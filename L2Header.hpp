@@ -115,7 +115,7 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 					throw std::invalid_argument("Cannot instantiate a unicast header with a non-unicast type.");
 			}
 			
-			L2HeaderUnicast(const MacId& icao_dest_id, bool use_arq, unsigned int arq_seqno, unsigned int arq_ack_no, unsigned int arq_ack_slot)
+			L2HeaderUnicast(const MacId& icao_dest_id, bool use_arq, SequenceNumber arq_seqno, SequenceNumber arq_ack_no, unsigned int arq_ack_slot)
 					: L2HeaderUnicast(icao_dest_id, use_arq, arq_seqno, arq_ack_no, arq_ack_slot, FrameType::unicast) {}
 			
 			const MacId& getDestId() const {

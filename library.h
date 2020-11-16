@@ -1,6 +1,0 @@
-#ifndef INTAIRNET_LINKLAYER_GLUE_LIBRARY_H
-#define INTAIRNET_LINKLAYER_GLUE_LIBRARY_H
-
-void hello();
-
-#endif
