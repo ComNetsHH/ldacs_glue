@@ -3,4 +3,4 @@ project(intairnet_linklayer_glue)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_library(intairnet_linklayer_glue SHARED library.cpp library.h L2Header.hpp MacId.hpp L2Packet.hpp CPRPosition.hpp IMac.hpp IArq.hpp IRlc.hpp)
+add_library(intairnet_linklayer_glue SHARED library.cpp library.h L2Header.hpp MacId.hpp L2Packet.hpp CPRPosition.hpp IMac.hpp IArq.hpp IRlc.hpp SequenceNumber.hpp)

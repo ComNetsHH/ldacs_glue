@@ -6,8 +6,10 @@
 #define INTAIRNET_LINKLAYER_GLUE_L2HEADER_HPP
 
 #include <algorithm>
+#include <vector>
 #include "MacId.hpp"
 #include "CPRPosition.hpp"
+#include "SequenceNumber.hpp"
 
 namespace TUHH_INTAIRNET_MCSOTDMA {
 	
@@ -105,8 +107,8 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 	
 	class L2HeaderUnicast : public L2Header {
 		public:
-			L2HeaderUnicast(const MacId& icao_dest_id, bool use_arq, unsigned int arq_seqno, unsigned int arq_ack_no, unsigned int arq_ack_slot, FrameType frame_type)
-					: L2Header(frame_type), icao_dest_id(icao_dest_id), use_arq(use_arq), arq_seqno(arq_seqno), arq_ack_no(arq_ack_no), arq_ack_slot(arq_ack_slot) {
+			L2HeaderUnicast(const MacId& icao_dest_id, bool use_arq, SequenceNumber seqno, SequenceNumber seqno_next_expected, unsigned int arq_ack_slot, FrameType frame_type)
+					: L2Header(frame_type), icao_dest_id(icao_dest_id), use_arq(use_arq), seqno(seqno), seqno_next_expected(seqno_next_expected), arq_ack_slot(arq_ack_slot) {
 				if (icao_dest_id == SYMBOLIC_ID_UNSET)
 					throw std::invalid_argument("Cannot instantiate a header with an unset ICAO ID.");
 				if (frame_type != FrameType::unicast && frame_type != FrameType::link_establishment_reply && frame_type != FrameType::link_establishment_request)
@@ -127,14 +129,18 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 				       + 8 /* ARQ slot indication number */
 				       + icao_dest_id.getBits() /* destination ID */
 				       + L2Header::getBits();
+
+				       // TODO: add size of srej list
 			}
 			
 			/** Whether the ARQ protocol is followed for this transmission, i.e. acknowledgements are expected. */
 			bool use_arq;
 			/** ARQ sequence number. */
-			unsigned int arq_seqno;
+            SequenceNumber seqno;
 			/** ARQ acknowledgement. */
-			unsigned int arq_ack_no;
+            SequenceNumber seqno_next_expected;
+            /** Selective rejection list. */
+            std::vector<SequenceNumber> srej_list;
 			/** The offset to the next reserved slot where an acknowledgement is expected. */
 			unsigned int arq_ack_slot;
 		
