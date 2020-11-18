@@ -8,6 +8,10 @@
 #include "L2Packet.hpp"
 
 namespace TUHH_INTAIRNET_MCSOTDMA {
+	
+	/**
+	 * Specifies the interface the ARQ sublayer must implement.
+	 */
 	class IArq {
 		public:
 			

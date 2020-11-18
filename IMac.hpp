@@ -9,6 +9,10 @@
 #include "L2Packet.hpp"
 
 namespace TUHH_INTAIRNET_MCSOTDMA {
+	
+	/**
+	 * Specifies the interface the MAC sublayer must implement.
+	 */
 	class IMac {
 		public:
 			

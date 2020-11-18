@@ -11,6 +11,9 @@
 namespace TUHH_INTAIRNET_MCSOTDMA {
 	class L3Packet;
 	
+	/**
+	 * Specifies the interface the RLC sublayer must implement.
+	 */
 	class IRlc {
 		public:
 			/**
