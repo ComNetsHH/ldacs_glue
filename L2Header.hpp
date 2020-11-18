@@ -107,7 +107,7 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 	
 	class L2HeaderUnicast : public L2Header {
 		public:
-			L2HeaderUnicast(const MacId& icao_dest_id, bool use_arq, SequenceNumber seqno, SequenceNumber seqno_next_expected, unsigned int arq_ack_slot, FrameType frame_type)
+			L2HeaderUnicast(const MacId& icao_dest_id, bool use_arq, const SequenceNumber& seqno, const SequenceNumber& seqno_next_expected, unsigned int arq_ack_slot, FrameType frame_type)
 					: L2Header(frame_type), icao_dest_id(icao_dest_id), use_arq(use_arq), seqno(seqno), seqno_next_expected(seqno_next_expected), arq_ack_slot(arq_ack_slot) {
 				if (icao_dest_id == SYMBOLIC_ID_UNSET)
 					throw std::invalid_argument("Cannot instantiate a header with an unset ICAO ID.");
@@ -151,7 +151,7 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 	
 	class L2HeaderLinkEstablishmentRequest : public L2HeaderUnicast {
 		public:
-			L2HeaderLinkEstablishmentRequest(const MacId& icao_dest_id, bool use_arq, unsigned int arq_seqno, unsigned int arq_ack_no, unsigned int arq_ack_slot)
+			L2HeaderLinkEstablishmentRequest(const MacId& icao_dest_id, bool use_arq, const SequenceNumber& arq_seqno, const SequenceNumber& arq_ack_no, unsigned int arq_ack_slot)
 					: L2HeaderUnicast(icao_dest_id, use_arq, arq_seqno, arq_ack_no, arq_ack_slot, FrameType::link_establishment_request) {}
 	};
 	
