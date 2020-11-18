@@ -11,6 +11,7 @@
 namespace TUHH_INTAIRNET_MCSOTDMA {
 	
 	class IArq; // Forward-declaration so that we can keep a pointer to the ARQ sublayer.
+	class IPhy; // Forward-declaration so that we can keep a pointer to the PHY layer.
 	
 	/**
 	 * Specifies the interface the MAC sublayer must implement.
@@ -31,7 +32,7 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			virtual void passToLower(L2Packet* packet) = 0;
 			
 			/**
-			 * Sets the ARQ sublayer above.
+			 * Connects the ARQ sublayer above.
 			 * @param arq
 			 */
 			void setUpperLayer(IArq* arq) {
@@ -44,9 +45,25 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			IArq* getUpperLayer() {
 				return this->upper_layer;
 			}
+			
+			/**
+			 * Connects the PHY layer below.
+			 * @param phy
+			 */
+			void setLowerLayer(IPhy* phy) {
+				this->lower_layer = phy;
+			}
+			
+			/**
+			 * @return A pointer to the PHY layer below.
+			 */
+			IPhy* getLowerLayer() {
+				return this->lower_layer;
+			}
 		
 		protected:
 			IArq* upper_layer = nullptr;
+			IPhy* lower_layer = nullptr;
 	};
 }
 

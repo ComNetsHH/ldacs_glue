@@ -20,7 +20,7 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 	class L2Packet {
 		public:
 			/**
-			 * Interface for a wrapper of around an upper-layer packet.
+			 * Interface for a wrapper of an upper-layer packet.
 		    */
 			class Payload {
 				public:
