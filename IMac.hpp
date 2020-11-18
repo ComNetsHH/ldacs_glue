@@ -23,7 +23,7 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			 * @param num_bits The number of bits present in the queue corresponding to 'id'.
 			 * @param mac_id The MAC ID.
 			 */
-			virtual void notifyOutgoing(unsigned int num_bits, const MacId& mac_id) = 0;
+			virtual void notifyOutgoing(unsigned long num_bits, const MacId& mac_id) = 0;
 			
 			/**
 			 * When a transmission slot arrives, this passes down a packet to the PHY layer.
