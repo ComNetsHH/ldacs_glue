@@ -9,6 +9,9 @@
 
 namespace TUHH_INTAIRNET_MCSOTDMA {
 	
+	class IMac; // Forward-declaration so that we can keep a pointer to the MAC sublayer.
+	class IRlc; // Forward-declaration so that we can keep a pointer to the RLC sublayer.
+	
 	/**
 	 * Specifies the interface the ARQ sublayer must implement.
 	 */
@@ -37,6 +40,40 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			 * @return Whether the link should be ARQ protected.
 			 */
 			virtual bool shouldLinkBeArqProtected(const MacId& mac_id) const = 0;
+			
+			/**
+			 * Connects the RLC sublayer above.
+			 * @param rlc
+			 */
+			void setUpperLayer(IRlc* rlc) {
+				this->upper_layer = rlc;
+			}
+			
+			/**
+			 * @return Pointer to the RLC sublayer above.
+			 */
+			IRlc* getUpperLayer() {
+				return this->upper_layer;
+			}
+			
+			/**
+			 * Connects the MAC sublayer below.
+			 * @param mac
+			 */
+			void setLowerLayer(IMac* mac) {
+				this->lower_layer = mac;
+			}
+			
+			/**
+			 * @return Pointer to the MAC sublayer below.
+			 */
+			IMac* getLowerLayer() {
+				return this->lower_layer;
+			}
+		
+		protected:
+			IRlc* upper_layer = nullptr;
+			IMac* lower_layer = nullptr;
 	};
 }
 

@@ -10,12 +10,13 @@
 
 namespace TUHH_INTAIRNET_MCSOTDMA {
 	
+	class IArq; // Forward-declaration so that we can keep a pointer to the ARQ sublayer.
+	
 	/**
 	 * Specifies the interface the MAC sublayer must implement.
 	 */
 	class IMac {
 		public:
-			
 			/**
 			 * Notify the MAC sublayer about an outbound packet.
 			 * @param num_bits The number of bits present in the queue corresponding to 'id'.
@@ -28,6 +29,24 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			 * @param packet
 			 */
 			virtual void passToLower(L2Packet* packet) = 0;
+			
+			/**
+			 * Sets the ARQ sublayer above.
+			 * @param arq
+			 */
+			void setUpperLayer(IArq* arq) {
+				this->upper_layer = arq;
+			}
+			
+			/**
+			 * @return Pointer to the ARQ sublayer above.
+			 */
+			IArq* getUpperLayer() {
+				return this->upper_layer;
+			}
+		
+		protected:
+			IArq* upper_layer = nullptr;
 	};
 }
 

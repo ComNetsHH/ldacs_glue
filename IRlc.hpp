@@ -9,7 +9,9 @@
 #include "L2Packet.hpp"
 
 namespace TUHH_INTAIRNET_MCSOTDMA {
-	class L3Packet;
+	
+	class IArq; // Forward-declaration so that we can keep a pointer to the ARQ sublayer.
+	class L3Packet; // Forward declaration so that we can accept layer-3 packets.
 	
 	/**
 	 * Specifies the interface the RLC sublayer must implement.
@@ -29,6 +31,24 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			 * @return A pointer to the segment.
 			 */
 			virtual L2Packet* requestSegment(unsigned int num_bits, const MacId& mac_id) = 0;
+			
+			/**
+			 * @return Pointer to the ARQ sublayer below.
+			 */
+			IArq* getLowerLayer() {
+				return this->lower_layer;
+			}
+			
+			/**
+			 * Connects the ARQ sublayer below.
+			 * @param arq
+			 */
+			void setLowerLayer(IArq* arq) {
+				this->lower_layer = arq;
+			}
+		
+		protected:
+			IArq* lower_layer = nullptr;
 	};
 }
 
