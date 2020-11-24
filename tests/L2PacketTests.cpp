@@ -4,6 +4,7 @@
 
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
+#include <vector>
 #include "../L2Packet.hpp"
 
 using namespace TUHH_INTAIRNET_MCSOTDMA;

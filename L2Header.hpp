@@ -128,9 +128,8 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 				       + 8 /* ARQ ACK number */
 				       + 8 /* ARQ slot indication number */
 				       + icao_dest_id.getBits() /* destination ID */
+				       + 8 * srej_list.size()
 				       + L2Header::getBits();
-
-				       // TODO: add size of srej list
 			}
 			
 			/** Whether the ARQ protocol is followed for this transmission, i.e. acknowledgements are expected. */
@@ -143,6 +142,34 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
             std::vector<SequenceNumber> srej_list;
 			/** The offset to the next reserved slot where an acknowledgement is expected. */
 			unsigned int arq_ack_slot;
+            /** Sequence number setter */
+			void setSeqno(SequenceNumber seqno) {
+			    this->seqno = seqno;
+			}
+            /** Next expected sequence number setter function */
+			void setSeqnoNextExpected(SequenceNumber seqno) {
+			    this->seqno_next_expected = seqno;
+			}
+            /** Srej list setter function */
+			void setSrejList(std::vector<SequenceNumber> list) {
+			    this->srej_list = list;
+			}
+            /** Get srej list length */
+			uint8_t getSrejListLength() {
+			    return this->srej_list.size();
+			}
+            /** Get srej list */
+			std::vector<SequenceNumber> getSrejList() {
+			    return this->srej_list;
+			}
+            /** Get sequence number */
+			SequenceNumber getSeqno() {
+                return this->seqno;
+			}
+            /** Get next expected sequence number */
+			SequenceNumber getSeqnoNextExpected() {
+                return this->seqno_next_expected;
+			}
 		
 		protected:
 			/** Destination ICAO ID. */

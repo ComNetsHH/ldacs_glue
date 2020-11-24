@@ -58,6 +58,21 @@ class L2HeaderTests : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT(arq_seqno == header_unicast.seqno);
 			CPPUNIT_ASSERT(arq_ack_no == header_unicast.seqno_next_expected);
 			CPPUNIT_ASSERT_EQUAL(arq_ack_slot, header_unicast.arq_ack_slot);
+
+
+            SequenceNumber seqNo(1);
+            std::vector<SequenceNumber> selRejList;
+            selRejList.push_back(SequenceNumber(2));
+            selRejList.push_back(SequenceNumber(3));
+
+            header_unicast.setSeqno(seqNo);
+            header_unicast.setSeqnoNextExpected(seqNo);
+            header_unicast.setSrejList(selRejList);
+
+            CPPUNIT_ASSERT_EQUAL(header_unicast.getSrejListLength(), uint8_t(2));
+            CPPUNIT_ASSERT_EQUAL(header_unicast.getSrejList().size(), (unsigned long) 2);
+            CPPUNIT_ASSERT_EQUAL(header_unicast.getSeqno().get(), seqNo.get());
+            CPPUNIT_ASSERT_EQUAL(header_unicast.getSeqnoNextExpected().get(), seqNo.get());
 		}
 		
 		void testHeaderSizes() {
@@ -71,6 +86,12 @@ class L2HeaderTests : public CppUnit::TestFixture {
 			unsigned int arq_ack_slot = 52;
 			L2HeaderUnicast unicast_header = L2HeaderUnicast(dest_id, use_arq, arq_seqno, arq_ack_no, arq_ack_slot);
 			CPPUNIT_ASSERT_EQUAL(uint(71), unicast_header.getBits());
+
+            std::vector<SequenceNumber> selRejList;
+            selRejList.push_back(SequenceNumber(2));
+            selRejList.push_back(SequenceNumber(3));
+			unicast_header.setSrejList(selRejList);
+            CPPUNIT_ASSERT_EQUAL(uint(87), unicast_header.getBits());
 			
 			L2HeaderBroadcast broadcast_header = L2HeaderBroadcast();
 			CPPUNIT_ASSERT_EQUAL(uint(19), broadcast_header.getBits());
@@ -81,6 +102,7 @@ class L2HeaderTests : public CppUnit::TestFixture {
 			L2HeaderBeacon beacon_header = L2HeaderBeacon(CPRPosition(1, 2, 3), true, 12, 1);
 			CPPUNIT_ASSERT_EQUAL(uint(65), beacon_header.getBits());
 		}
+
 	
 	CPPUNIT_TEST_SUITE(L2HeaderTests);
 		CPPUNIT_TEST(testHeader);
