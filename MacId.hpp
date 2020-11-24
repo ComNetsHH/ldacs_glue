@@ -47,11 +47,11 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			int id;
 	};
 	
-	/** Symbolic link ID that represents an unset ICAO ID. */
+	/** Symbolic unset ID. */
 	const MacId SYMBOLIC_ID_UNSET = MacId(-1);
-	/** Symbolic link ID that represents a broadcast. */
+	/** Symbolic broadcast ID. */
 	const MacId SYMBOLIC_LINK_ID_BROADCAST = MacId(-2);
-	/** Symbolic link ID that represents a beacon (which is also a broadcast). */
+	/** Symbolic beacon ID (which is also a broadcast). */
 	const MacId SYMBOLIC_LINK_ID_BEACON = MacId(-3);
 }
 
