@@ -121,7 +121,7 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			const MacId& getDestId() const {
 				return this->icao_dest_id;
 			}
-			
+
 			unsigned int getBits() const override {
 				return 1 /* Whether ARQ is used */
 				       + 8 /* ARQ sequence number */
@@ -129,6 +129,7 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 				       + 8 /* ARQ slot indication number */
 				       + icao_dest_id.getBits() /* destination ID */
 				       + 8 * srej_list.size()
+				       + 8 /* List size of srej_list */
 				       + L2Header::getBits();
 			}
 			
@@ -138,6 +139,8 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
             SequenceNumber seqno;
 			/** ARQ acknowledgement. */
             SequenceNumber seqno_next_expected;
+            /** Selective rejection list size */
+            unsigned int srej_size;
             /** Selective rejection list. */
             std::vector<SequenceNumber> srej_list;
 			/** The offset to the next reserved slot where an acknowledgement is expected. */
