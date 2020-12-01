@@ -10,19 +10,21 @@
 using namespace std;
 
 int main(int argc, const char* argv[]) {
-    CppUnit::TestResult result;
-    CppUnit::TestResultCollector collectedResults;
-    CppUnit::BriefTestProgressListener progress;
+//    CppUnit::TestResult result;
+//    CppUnit::TestResultCollector collectedResults;
+//    CppUnit::BriefTestProgressListener progress;
     CppUnit::TextUi::TestRunner runner;
 
-    result.addListener (&collectedResults);
-    result.addListener (&progress);
+//    result.addListener (&collectedResults);
+//    result.addListener (&progress);
 
     runner.addTest(SequenceNumberTests::suite());
 	runner.addTest(L2HeaderTests::suite());
 	runner.addTest(L2PacketTests::suite());
 
-    runner.run(result);
-    return collectedResults.wasSuccessful() ? 0 : 1;
+//    runner.run(result);
+	runner.run();
+	return runner.result().wasSuccessful() ? 0 : 1;
+//    return collectedResults.wasSuccessful() ? 0 : 1;
 
 }

@@ -70,6 +70,13 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			IMac* getLowerLayer() {
 				return this->lower_layer;
 			}
+			
+			/**
+			 * Link requests must be injected into the RLC sublayer above.
+			 * With this function, injection *up* the protocol stack is possible.
+			 * @param packet
+			 */
+			void injectIntoUpper(L2Packet* packet);
 		
 		protected:
 			IRlc* upper_layer = nullptr;

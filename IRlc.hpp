@@ -25,6 +25,12 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			virtual void receiveFromUpper(L3Packet* data) = 0;
 			
 			/**
+			 * Link requests may be injected from the MAC sublayer below, through the ARQ sublayer, into this layer.
+			 * @param packet
+			 */
+			virtual void receiveInjectionFromLower(L2Packet* packet) = 0;
+			
+			/**
 			 * The ARQ sublayer requests a new segment to send from the RLC sublayer.
 			 * @param num_bits Number of bits that should be contained in the segment.
 			 * @param mac_id MAC ID corresponding to the communication link for which this segment is requested.
@@ -46,6 +52,7 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			void setLowerLayer(IArq* arq) {
 				this->lower_layer = arq;
 			}
+			
 		
 		protected:
 			IArq* lower_layer = nullptr;

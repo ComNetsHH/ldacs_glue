@@ -85,13 +85,13 @@ class L2HeaderTests : public CppUnit::TestFixture {
 			SequenceNumber arq_ack_no = SequenceNumber(51);
 			unsigned int arq_ack_slot = 52;
 			L2HeaderUnicast unicast_header = L2HeaderUnicast(dest_id, use_arq, arq_seqno, arq_ack_no, arq_ack_slot);
-			CPPUNIT_ASSERT_EQUAL(uint(71), unicast_header.getBits());
+			CPPUNIT_ASSERT_EQUAL(uint(79), unicast_header.getBits());
 
             std::vector<SequenceNumber> selRejList;
             selRejList.push_back(SequenceNumber(2));
             selRejList.push_back(SequenceNumber(3));
 			unicast_header.setSrejList(selRejList);
-            CPPUNIT_ASSERT_EQUAL(uint(87), unicast_header.getBits());
+            CPPUNIT_ASSERT_EQUAL(uint(95), unicast_header.getBits());
 			
 			L2HeaderBroadcast broadcast_header = L2HeaderBroadcast();
 			CPPUNIT_ASSERT_EQUAL(uint(19), broadcast_header.getBits());
