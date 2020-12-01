@@ -11,10 +11,13 @@ L2Packet::L2Packet() : headers(), payloads(), dest_id(SYMBOLIC_ID_UNSET) {}
 L2Packet::~L2Packet() {
 	for (auto* callback : callbacks)
 		callback->notifyOnOutgoingPacket(this);
+	for (auto* header : headers)
+		delete header;
+	for (auto* payload : payloads)
+		delete payload;
 }
 
-void L2Packet::addPayload(L2Header* header,
-                                                   L2Packet::Payload* payload) {
+void L2Packet::addPayload(L2Header* header, L2Packet::Payload* payload) {
 	// Ensure that the first header is a base header.
 	if (headers.empty() && header->frame_type != L2Header::FrameType::base)
 		throw std::invalid_argument("First header of a packet *must* be a base header.");

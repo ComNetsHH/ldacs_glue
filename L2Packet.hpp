@@ -32,6 +32,8 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			class Payload {
 				public:
 					virtual unsigned int getBits() const = 0;
+					
+					virtual ~Payload() = default;
 			};
 			
 			L2Packet();
