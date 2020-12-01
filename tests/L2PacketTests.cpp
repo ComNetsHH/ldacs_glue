@@ -6,6 +6,7 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <vector>
 #include "../L2Packet.hpp"
+//#include "../L2PacketCallback.hpp"
 
 using namespace TUHH_INTAIRNET_MCSOTDMA;
 
@@ -17,6 +18,15 @@ class L2PacketTests : public CppUnit::TestFixture {
 				unsigned int getBits() const override {
 					return 1;
 				}
+		};
+		
+		class TestCallback : public L2PacketSentCallback {
+			public:
+				void notifyOnOutgoingPacket(TUHH_INTAIRNET_MCSOTDMA::L2Packet* packet) override {
+					num_packets++;
+				}
+
+				size_t num_packets = 0;
 		};
 	
 	public:
@@ -188,11 +198,21 @@ class L2PacketTests : public CppUnit::TestFixture {
 			}
 			CPPUNIT_ASSERT_EQUAL(false, exception_occurred);
 		}
+		
+		void testCallback() {
+			auto callback = TestCallback();
+			CPPUNIT_ASSERT_EQUAL(size_t(0), callback.num_packets);
+			packet->addCallback(&callback);
+			delete packet;
+			CPPUNIT_ASSERT_EQUAL(size_t(1), callback.num_packets);
+			packet = new L2Packet();
+		}
 	
 	CPPUNIT_TEST_SUITE(L2PacketTests);
 		CPPUNIT_TEST(testAddPayload);
 		CPPUNIT_TEST(testUnicastPayload);
 		CPPUNIT_TEST(testBroadcastPayload);
 		CPPUNIT_TEST(testBeaconPayload);
+		CPPUNIT_TEST(testCallback);
 	CPPUNIT_TEST_SUITE_END();
 };

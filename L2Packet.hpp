@@ -12,7 +12,12 @@
 
 namespace TUHH_INTAIRNET_MCSOTDMA {
 	
-	class L2PacketSentCallback;
+	class L2Packet; // forward declaration so that L2PacketSetCallback can use it.
+	
+	class L2PacketSentCallback {
+		public:
+			virtual void notifyOnOutgoingPacket(TUHH_INTAIRNET_MCSOTDMA::L2Packet* packet) = 0;
+	};
 	
 	/**
 	 * Wraps around an original packet implementation.
@@ -29,7 +34,7 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 					virtual unsigned int getBits() const = 0;
 			};
 			
-			explicit L2Packet() : headers(), payloads(), dest_id(SYMBOLIC_ID_UNSET) {}
+			L2Packet();
 			
 			virtual ~L2Packet();
 			
@@ -38,16 +43,12 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			/**
 			 * @return All payloads.
 			 */
-			const std::vector<Payload*>& getPayloads() {
-				return this->payloads;
-			}
+			const std::vector<Payload*>& getPayloads();
 			
 			/**
 			 * @return All headers.
 			 */
-			const std::vector<L2Header*>& getHeaders() {
-				return this->headers;
-			}
+			const std::vector<L2Header*>& getHeaders();
 			
 			/**
 			 * @return Total size of this packet in bits, consisting of both headers and payloads.
@@ -63,33 +64,23 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		
 		protected:
 			/**
-			 * Several headers can be concatenated to fill one packet.
+			 * Ensures that at least one header is present, which must be a base header.
+			 * @throws std::logic_error If no headers are present.
+			 * @throws std::runtime_error If first header is not a base header.
 			 */
+			void validateHeader() const;
+			
+		protected:
+			/** Several headers can be concatenated to fill one packet. */
 			std::vector<L2Header*> headers;
 			
-			/**
-			 * Several payloads can be concatenated (with resp. headers) to fill one packet.
-			 */
+			/** Several payloads can be concatenated (with resp. headers) to fill one packet. */
 			std::vector<Payload*> payloads;
 			
 			MacId dest_id;
 			
 			/** Holds all registered callbacks. */
 			std::vector<L2PacketSentCallback*> callbacks;
-		
-		protected:
-			/**
-			 * Ensures that at least one header is present, which must be a base header.
-			 * @throws std::logic_error If no headers are present.
-			 * @throws std::runtime_error If first header is not a base header.
-			 */
-			void validateHeader() const {
-				if (headers.empty())
-					throw std::logic_error("No headers present.");
-				const L2Header* first_header = headers.at(0);
-				if (first_header->frame_type != L2Header::base)
-					throw std::runtime_error("First header is not a base header.");
-			}
 	};
 }
 

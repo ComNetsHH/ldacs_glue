@@ -1,32 +1,20 @@
 //
-// Created by Sebastian Lindner on 25.11.20.
+// Created by Sebastian Lindner on 01.12.20.
 //
 
 #include "L2Packet.hpp"
-#include "L2PacketCallback.hpp"
 
-TUHH_INTAIRNET_MCSOTDMA::L2Packet::~L2Packet() {
-	for (L2PacketSentCallback* callback : callbacks)
+using namespace TUHH_INTAIRNET_MCSOTDMA;
+
+L2Packet::L2Packet() : headers(), payloads(), dest_id(SYMBOLIC_ID_UNSET) {}
+
+L2Packet::~L2Packet() {
+	for (auto* callback : callbacks)
 		callback->notifyOnOutgoingPacket(this);
 }
 
-void TUHH_INTAIRNET_MCSOTDMA::L2Packet::addCallback(TUHH_INTAIRNET_MCSOTDMA::L2PacketSentCallback* callback) {
-	this->callbacks.push_back(callback);
-}
-
-const TUHH_INTAIRNET_MCSOTDMA::MacId& TUHH_INTAIRNET_MCSOTDMA::L2Packet::getDestination() const {
-	return this->dest_id;
-}
-
-unsigned int TUHH_INTAIRNET_MCSOTDMA::L2Packet::getBits() const {
-	unsigned int bits = 0;
-	for (size_t i = 0; i < headers.size(); i++)
-		bits += headers.at(i)->getBits() + payloads.at(i)->getBits();
-	return bits;
-}
-
-void TUHH_INTAIRNET_MCSOTDMA::L2Packet::addPayload(TUHH_INTAIRNET_MCSOTDMA::L2Header* header,
-                                                   TUHH_INTAIRNET_MCSOTDMA::L2Packet::Payload* payload) {
+void L2Packet::addPayload(L2Header* header,
+                                                   L2Packet::Payload* payload) {
 	// Ensure that the first header is a base header.
 	if (headers.empty() && header->frame_type != L2Header::FrameType::base)
 		throw std::invalid_argument("First header of a packet *must* be a base header.");
@@ -67,9 +55,43 @@ void TUHH_INTAIRNET_MCSOTDMA::L2Packet::addPayload(TUHH_INTAIRNET_MCSOTDMA::L2He
 			this->dest_id = SYMBOLIC_LINK_ID_BEACON;
 			// If there already is a set destination, throw an error, as beacon headers must come first.
 		else
-			throw std::runtime_error("Cannot add a beacon header to this packet. It already has a destination ID: '" + std::to_string(this->dest_id.getId()) + "'.");
+			throw std::runtime_error(
+					"Cannot add a beacon header to this packet. It already has a destination ID: '" +
+					std::to_string(this->dest_id.getId()) + "'.");
 	}
 	
 	headers.push_back(header);
 	payloads.push_back(payload);
 }
+
+const std::vector<L2Packet::Payload*>& L2Packet::getPayloads() {
+	return this->payloads;
+}
+
+const std::vector<L2Header*>& L2Packet::getHeaders() {
+	return this->headers;
+}
+
+unsigned int L2Packet::getBits() const {
+	unsigned int bits = 0;
+	for (size_t i = 0; i < headers.size(); i++)
+		bits += headers.at(i)->getBits() + payloads.at(i)->getBits();
+	return bits;
+}
+
+const MacId& L2Packet::getDestination() const {
+	return this->dest_id;
+}
+
+void L2Packet::addCallback(L2PacketSentCallback* callback) {
+	this->callbacks.push_back(callback);
+}
+
+void L2Packet::validateHeader() const {
+	if (headers.empty())
+		throw std::logic_error("No headers present.");
+	const L2Header* first_header = headers.at(0);
+	if (first_header->frame_type != L2Header::base)
+		throw std::runtime_error("First header is not a base header.");
+}
+
