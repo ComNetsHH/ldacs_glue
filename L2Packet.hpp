@@ -40,6 +40,12 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			
 			virtual ~L2Packet();
 			
+			/**
+			 * Add a (header, payload)-pair.
+			 * These will be deleted by this L2Packet's destructor.
+			 * @param header
+			 * @param payload
+			 */
 			void addPayload(L2Header* header, Payload* payload);
 			
 			/**
