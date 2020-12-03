@@ -25,6 +25,12 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			virtual void receiveFromUpper(L3Packet* data) = 0;
 			
 			/**
+			 * When a packet comes in via PHY, MAC, ARQ, this function passes it from the ARQ to this RLC layer.
+			 * @param packet
+			 */
+			virtual void receiveFromLower(L2Packet* packet) = 0;
+			
+			/**
 			 * Link requests may be injected from the MAC sublayer below, through the ARQ sublayer, into this layer.
 			 * @param packet
 			 */
