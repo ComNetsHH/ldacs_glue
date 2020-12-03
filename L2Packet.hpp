@@ -16,7 +16,11 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 	
 	class L2PacketSentCallback {
 		public:
-			virtual void notifyOnOutgoingPacket(TUHH_INTAIRNET_MCSOTDMA::L2Packet* packet) = 0;
+			/**
+			 * Callback interface for when a transmission slot arrives which is sending a particular packet.
+			 * @param packet
+			 */
+			virtual void notifyPacketBeingSent(TUHH_INTAIRNET_MCSOTDMA::L2Packet* packet) = 0;
 	};
 	
 	/**
@@ -69,6 +73,11 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			const MacId& getDestination() const;
 			
 			void addCallback(L2PacketSentCallback* callback);
+			
+			/**
+			 * Notify all currently registered callbacks.
+			 */
+			void notifyCallbacks();
 		
 		protected:
 			/**

@@ -22,7 +22,7 @@ class L2PacketTests : public CppUnit::TestFixture {
 		
 		class TestCallback : public L2PacketSentCallback {
 			public:
-				void notifyOnOutgoingPacket(TUHH_INTAIRNET_MCSOTDMA::L2Packet* packet) override {
+				void notifyPacketBeingSent(TUHH_INTAIRNET_MCSOTDMA::L2Packet* packet) override {
 					num_packets++;
 				}
 
@@ -203,9 +203,8 @@ class L2PacketTests : public CppUnit::TestFixture {
 			auto callback = TestCallback();
 			CPPUNIT_ASSERT_EQUAL(size_t(0), callback.num_packets);
 			packet->addCallback(&callback);
-			delete packet;
+			packet->notifyCallbacks();
 			CPPUNIT_ASSERT_EQUAL(size_t(1), callback.num_packets);
-			packet = new L2Packet();
 		}
 	
 	CPPUNIT_TEST_SUITE(L2PacketTests);

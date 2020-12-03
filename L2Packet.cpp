@@ -9,8 +9,6 @@ using namespace TUHH_INTAIRNET_MCSOTDMA;
 L2Packet::L2Packet() : dest_id(SYMBOLIC_ID_UNSET) {}
 
 L2Packet::~L2Packet() {
-	for (auto* callback : callbacks)
-		callback->notifyOnOutgoingPacket(this);
 	for (auto* header : headers)
 		delete header;
 	for (auto* payload : payloads)
@@ -96,5 +94,10 @@ void L2Packet::validateHeader() const {
 	const L2Header* first_header = headers.at(0);
 	if (first_header->frame_type != L2Header::base)
 		throw std::runtime_error("First header is not a base header.");
+}
+
+void L2Packet::notifyCallbacks() {
+	for (auto* callback : callbacks)
+		callback->notifyPacketBeingSent(this);
 }
 
