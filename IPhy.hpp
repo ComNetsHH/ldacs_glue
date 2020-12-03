@@ -23,7 +23,7 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			 * @param data
 			 * @param center_frequency
 			 */
-			virtual void receiveFromUpper(unsigned int num_bits, L2Packet* data, unsigned int center_frequency) = 0;
+			virtual void receiveFromUpper(L2Packet* data, unsigned int center_frequency) = 0;
 			
 			/**
 			 * @return From the current modulation and coding, return the current datarate in bits per slot.
