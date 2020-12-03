@@ -28,8 +28,9 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			/**
 			 * When a transmission slot arrives, this passes down a packet to the PHY layer.
 			 * @param packet
+			 * @param center_frequency
 			 */
-			virtual void passToLower(L2Packet* packet) = 0;
+			virtual void passToLower(L2Packet* packet, unsigned int center_frequency) = 0;
 			
 			/**
 			 * Link requests must be injected into the RLC sublayer above.
