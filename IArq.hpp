@@ -79,6 +79,12 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			void injectIntoUpper(L2Packet* packet);
 			
 			/**
+			 * When packets arrive via PHY and MAC, this function is called by the MAC to pass it up.
+			 * @param packet
+			 */
+			virtual void receiveFromLower(L2Packet* packet) = 0;
+			
+			/**
 			 * The MAC may call this function to notify the ARQ sublayer of a newly established link.
 			 * @param id
 			 */

@@ -33,6 +33,12 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			virtual void passToLower(L2Packet* packet, unsigned int center_frequency) = 0;
 			
 			/**
+			 * When a packet comes in, this passes it up to the next upper layer.
+			 * @param packet
+			 */
+			virtual void passToUpper(L2Packet* packet) = 0;
+			
+			/**
 			 * Link requests must be injected into the RLC sublayer above.
 			 * With this function, injection *up* the protocol stack is possible.
 			 * @param packet
