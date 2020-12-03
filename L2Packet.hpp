@@ -55,7 +55,7 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			/**
 			 * @return All payloads.
 			 */
-			const std::vector<Payload*>& getPayloads();
+			std::vector<Payload*>& getPayloads();
 			
 			/**
 			 * @return All headers.
@@ -72,6 +72,12 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			 */
 			const MacId& getDestination() const;
 			
+			/**
+			 * Register a callback that should be notified when this packet is about to be sent.
+			 * For example it is used for a P2P LinkManager that is notified when its link request is about to be sent,
+			 * so that it can compute the propsal.
+			 * @param callback
+			 */
 			void addCallback(L2PacketSentCallback* callback);
 			
 			/**

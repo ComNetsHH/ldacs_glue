@@ -65,7 +65,7 @@ void L2Packet::addPayload(L2Header* header, L2Packet::Payload* payload) {
 	payloads.push_back(payload);
 }
 
-const std::vector<L2Packet::Payload*>& L2Packet::getPayloads() {
+std::vector<L2Packet::Payload*>& L2Packet::getPayloads() {
 	return this->payloads;
 }
 
