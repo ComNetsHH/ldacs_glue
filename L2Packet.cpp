@@ -6,7 +6,7 @@
 
 using namespace TUHH_INTAIRNET_MCSOTDMA;
 
-L2Packet::L2Packet() : headers(), payloads(), dest_id(SYMBOLIC_ID_UNSET) {}
+L2Packet::L2Packet() : dest_id(SYMBOLIC_ID_UNSET) {}
 
 L2Packet::~L2Packet() {
 	for (auto* callback : callbacks)

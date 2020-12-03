@@ -39,22 +39,21 @@ class L2PacketTests : public CppUnit::TestFixture {
 		}
 		
 		void testAddPayload() {
-			L2HeaderUnicast unicast_header = L2HeaderUnicast(MacId(43), true, 100, 101, 102);
-			TestPayload payload = TestPayload();
+			L2HeaderUnicast* unicast_header = new L2HeaderUnicast(MacId(43), true, 100, 101, 102);
 			bool exception_occurred = false;
 			// Can't add a non-base header as first header.
 			try {
-				packet->addPayload(&unicast_header, &payload);
+				packet->addPayload(unicast_header, nullptr);
 			} catch (const std::exception& e) {
 				exception_occurred = true;
 			}
 			CPPUNIT_ASSERT_EQUAL(true, exception_occurred);
 			
 			// Can add a base header.
-			L2HeaderBase base_header = L2HeaderBase(MacId(42), 12, 13, 14, 15);
+			L2HeaderBase* base_header = new L2HeaderBase(MacId(42), 12, 13, 14, 15);
 			exception_occurred = false;
 			try {
-				packet->addPayload(&base_header, &payload);
+				packet->addPayload(base_header, nullptr);
 			} catch (const std::exception& e) {
 				exception_occurred = true;
 			}
@@ -63,7 +62,7 @@ class L2PacketTests : public CppUnit::TestFixture {
 			// Now can add any other header.
 			exception_occurred = false;
 			try {
-				packet->addPayload(&unicast_header, &payload);
+				packet->addPayload(unicast_header, nullptr);
 			} catch (const std::exception& e) {
 				std::cout << e.what() << std::endl;
 				exception_occurred = true;
@@ -73,7 +72,7 @@ class L2PacketTests : public CppUnit::TestFixture {
 			// But not another base header.
 			exception_occurred = false;
 			try {
-				packet->addPayload(&base_header, &payload);
+				packet->addPayload(base_header, nullptr);
 			} catch (const std::exception& e) {
 				exception_occurred = true;
 			}
@@ -81,15 +80,15 @@ class L2PacketTests : public CppUnit::TestFixture {
 		}
 		
 		void testUnicastPayload() {
-			L2HeaderUnicast unicast_header = L2HeaderUnicast(MacId(43), true, 100, 101, 102);
-			L2HeaderBase base_header = L2HeaderBase(MacId(42), 12, 13, 14, 15);
-			TestPayload payload = TestPayload();
+			L2HeaderUnicast* unicast_header = new L2HeaderUnicast(MacId(43), true, 100, 101, 102);
+			L2HeaderBase* base_header = new L2HeaderBase(MacId(42), 12, 13, 14, 15);
+			TestPayload* payload = nullptr;
 			
 			// Add a base and a unicast header.
 			bool exception_occurred = false;
 			try {
-				packet->addPayload(&base_header, &payload);
-				packet->addPayload(&unicast_header, &payload);
+				packet->addPayload(base_header, payload);
+				packet->addPayload(unicast_header, payload);
 			} catch (const std::exception& e) {
 				exception_occurred = true;
 			}
@@ -97,12 +96,13 @@ class L2PacketTests : public CppUnit::TestFixture {
 			
 			// Shouldn't be able to add a unicast header to a different destination.
 			MacId id_dest_2 = MacId(44);
-			L2HeaderUnicast second_unicast_header = L2HeaderUnicast(id_dest_2, true, 100, 101, 102);
+			L2HeaderUnicast* second_unicast_header = new L2HeaderUnicast(id_dest_2, true, 100, 101, 102);
 			exception_occurred = false;
 			try {
-				packet->addPayload(&second_unicast_header, &payload);
+				packet->addPayload(second_unicast_header, payload);
 			} catch (const std::exception& e) {
 				exception_occurred = true;
+				delete second_unicast_header;
 			}
 			CPPUNIT_ASSERT_EQUAL(true, exception_occurred);
 			
@@ -110,7 +110,7 @@ class L2PacketTests : public CppUnit::TestFixture {
 			exception_occurred = false;
 			try {
 				L2HeaderBroadcast broadcast_header = L2HeaderBroadcast();
-				packet->addPayload(&broadcast_header, &payload);
+				packet->addPayload(&broadcast_header, payload);
 			} catch (const std::exception& e) {
 				exception_occurred = true;
 			}
@@ -120,7 +120,7 @@ class L2PacketTests : public CppUnit::TestFixture {
 			exception_occurred = false;
 			try {
 				L2HeaderBeacon beacon_header = L2HeaderBeacon(CPRPosition(1,2,3), true, 2, 1);
-				packet->addPayload(&beacon_header, &payload);
+				packet->addPayload(&beacon_header, payload);
 			} catch (const std::exception& e) {
 				exception_occurred = true;
 			}
@@ -128,17 +128,17 @@ class L2PacketTests : public CppUnit::TestFixture {
 		}
 		
 		void testBroadcastPayload() {
-			L2HeaderBase base_header = L2HeaderBase(MacId(42), 12, 13, 14, 15);
-			L2HeaderBroadcast broadcast_header = L2HeaderBroadcast();
-			L2HeaderUnicast unicast_header = L2HeaderUnicast(MacId(43), true, 100, 101, 102);
-			TestPayload payload = TestPayload();
+			L2HeaderBase* base_header = new L2HeaderBase(MacId(42), 12, 13, 14, 15);
+			L2HeaderBroadcast* broadcast_header = new L2HeaderBroadcast();
+			L2HeaderUnicast* unicast_header = new L2HeaderUnicast(MacId(43), true, 100, 101, 102);
+			TestPayload* payload = nullptr;
 			
 			// Add a base and a broadcast header and then a unicast header.
 			bool exception_occurred = false;
 			try {
-				packet->addPayload(&base_header, &payload);
-				packet->addPayload(&broadcast_header, &payload);
-				packet->addPayload(&unicast_header, &payload);
+				packet->addPayload(base_header, payload);
+				packet->addPayload(broadcast_header, payload);
+				packet->addPayload(unicast_header, payload);
 			} catch (const std::exception& e) {
 				exception_occurred = true;
 			}
@@ -147,7 +147,7 @@ class L2PacketTests : public CppUnit::TestFixture {
 			// Shouldn't be able to add a broadcast header.
 			exception_occurred = false;
 			try {
-				packet->addPayload(&broadcast_header, &payload);
+				packet->addPayload(broadcast_header, payload);
 			} catch (const std::exception& e) {
 				exception_occurred = true;
 			}
@@ -157,7 +157,7 @@ class L2PacketTests : public CppUnit::TestFixture {
 			exception_occurred = false;
 			try {
 				L2HeaderBeacon beacon_header = L2HeaderBeacon(CPRPosition(1,2,3), true, 2, 1);
-				packet->addPayload(&beacon_header, &payload);
+				packet->addPayload(&beacon_header, payload);
 			} catch (const std::exception& e) {
 				exception_occurred = true;
 			}
@@ -165,14 +165,14 @@ class L2PacketTests : public CppUnit::TestFixture {
 		}
 		
 		void testBeaconPayload() {
-			L2HeaderBase base_header = L2HeaderBase(MacId(42), 12, 13, 14, 15);
-			L2HeaderBeacon beacon_header = L2HeaderBeacon(CPRPosition(1, 2, 3), true, 50, 1);
-			TestPayload payload = TestPayload();
+			L2HeaderBase* base_header = new L2HeaderBase(MacId(42), 12, 13, 14, 15);
+			L2HeaderBeacon* beacon_header = new L2HeaderBeacon(CPRPosition(1, 2, 3), true, 50, 1);
+			TestPayload* payload = nullptr;
 			// Should be able to add a beacon header.
 			bool exception_occurred = false;
 			try {
-				packet->addPayload(&base_header, &payload);
-				packet->addPayload(&beacon_header, &payload);
+				packet->addPayload(base_header, payload);
+				packet->addPayload(beacon_header, payload);
 			} catch (const std::exception& e) {
 				exception_occurred = true;
 			}
@@ -181,8 +181,8 @@ class L2PacketTests : public CppUnit::TestFixture {
 			// Should be able to add a broadcast header.
 			exception_occurred = false;
 			try {
-				L2HeaderBroadcast broadcast_header = L2HeaderBroadcast();
-				packet->addPayload(&broadcast_header, &payload);
+				L2HeaderBroadcast* broadcast_header = new L2HeaderBroadcast();
+				packet->addPayload(broadcast_header, payload);
 			} catch (const std::exception& e) {
 				exception_occurred = true;
 			}
@@ -191,8 +191,8 @@ class L2PacketTests : public CppUnit::TestFixture {
 			// Should be able to add a unicast header.
 			exception_occurred = false;
 			try {
-				L2HeaderUnicast unicast_header = L2HeaderUnicast(MacId(43), true, 100, 101, 102);
-				packet->addPayload(&unicast_header, &payload);
+				L2HeaderUnicast* unicast_header = new L2HeaderUnicast(MacId(43), true, 100, 101, 102);
+				packet->addPayload(unicast_header, payload);
 			} catch (const std::exception& e) {
 				exception_occurred = true;
 			}
