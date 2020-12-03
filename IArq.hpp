@@ -77,6 +77,18 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			 * @param packet
 			 */
 			void injectIntoUpper(L2Packet* packet);
+			
+			/**
+			 * The MAC may call this function to notify the ARQ sublayer of a newly established link.
+			 * @param id
+			 */
+			virtual void notifyAboutNewLink(const MacId& id) = 0;
+			
+			/**
+			 * The MAC may call this function to notify the ARQ sublayer of a deleted link.
+			 * @param id
+			 */
+			virtual void notifyAboutRemovedLink(const MacId& id) = 0;
 		
 		protected:
 			IRlc* upper_layer = nullptr;
