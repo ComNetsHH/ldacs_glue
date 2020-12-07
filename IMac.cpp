@@ -28,3 +28,8 @@ unsigned long IMac::getCurrentDatarate() const {
 	assert(lower_layer && "MCSOTDMA_Mac::getCurrentDatarate for unset PHY layer.");
 	return lower_layer->getCurrentDatarate();
 }
+
+unsigned int IMac::getNumHopsToGS() const {
+	assert(upper_layer && "MCSOTDMA_Mac::getNumHopsToGS for unset ARQ layer.");
+	return upper_layer->getNumHopsToGS();
+}

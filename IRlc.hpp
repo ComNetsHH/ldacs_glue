@@ -7,6 +7,8 @@
 
 #include "MacId.hpp"
 #include "L2Packet.hpp"
+#include "IRlc.hpp"
+#include "INet.hpp"
 
 namespace TUHH_INTAIRNET_MCSOTDMA {
 	
@@ -77,9 +79,17 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 				this->lower_layer = arq;
 			}
 			
+			/**
+			 * @return The number of hops to the nearest ground station according to current routing information.
+			 */
+			unsigned int getNumHopsToGS() const {
+				return upper_layer->getNumHopsToGroundStation();
+			}
+			
 		
 		protected:
 			IArq* lower_layer = nullptr;
+			INet* upper_layer = nullptr;
 	};
 }
 

@@ -97,6 +97,11 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			 * @param id
 			 */
 			virtual void notifyAboutRemovedLink(const MacId& id) = 0;
+			
+			/**
+			 * @return The number of hops to the nearest ground station according to current routing information.
+			 */
+			unsigned int getNumHopsToGS() const;
 		
 		protected:
 			/**

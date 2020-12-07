@@ -98,6 +98,11 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			 * @return The current data rate in bits per slot.
 			 */
 			unsigned long getCurrentDatarate() const;
+			
+			/**
+			 * @return The number of hops to the nearest ground station according to current routing information.
+			 */
+			unsigned int getNumHopsToGS() const;
 		
 		protected:
 			IArq* upper_layer = nullptr;

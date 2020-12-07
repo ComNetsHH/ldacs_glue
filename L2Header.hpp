@@ -46,7 +46,7 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 					throw std::invalid_argument("Cannot instantiate a header with an unset ICAO ID.");
 			}
 			
-			/** Number of slots until this reservation is next transmitted. */
+			/** Number of slots until the next transmission. */
 			unsigned int offset;
 			/** Number of slots next frame will occupy. */
 			unsigned short length_next;

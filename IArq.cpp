@@ -22,3 +22,8 @@ void IArq::receiveFromLower(L2Packet* packet) {
 	this->upper_layer->receiveFromLower(packet);
 }
 
+unsigned int IArq::getNumHopsToGS() const {
+	assert(this->upper_layer && "IArq::getNumHopsToGS called but upper layer is unset.");
+	return upper_layer->getNumHopsToGS();
+}
+
