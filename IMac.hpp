@@ -19,6 +19,8 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 	class IMac {
 		public:
 			
+			IMac(const MacId& id) : id(id) {}
+			
 			virtual ~IMac() = default;
 			
 			/**
@@ -108,10 +110,15 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			 * @return The current geographic position.
 			 */
 			virtual CPRPosition getPosition() const = 0;
+			
+			const MacId& getMacId() {
+				return this->id;
+			}
 		
 		protected:
 			IArq* upper_layer = nullptr;
 			IPhy* lower_layer = nullptr;
+			MacId id;
 	};
 }
 
