@@ -61,7 +61,7 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			/** Remaining number of repetitions this reservation remains valid for. */
 			unsigned int timeout;
 			/** Source ID. */
-			const MacId icao_id;
+			MacId icao_id;
 			/** Combines authentication with error detection / correction. */
 			unsigned int message_authentication_code;
 	};
