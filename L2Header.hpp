@@ -170,10 +170,9 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			SequenceNumber getSeqnoNextExpected() {
                 return this->seqno_next_expected;
 			}
-		
-		protected:
+			
 			/** Destination ICAO ID. */
-			const MacId icao_dest_id;
+			MacId icao_dest_id;
 	};
 	
 	class L2HeaderLinkEstablishmentRequest : public L2HeaderUnicast {
