@@ -26,6 +26,14 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			virtual void notifyOutgoing(unsigned long num_bits, const MacId& mac_id) = 0;
 			
 			/**
+			 * Requests a segment from the upper layer.
+			 * @param num_bits
+			 * @param mac_id
+			 * @return
+			 */
+			virtual L2Packet* requestSegment(unsigned int num_bits, const MacId& mac_id);
+			
+			/**
 			 * When a transmission slot arrives, this passes down a packet to the PHY layer.
 			 * @param packet
 			 * @param center_frequency

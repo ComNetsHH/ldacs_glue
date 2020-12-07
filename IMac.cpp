@@ -13,3 +13,7 @@ void TUHH_INTAIRNET_MCSOTDMA::IMac::injectIntoUpper(L2Packet* packet) {
 	// Just forward it.
 	this->upper_layer->injectIntoUpper(packet);
 }
+
+L2Packet* IMac::requestSegment(unsigned int num_bits, const MacId& mac_id) {
+	return upper_layer->requestSegment(num_bits, mac_id);
+}
