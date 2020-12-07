@@ -43,16 +43,14 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 	
 	class L2HeaderBase : public L2Header {
 		public:
-			L2HeaderBase(const MacId& icao_id, unsigned int offset, unsigned short length_current, unsigned short length_next, unsigned int timeout)
-					: L2Header(FrameType::base), icao_id(icao_id), offset(offset), length_current(length_current), length_next(length_next), timeout(timeout) {
+			L2HeaderBase(const MacId& icao_id, unsigned int offset, unsigned short length_next, unsigned int timeout)
+					: L2Header(FrameType::base), icao_id(icao_id), offset(offset), length_next(length_next), timeout(timeout) {
 				if (icao_id == SYMBOLIC_ID_UNSET)
 					throw std::invalid_argument("Cannot instantiate a header with an unset ICAO ID.");
 			}
 			
 			/** Number of slots until this reservation is next transmitted. */
 			unsigned int offset;
-			/** Number of slots this frame occupies. */
-			unsigned short length_current;
 			/** Number of slots next frame will occupy. */
 			unsigned short length_next;
 			/** Remaining number of repetitions this reservation remains valid for. */
@@ -61,7 +59,6 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			unsigned int getBits() const override {
 				return icao_id.getBits()
 				       + 8 /* offset */
-				       + 4 /* length_current */
 				       + 4 /* length_next */
 				       + 8 /* timeout */
 				       + L2Header::getBits();

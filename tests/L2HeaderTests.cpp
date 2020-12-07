@@ -14,7 +14,6 @@ class L2HeaderTests : public CppUnit::TestFixture {
 		L2Header* header;
 		MacId id = MacId(42);
 		unsigned int offset = 12;
-		unsigned short length_current = 13;
 		unsigned short length_next = 10;
 		unsigned int timeout = 12;
 	
@@ -32,11 +31,10 @@ class L2HeaderTests : public CppUnit::TestFixture {
 		}
 		
 		void testBaseHeader() {
-			L2HeaderBase header_base = L2HeaderBase(id, offset, length_current, length_next, timeout);
+			L2HeaderBase header_base = L2HeaderBase(id, offset, length_next, timeout);
 			CPPUNIT_ASSERT_EQUAL(L2Header::FrameType::base, header_base.frame_type);
 			CPPUNIT_ASSERT(header_base.getId() == id);
 			CPPUNIT_ASSERT_EQUAL(offset, header_base.offset);
-			CPPUNIT_ASSERT_EQUAL(length_current, header_base.length_current);
 			CPPUNIT_ASSERT_EQUAL(length_next, header_base.length_next);
 			CPPUNIT_ASSERT_EQUAL(timeout, header_base.timeout);
 		}
@@ -76,8 +74,8 @@ class L2HeaderTests : public CppUnit::TestFixture {
 		}
 		
 		void testHeaderSizes() {
-			L2HeaderBase base_header = L2HeaderBase(id, offset, length_current, length_next, timeout);
-			CPPUNIT_ASSERT_EQUAL(uint(70), base_header.getBits());
+			L2HeaderBase base_header = L2HeaderBase(id, offset, length_next, timeout);
+			CPPUNIT_ASSERT_EQUAL(uint(66), base_header.getBits());
 			
 			MacId dest_id = MacId(99);
 			bool use_arq = true;

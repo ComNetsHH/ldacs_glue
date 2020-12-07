@@ -50,7 +50,7 @@ class L2PacketTests : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT_EQUAL(true, exception_occurred);
 			
 			// Can add a base header.
-			L2HeaderBase* base_header = new L2HeaderBase(MacId(42), 12, 13, 14, 15);
+			L2HeaderBase* base_header = new L2HeaderBase(MacId(42), 12, 13, 14);
 			exception_occurred = false;
 			try {
 				packet->addPayload(base_header, nullptr);
@@ -81,7 +81,7 @@ class L2PacketTests : public CppUnit::TestFixture {
 		
 		void testUnicastPayload() {
 			L2HeaderUnicast* unicast_header = new L2HeaderUnicast(MacId(43), true, 100, 101, 102);
-			L2HeaderBase* base_header = new L2HeaderBase(MacId(42), 12, 13, 14, 15);
+			L2HeaderBase* base_header = new L2HeaderBase(MacId(42), 12, 13, 14);
 			TestPayload* payload = nullptr;
 			
 			// Add a base and a unicast header.
@@ -128,7 +128,7 @@ class L2PacketTests : public CppUnit::TestFixture {
 		}
 		
 		void testBroadcastPayload() {
-			L2HeaderBase* base_header = new L2HeaderBase(MacId(42), 12, 13, 14, 15);
+			L2HeaderBase* base_header = new L2HeaderBase(MacId(42), 12, 13, 14);
 			L2HeaderBroadcast* broadcast_header = new L2HeaderBroadcast();
 			L2HeaderUnicast* unicast_header = new L2HeaderUnicast(MacId(43), true, 100, 101, 102);
 			TestPayload* payload = nullptr;
@@ -165,7 +165,7 @@ class L2PacketTests : public CppUnit::TestFixture {
 		}
 		
 		void testBeaconPayload() {
-			L2HeaderBase* base_header = new L2HeaderBase(MacId(42), 12, 13, 14, 15);
+			L2HeaderBase* base_header = new L2HeaderBase(MacId(42), 12, 13, 14);
 			L2HeaderBeacon* beacon_header = new L2HeaderBeacon(CPRPosition(1, 2, 3), true, 50, 1);
 			TestPayload* payload = nullptr;
 			// Should be able to add a beacon header.
