@@ -7,11 +7,12 @@
 
 #include "MacId.hpp"
 #include "L2Packet.hpp"
+#include "L3Packet.h"
 
 namespace TUHH_INTAIRNET_MCSOTDMA {
 	
 	class IArq; // Forward-declaration so that we can keep a pointer to the ARQ sublayer.
-	class L3Packet; // Forward declaration so that we can accept layer-3 packets.
+	//class L3Packet; // Forward declaration so that we can accept layer-3 packets.
 
 
 	/**
