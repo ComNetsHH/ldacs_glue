@@ -75,7 +75,7 @@ class L2HeaderTests : public CppUnit::TestFixture {
 		
 		void testHeaderSizes() {
 			L2HeaderBase base_header = L2HeaderBase(id, offset, length_next, timeout);
-			CPPUNIT_ASSERT_EQUAL(uint(66), base_header.getBits());
+			CPPUNIT_ASSERT_EQUAL(uint(850), base_header.getBits());
 			
 			MacId dest_id = MacId(99);
 			bool use_arq = true;
@@ -83,22 +83,22 @@ class L2HeaderTests : public CppUnit::TestFixture {
 			SequenceNumber arq_ack_no = SequenceNumber(51);
 			unsigned int arq_ack_slot = 52;
 			L2HeaderUnicast unicast_header = L2HeaderUnicast(dest_id, use_arq, arq_seqno, arq_ack_no, arq_ack_slot);
-			CPPUNIT_ASSERT_EQUAL(uint(79), unicast_header.getBits());
+			CPPUNIT_ASSERT_EQUAL(uint(63), unicast_header.getBits());
 
             std::vector<SequenceNumber> selRejList;
             selRejList.push_back(SequenceNumber(2));
             selRejList.push_back(SequenceNumber(3));
 			unicast_header.setSrejList(selRejList);
-            CPPUNIT_ASSERT_EQUAL(uint(95), unicast_header.getBits());
+            CPPUNIT_ASSERT_EQUAL(uint(79), unicast_header.getBits());
 			
 			L2HeaderBroadcast broadcast_header = L2HeaderBroadcast();
-			CPPUNIT_ASSERT_EQUAL(uint(19), broadcast_header.getBits());
+			CPPUNIT_ASSERT_EQUAL(uint(3), broadcast_header.getBits());
 			
 			L2Header simple_header = L2Header(L2Header::FrameType::unset);
 			CPPUNIT_ASSERT(simple_header.getBits() == broadcast_header.getBits());
 			
 			L2HeaderBeacon beacon_header = L2HeaderBeacon(CPRPosition(1, 2, 3), true, 12, 1);
-			CPPUNIT_ASSERT_EQUAL(uint(65), beacon_header.getBits());
+			CPPUNIT_ASSERT_EQUAL(uint(49), beacon_header.getBits());
 		}
 
 	
