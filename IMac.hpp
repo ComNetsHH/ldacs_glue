@@ -85,6 +85,19 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			IPhy* getLowerLayer() {
 				return this->lower_layer;
 			}
+			
+			/**
+			 * Queries the ARQ sublayer above.
+			 * @param mac_id
+			 * @return Whether the specified link should be ARQ protected.
+			 */
+			bool shouldLinkBeArqProtected(const MacId& mac_id) const;
+			
+			/**
+			 * Queres the PHY layer below.
+			 * @return The current data rate in bits per slot.
+			 */
+			unsigned long getCurrentDatarate() const;
 		
 		protected:
 			IArq* upper_layer = nullptr;
