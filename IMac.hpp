@@ -18,6 +18,9 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 	 */
 	class IMac {
 		public:
+			
+			virtual ~IMac() = default;
+			
 			/**
 			 * Notify the MAC sublayer about an outbound packet.
 			 * @param num_bits The number of bits present in the queue corresponding to 'id'.

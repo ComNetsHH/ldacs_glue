@@ -17,6 +17,8 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 	class IPhy {
 		public:
 			
+			virtual ~IPhy() = default;
+			
 			/**
 			 * Notify the PHY layer about an outbound packet.
 			 * @param num_bits

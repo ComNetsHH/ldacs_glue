@@ -18,6 +18,8 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 	class IArq {
 		public:
 			
+			virtual ~IArq() = default;
+			
 			/**
 			 * Notify the ARQ sublayer from the RLC sublayer about an outbound packet.
 			 * @param num_bits The number of bits present in the queue corresponding to 'id'.
