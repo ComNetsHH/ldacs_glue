@@ -64,6 +64,14 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			 */
 			virtual L2Packet* requestSegment(unsigned int num_bits, const MacId& mac_id) = 0;
 			
+			void setUpperLayer(INet* upper_layer) {
+				this->upper_layer = upper_layer;
+			}
+			
+			INet* getUpperLayer() {
+				return this->upper_layer;
+			}
+			
 			/**
 			 * @return Pointer to the ARQ sublayer below.
 			 */
