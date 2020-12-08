@@ -46,6 +46,13 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			virtual void passToLower(L2Packet* packet, unsigned int center_frequency) = 0;
 			
 			/**
+			 * Define what happens when the PHY passes a just-received data packet to the MAC.
+			 * @param packet
+			 * @param id
+			 */
+			virtual void receiveFromLower(L2Packet* packet, const MacId& id) = 0;
+			
+			/**
 			 * When a packet comes in, this passes it up to the next upper layer.
 			 * @param packet
 			 */

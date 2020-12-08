@@ -75,8 +75,10 @@ const std::vector<L2Header*>& L2Packet::getHeaders() {
 
 unsigned int L2Packet::getBits() const {
 	unsigned int bits = 0;
-	for (size_t i = 0; i < headers.size(); i++)
-		bits += headers.at(i)->getBits() + payloads.at(i)->getBits();
+	for (size_t i = 0; i < headers.size(); i++) {
+		L2Packet::Payload* payload = payloads.at(i);
+		bits += headers.at(i)->getBits() + (payload == nullptr ? 0 : payload->getBits());
+	}
 	return bits;
 }
 
