@@ -9,6 +9,7 @@
 #include "L2Packet.hpp"
 #include "IRlc.hpp"
 #include "INet.hpp"
+#include <cassert>
 
 namespace TUHH_INTAIRNET_MCSOTDMA {
 	
@@ -94,6 +95,15 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 				return upper_layer->getNumHopsToGroundStation();
 			}
 			
+			/**
+			 * When a neighbor's update comes in, this reports it to the upper layers.
+			 * @param id
+			 * @param num_hops
+			 */
+			void reportNumHopsToGS(const MacId& id, unsigned int num_hops) const {
+				assert(this->upper_layer && "IRlc::reportNumHopsToGS for unset upper layer.");
+				upper_layer->reportNumHopsToGS(id, num_hops);
+			}
 		
 		protected:
 			IArq* lower_layer = nullptr;

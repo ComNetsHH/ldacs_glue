@@ -38,6 +38,11 @@ unsigned int IMac::getNumHopsToGS() const {
 	return upper_layer->getNumHopsToGS();
 }
 
+void IMac::reportNumHopsToGS(const MacId& id, unsigned int num_hops) const {
+	assert(upper_layer && "MCSOTDMA_Mac::getNumHopsToGS for unset ARQ layer.");
+	upper_layer->reportNumHopsToGS(id, num_hops);
+}
+
 const CPRPosition& IMac::getPosition(const MacId& id) const {
 	try {
 		return position_map.at(id);

@@ -102,6 +102,13 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			 * @return The number of hops to the nearest ground station according to current routing information.
 			 */
 			unsigned int getNumHopsToGS() const;
+			
+			/**
+			 * When a neighbor's update comes in, this reports it to the upper layers.
+			 * @param id
+			 * @param num_hops
+			 */
+			void reportNumHopsToGS(const MacId& id, unsigned int num_hops) const;
 		
 		protected:
 			/**

@@ -115,6 +115,13 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			unsigned int getNumHopsToGS() const;
 			
 			/**
+			 * When a neighbor's update comes in, this reports it to the upper layers.
+			 * @param id
+			 * @param num_hops
+			 */
+			void reportNumHopsToGS(const MacId& id, unsigned int num_hops) const;
+			
+			/**
 			 * @param id
 			 * @return The current belief ot the respective user's geographic position.
 			 */

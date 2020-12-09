@@ -27,3 +27,8 @@ unsigned int IArq::getNumHopsToGS() const {
 	return upper_layer->getNumHopsToGS();
 }
 
+void IArq::reportNumHopsToGS(const MacId& id, unsigned int num_hops) const {
+	assert(this->upper_layer && "IArq::reportNumHopsToGS called but upper layer is unset.");
+	upper_layer->reportNumHopsToGS(id, num_hops);
+}
+
