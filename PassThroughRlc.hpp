@@ -3,7 +3,7 @@
 //
 
 #include "IRlc.hpp"
-#include "IOmnetPluggable.h"
+#include "IOmnetPluggable.hpp"
 #include <deque>
 
 #ifndef INTAIRNET_LINKLAYER_GLUE_PASSTHROUGHRLC_H
