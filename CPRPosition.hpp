@@ -13,6 +13,7 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			CPRPosition(double latitude, double longitude, double altitude) : latitude(latitude), longitude(longitude), altitude(altitude) {
 				// No actual computation is performed.
 			}
+			CPRPosition() : CPRPosition(0, 0, 0) {}
 			
 			CPRPosition(const CPRPosition& other) = default;
 			
@@ -21,6 +22,16 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			/** Number of bits required to encode this position. */
 			unsigned int getBits() const {
 				return 12 /* latitude */ + 14 /* longitutde */ + 12 /* altitude */;
+			}
+			
+			bool operator==(const CPRPosition& other) const {
+				return latitude == other.latitude
+					&& longitude == other.longitude
+					&& altitude == other.altitude;
+			}
+			
+			bool operator!=(const CPRPosition& other) const {
+				return !((*this) == other);
 			}
 	};
 }

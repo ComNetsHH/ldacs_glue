@@ -9,7 +9,11 @@
 
 using namespace TUHH_INTAIRNET_MCSOTDMA;
 
-void TUHH_INTAIRNET_MCSOTDMA::IMac::injectIntoUpper(L2Packet* packet) {
+IMac::IMac(const MacId& id) : id(id), position_map() {
+	updatePosition(id, CPRPosition(0, 0, 0));
+}
+
+void IMac::injectIntoUpper(L2Packet* packet) {
 	assert(this->upper_layer && "IMac::injectIntoUpper called but upper layer is unset.");
 	// Just forward it.
 	this->upper_layer->injectIntoUpper(packet);
@@ -32,4 +36,16 @@ unsigned long IMac::getCurrentDatarate() const {
 unsigned int IMac::getNumHopsToGS() const {
 	assert(upper_layer && "MCSOTDMA_Mac::getNumHopsToGS for unset ARQ layer.");
 	return upper_layer->getNumHopsToGS();
+}
+
+const CPRPosition& IMac::getPosition(const MacId& id) const {
+	try {
+		return position_map.at(id);
+	} catch (const std::out_of_range& e) {
+		throw std::out_of_range("MCSOTDMA_Mac::getPosition for unknown ID: " + std::string(e.what()));
+	}
+}
+
+void IMac::updatePosition(const MacId& id, const CPRPosition& position) {
+	position_map[id] = position;
 }

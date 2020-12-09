@@ -7,6 +7,7 @@
 
 #include "MacId.hpp"
 #include "L2Packet.hpp"
+#include <map>
 
 namespace TUHH_INTAIRNET_MCSOTDMA {
 	
@@ -19,7 +20,7 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 	class IMac {
 		public:
 			
-			IMac(const MacId& id) : id(id) {}
+			explicit IMac(const MacId& id);
 			
 			virtual ~IMac() = default;
 			
@@ -114,9 +115,17 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			unsigned int getNumHopsToGS() const;
 			
 			/**
-			 * @return The current geographic position.
+			 * @param id
+			 * @return The current belief ot the respective user's geographic position.
 			 */
-			virtual CPRPosition getPosition() const = 0;
+			const CPRPosition& getPosition(const MacId& id) const;
+			
+			/**
+			 * Update the belief of the respective user's geographic position.
+			 * @param id
+			 * @param position
+			 */
+			void updatePosition(const MacId& id, const CPRPosition& position);
 			
 			const MacId& getMacId() {
 				return this->id;
@@ -126,6 +135,7 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			IArq* upper_layer = nullptr;
 			IPhy* lower_layer = nullptr;
 			MacId id;
+			std::map<MacId, CPRPosition> position_map{};
 	};
 }
 
