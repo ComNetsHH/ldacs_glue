@@ -10,7 +10,7 @@
 using namespace TUHH_INTAIRNET_MCSOTDMA;
 
 IMac::IMac(const MacId& id) : id(id), position_map() {
-	updatePosition(id, CPRPosition(0, 0, 0));
+	updatePosition(id, CPRPosition());
 }
 
 void IMac::injectIntoUpper(L2Packet* packet) {

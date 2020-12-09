@@ -79,7 +79,7 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		public:
 			L2HeaderBeacon(const CPRPosition& position, bool is_cpr_odd, unsigned int num_hops_to_ground_station, unsigned short pos_quality)
 					: L2Header(L2Header::FrameType::beacon), position(position), is_cpr_odd(is_cpr_odd), num_hops_to_ground_station(num_hops_to_ground_station), pos_quality(pos_quality) {}
-			L2HeaderBeacon() : L2HeaderBeacon(CPRPosition(0,0,0), false, 0, 0) {}
+			L2HeaderBeacon() : L2HeaderBeacon(CPRPosition(), CPRPosition().odd, 0, 0) {}
 			
 			unsigned int getBits() const override {
 				return position.getBits()
