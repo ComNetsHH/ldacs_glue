@@ -97,7 +97,7 @@ class L2HeaderTests : public CppUnit::TestFixture {
 			L2Header simple_header = L2Header(L2Header::FrameType::unset);
 			CPPUNIT_ASSERT(simple_header.getBits() == broadcast_header.getBits());
 			
-			L2HeaderBeacon beacon_header = L2HeaderBeacon(CPRPosition(), CPRPosition().odd, 12, 1);
+			L2HeaderBeacon beacon_header = L2HeaderBeacon(CPRPosition(), CPRPosition().odd, 12, CPRPosition::PositionQuality::hi);
 			CPPUNIT_ASSERT_EQUAL(uint(49), beacon_header.getBits());
 		}
 

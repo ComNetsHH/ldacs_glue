@@ -19,7 +19,6 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 	 */
 	class IMac {
 		public:
-			
 			explicit IMac(const MacId& id);
 			
 			virtual ~IMac() = default;
@@ -127,12 +126,14 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			 */
 			const CPRPosition& getPosition(const MacId& id) const;
 			
+			CPRPosition::PositionQuality getPositionQuality(const MacId& id) const;
+			
 			/**
 			 * Update the belief of the respective user's geographic position.
 			 * @param id
 			 * @param position
 			 */
-			void updatePosition(const MacId& id, const CPRPosition& position);
+			void updatePosition(const MacId& id, const CPRPosition& position, CPRPosition::PositionQuality position_quality);
 			
 			const MacId& getMacId() {
 				return this->id;
@@ -142,7 +143,8 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			IArq* upper_layer = nullptr;
 			IPhy* lower_layer = nullptr;
 			MacId id;
-			std::map<MacId, CPRPosition> position_map{};
+			std::map<MacId, CPRPosition> position_map;
+			std::map<MacId, CPRPosition::PositionQuality> position_quality_map;
 	};
 }
 

@@ -119,7 +119,7 @@ class L2PacketTests : public CppUnit::TestFixture {
 			// Shouldn't be able to add a beacon header.
 			exception_occurred = false;
 			try {
-				L2HeaderBeacon beacon_header = L2HeaderBeacon(CPRPosition(), CPRPosition().odd, 2, 1);
+				L2HeaderBeacon beacon_header = L2HeaderBeacon(CPRPosition(), CPRPosition().odd, 2, CPRPosition::PositionQuality::hi);
 				packet->addPayload(&beacon_header, payload);
 			} catch (const std::exception& e) {
 				exception_occurred = true;
@@ -156,7 +156,7 @@ class L2PacketTests : public CppUnit::TestFixture {
 			// Shouldn't be able to add a beacon header.
 			exception_occurred = false;
 			try {
-				L2HeaderBeacon beacon_header = L2HeaderBeacon(CPRPosition(), CPRPosition().odd, 2, 1);
+				L2HeaderBeacon beacon_header = L2HeaderBeacon(CPRPosition(), CPRPosition().odd, 2, CPRPosition::PositionQuality::hi);
 				packet->addPayload(&beacon_header, payload);
 			} catch (const std::exception& e) {
 				exception_occurred = true;
@@ -166,7 +166,7 @@ class L2PacketTests : public CppUnit::TestFixture {
 		
 		void testBeaconPayload() {
 			L2HeaderBase* base_header = new L2HeaderBase(MacId(42), 12, 13, 14);
-			L2HeaderBeacon* beacon_header = new L2HeaderBeacon(CPRPosition(), CPRPosition().odd, 50, 1);
+			L2HeaderBeacon* beacon_header = new L2HeaderBeacon(CPRPosition(), CPRPosition().odd, 50, CPRPosition::PositionQuality::hi);
 			TestPayload* payload = nullptr;
 			// Should be able to add a beacon header.
 			bool exception_occurred = false;

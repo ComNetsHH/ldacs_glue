@@ -10,6 +10,12 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 	/** The Compact Position Report-encoded position of latitude, longitude, altitude as ADS-B uses it. */
 	class CPRPosition {
 		public:
+			enum PositionQuality {
+				low,
+				med,
+				hi
+			};
+			
 			CPRPosition(double latitude, double longitude, double altitude, bool odd) : latitude(latitude), longitude(longitude), altitude(altitude), odd(odd) {
 				// No actual computation is performed.
 			}

@@ -9,8 +9,8 @@
 
 using namespace TUHH_INTAIRNET_MCSOTDMA;
 
-IMac::IMac(const MacId& id) : id(id), position_map() {
-	updatePosition(id, CPRPosition());
+IMac::IMac(const MacId& id) : id(id), position_map(), position_quality_map() {
+	updatePosition(id, CPRPosition(), CPRPosition::PositionQuality::hi);
 }
 
 void IMac::injectIntoUpper(L2Packet* packet) {
@@ -51,6 +51,15 @@ const CPRPosition& IMac::getPosition(const MacId& id) const {
 	}
 }
 
-void IMac::updatePosition(const MacId& id, const CPRPosition& position) {
+void IMac::updatePosition(const MacId& id, const CPRPosition& position, CPRPosition::PositionQuality pos_quality) {
 	position_map[id] = position;
+	position_quality_map[id] = pos_quality;
+}
+
+CPRPosition::PositionQuality IMac::getPositionQuality(const MacId& id) const {
+	try {
+		return position_quality_map.at(id);
+	} catch (const std::out_of_range& e) {
+		throw std::out_of_range("MCSOTDMA_Mac::getPositionQuality for unknown ID: " + std::string(e.what()));
+	}
 }
