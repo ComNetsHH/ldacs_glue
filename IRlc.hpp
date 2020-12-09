@@ -7,7 +7,7 @@
 
 #include "MacId.hpp"
 #include "L2Packet.hpp"
-#include "L3Packet.h"
+#include "L3Packet.hpp"
 
 namespace TUHH_INTAIRNET_MCSOTDMA {
 	

@@ -2,7 +2,7 @@
 // Created by Konrad Fuger on 06.12.20.
 //
 
-#include "PassThroughRlc.h"
+#include "PassThroughRlc.hpp"
 #include <string>
 #include <iostream>
 
