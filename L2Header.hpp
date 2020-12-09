@@ -80,9 +80,15 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		public:
 			L2HeaderBroadcast()
 					: L2Header(FrameType::broadcast) {}
+
+            /** Whether the contained L3 Packet starts with this fragment **/
+            bool is_pkt_start = false;
+
+            /** Whether the contained L3 Packet ends with this fragment **/
+            bool is_pkt_end = false;
 			
 			unsigned int getBits() const override {
-				return L2Header::getBits();
+				return L2Header::getBits() +2; // Two additional bits for start and end flags
 			}
 	};
 	
@@ -124,6 +130,7 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 
 			unsigned int getBits() const override {
 				return 1 /* Whether ARQ is used */
+				       + 2 /* RLC start and end flags */
 				       + 8 /* ARQ sequence number */
 				       + 8 /* ARQ ACK number */
 				       + 8 /* ARQ slot indication number */
@@ -132,8 +139,14 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 				       + 8 /* List size of srej_list */
 				       + L2Header::getBits();
 			}
-			
-			/** Whether the ARQ protocol is followed for this transmission, i.e. acknowledgements are expected. */
+
+            /** Whether the contained L3 Packet starts with this fragment **/
+            bool is_pkt_start = false;
+
+            /** Whether the contained L3 Packet ends with this fragment **/
+            bool is_pkt_end = false;
+
+            /** Whether the ARQ protocol is followed for this transmission, i.e. acknowledgements are expected. */
 			bool use_arq;
 			/** ARQ sequence number. */
             SequenceNumber seqno;
