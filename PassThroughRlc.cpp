@@ -5,6 +5,7 @@
 #include "PassThroughRlc.hpp"
 #include <string>
 #include <iostream>
+#include "IArq.hpp"
 
 using namespace TUHH_INTAIRNET_MCSOTDMA;
 
@@ -22,8 +23,11 @@ void PassThroughRlc::onEvent(double time) {
 
 void PassThroughRlc::receiveFromUpper(L3Packet* data, MacId dest, PacketPriority priority) {
     networkLayerPackets.push_back(data);
-    emit("rlc_nw_queue", networkLayerPackets.size());
-    debug("rlc_nw_queue" + networkLayerPackets.size());
+    emit("rlc_nw_queue", 100);
+    debug("rlc_nw_queue");
+    IArq *arq = getLowerLayer();
+    arq->notifyOutgoing(100, dest);
+
 }
 
 void PassThroughRlc::receiveFromLower(L2Packet* packet) {

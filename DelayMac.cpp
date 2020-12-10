@@ -5,6 +5,7 @@
 #include "DelayMac.hpp"
 #include "MacId.hpp"
 #include "IArq.hpp"
+#include "IPhy.hpp"
 
 using namespace TUHH_INTAIRNET_MCSOTDMA;
 
@@ -28,6 +29,8 @@ void DelayMac::onEvent(double time) {
 
 void DelayMac::passToLower(L2Packet* packet, unsigned int center_frequency) {
     debug("PASSING DOWN");
+    IPhy *phy = getLowerLayer();
+    phy->receiveFromUpper(packet, center_frequency);
 }
 
 void DelayMac::passToUpper(L2Packet* packet) {
