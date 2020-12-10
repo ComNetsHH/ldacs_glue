@@ -63,3 +63,8 @@ CPRPosition::PositionQuality IMac::getPositionQuality(const MacId& id) const {
 		throw std::out_of_range("MCSOTDMA_Mac::getPositionQuality for unknown ID: " + std::string(e.what()));
 	}
 }
+
+bool IMac::isTransmitterIdle(unsigned int slot_offset, unsigned int num_slots) const {
+	assert(lower_layer && "IMac::isTransmitterIdle for unset lower layer.");
+	return lower_layer->isTransmitterIdle(slot_offset, num_slots);
+}

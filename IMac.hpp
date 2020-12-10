@@ -138,6 +138,8 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			const MacId& getMacId() {
 				return this->id;
 			}
+			
+			bool isTransmitterIdle(unsigned int slot_offset, unsigned int num_slots) const;
 		
 		protected:
 			IArq* upper_layer = nullptr;
