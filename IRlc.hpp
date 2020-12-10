@@ -8,6 +8,9 @@
 #include "MacId.hpp"
 #include "L2Packet.hpp"
 #include "L3Packet.hpp"
+#include "IRlc.hpp"
+#include "INet.hpp"
+#include <cassert>
 
 namespace TUHH_INTAIRNET_MCSOTDMA {
 	
@@ -63,6 +66,14 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			 */
 			virtual L2Packet* requestSegment(unsigned int num_bits, const MacId& mac_id) = 0;
 			
+			void setUpperLayer(INet* upper_layer) {
+				this->upper_layer = upper_layer;
+			}
+			
+			INet* getUpperLayer() {
+				return this->upper_layer;
+			}
+			
 			/**
 			 * @return Pointer to the ARQ sublayer below.
 			 */
@@ -78,9 +89,26 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 				this->lower_layer = arq;
 			}
 			
+			/**
+			 * @return The number of hops to the nearest ground station according to current routing information.
+			 */
+			unsigned int getNumHopsToGS() const {
+				return upper_layer->getNumHopsToGroundStation();
+			}
+			
+			/**
+			 * When a neighbor's update comes in, this reports it to the upper layers.
+			 * @param id
+			 * @param num_hops
+			 */
+			void reportNumHopsToGS(const MacId& id, unsigned int num_hops) const {
+				assert(this->upper_layer && "IRlc::reportNumHopsToGS for unset upper layer.");
+				upper_layer->reportNumHopsToGS(id, num_hops);
+			}
 		
 		protected:
 			IArq* lower_layer = nullptr;
+			INet* upper_layer = nullptr;
 	};
 }
 

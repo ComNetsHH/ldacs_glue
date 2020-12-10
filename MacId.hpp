@@ -6,6 +6,7 @@
 #define INTAIRNET_LINKLAYER_GLUE_ICAOID_HPP
 
 #include <stdexcept>
+#include <string>
 
 namespace TUHH_INTAIRNET_MCSOTDMA {
 	class MacId {
@@ -53,6 +54,25 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 	const MacId SYMBOLIC_LINK_ID_BROADCAST = MacId(-2);
 	/** Symbolic beacon ID (which is also a broadcast). */
 	const MacId SYMBOLIC_LINK_ID_BEACON = MacId(-3);
+	
+	inline std::ostream & operator<<(std::ostream & stream, const MacId& id) {
+		std::string str;
+		switch (id.getId()) {
+			case -1:
+				str = "UNSET";
+				break;
+			case -2:
+				str = "BROADCAST";
+				break;
+			case -3:
+				str = "BEACON";
+				break;
+			default:
+				str = std::to_string(id.getId());
+				break;
+		}
+		return stream << str;
+	}
 }
 
 #endif //INTAIRNET_LINKLAYER_GLUE_ICAOID_HPP

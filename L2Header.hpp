@@ -28,52 +28,42 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 				link_establishment_reply
 			};
 			
-			explicit L2Header(L2Header::FrameType frame_type)	: frame_type(frame_type), crc_checksum(0) {}
+			explicit L2Header(L2Header::FrameType frame_type)	: frame_type(frame_type) {}
 			
 			virtual unsigned int getBits() const {
-				return 3 /* frame type */
-				       + 16 /* CRC */;
+				return 3 /* frame type */;
 			}
 			
 			/** This frame's type. */
 			const FrameType frame_type;
-			/** CRC checksum. */
-			unsigned int crc_checksum;
 	};
 	
 	class L2HeaderBase : public L2Header {
 		public:
-			L2HeaderBase(const MacId& icao_id, unsigned int offset, unsigned short length_current, unsigned short length_next, unsigned int timeout)
-					: L2Header(FrameType::base), icao_id(icao_id), offset(offset), length_current(length_current), length_next(length_next), timeout(timeout) {
-				if (icao_id == SYMBOLIC_ID_UNSET)
-					throw std::invalid_argument("Cannot instantiate a header with an unset ICAO ID.");
+			L2HeaderBase(const MacId& icao_id, unsigned int offset, unsigned short length_next, unsigned int timeout)
+					: L2Header(FrameType::base), icao_id(icao_id), offset(offset), length_next(length_next), timeout(timeout), message_authentication_code(0) {
 			}
-			
-			/** Number of slots until this reservation is next transmitted. */
-			unsigned int offset;
-			/** Number of slots this frame occupies. */
-			unsigned short length_current;
-			/** Number of slots next frame will occupy. */
-			unsigned short length_next;
-			/** Remaining number of repetitions this reservation remains valid for. */
-			unsigned int timeout;
+			L2HeaderBase() : L2HeaderBase(SYMBOLIC_ID_UNSET, 0, 0, 0) {}
 			
 			unsigned int getBits() const override {
 				return icao_id.getBits()
 				       + 8 /* offset */
-				       + 4 /* length_current */
 				       + 4 /* length_next */
 				       + 8 /* timeout */
+				       + 800 /* 100B MAC */
 				       + L2Header::getBits();
 			}
 			
-			const MacId& getId() const {
-				return this->icao_id;
-			}
-		
-		protected:
+			/** Number of slots until the next transmission. */
+			unsigned int offset;
+			/** Number of slots next frame will occupy. */
+			unsigned short length_next;
+			/** Remaining number of repetitions this reservation remains valid for. */
+			unsigned int timeout;
 			/** Source ID. */
-			const MacId icao_id;
+			MacId icao_id;
+			/** Combines authentication with error detection / correction. */
+			unsigned int message_authentication_code;
 	};
 	
 	class L2HeaderBroadcast : public L2Header {
@@ -94,13 +84,9 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 	
 	class L2HeaderBeacon : public L2Header {
 		public:
-			L2HeaderBeacon(const CPRPosition& position, bool is_cpr_odd, unsigned int num_hops_to_ground_station, unsigned short pos_quality)
+			L2HeaderBeacon(const CPRPosition& position, bool is_cpr_odd, unsigned int num_hops_to_ground_station, CPRPosition::PositionQuality pos_quality)
 					: L2Header(L2Header::FrameType::beacon), position(position), is_cpr_odd(is_cpr_odd), num_hops_to_ground_station(num_hops_to_ground_station), pos_quality(pos_quality) {}
-			
-			CPRPosition position;
-			bool is_cpr_odd;
-			unsigned int num_hops_to_ground_station;
-			unsigned short pos_quality;
+			L2HeaderBeacon() : L2HeaderBeacon(CPRPosition(), CPRPosition().odd, 0, CPRPosition::PositionQuality::low) {}
 			
 			unsigned int getBits() const override {
 				return position.getBits()
@@ -109,20 +95,25 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 				       + 2 /* position quality */
 				       + L2Header::getBits();
 			}
+			
+			CPRPosition position;
+			bool is_cpr_odd;
+			unsigned int num_hops_to_ground_station;
+			CPRPosition::PositionQuality pos_quality;
 	};
 	
 	class L2HeaderUnicast : public L2Header {
 		public:
 			L2HeaderUnicast(const MacId& icao_dest_id, bool use_arq, const SequenceNumber& seqno, const SequenceNumber& seqno_next_expected, unsigned int arq_ack_slot, FrameType frame_type)
-					: L2Header(frame_type), icao_dest_id(icao_dest_id), use_arq(use_arq), seqno(seqno), seqno_next_expected(seqno_next_expected), arq_ack_slot(arq_ack_slot) {
-				if (icao_dest_id == SYMBOLIC_ID_UNSET)
-					throw std::invalid_argument("Cannot instantiate a header with an unset ICAO ID.");
+					: L2Header(frame_type), icao_dest_id(icao_dest_id), use_arq(use_arq), seqno(seqno), seqno_next_expected(seqno_next_expected), srej_size(0), arq_ack_slot(arq_ack_slot) {
 				if (frame_type != FrameType::unicast && frame_type != FrameType::link_establishment_reply && frame_type != FrameType::link_establishment_request)
 					throw std::invalid_argument("Cannot instantiate a unicast header with a non-unicast type.");
 			}
 			
 			L2HeaderUnicast(const MacId& icao_dest_id, bool use_arq, SequenceNumber arq_seqno, SequenceNumber arq_ack_no, unsigned int arq_ack_slot)
 					: L2HeaderUnicast(icao_dest_id, use_arq, arq_seqno, arq_ack_no, arq_ack_slot, FrameType::unicast) {}
+					
+			explicit L2HeaderUnicast(FrameType frame_type) : L2HeaderUnicast(SYMBOLIC_ID_UNSET, false, SequenceNumber(0), SequenceNumber(0), 0, frame_type) {}
 			
 			const MacId& getDestId() const {
 				return this->icao_dest_id;
@@ -186,22 +177,25 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			SequenceNumber getSeqnoNextExpected() {
                 return this->seqno_next_expected;
 			}
-		
-		protected:
+			
 			/** Destination ICAO ID. */
-			const MacId icao_dest_id;
+			MacId icao_dest_id;
 	};
 	
 	class L2HeaderLinkEstablishmentRequest : public L2HeaderUnicast {
 		public:
 			L2HeaderLinkEstablishmentRequest(const MacId& icao_dest_id, bool use_arq, const SequenceNumber& arq_seqno, const SequenceNumber& arq_ack_no, unsigned int arq_ack_slot)
 					: L2HeaderUnicast(icao_dest_id, use_arq, arq_seqno, arq_ack_no, arq_ack_slot, FrameType::link_establishment_request) {}
+					
+			L2HeaderLinkEstablishmentRequest() : L2HeaderLinkEstablishmentRequest(SYMBOLIC_ID_UNSET, false, SequenceNumber(0), SequenceNumber(0), 0) {}
 	};
 	
 	class L2HeaderLinkEstablishmentReply : public L2HeaderUnicast {
 		public:
-			L2HeaderLinkEstablishmentReply(const MacId& icao_dest_id, bool use_arq, unsigned int arq_seqno, unsigned int arq_ack_no, unsigned int arq_ack_slot)
+			L2HeaderLinkEstablishmentReply(const MacId& icao_dest_id, bool use_arq, const SequenceNumber& arq_seqno, const SequenceNumber& arq_ack_no, unsigned int arq_ack_slot)
 					: L2HeaderUnicast(icao_dest_id, use_arq, arq_seqno, arq_ack_no, arq_ack_slot, FrameType::link_establishment_reply) {}
+			
+			L2HeaderLinkEstablishmentReply() : L2HeaderLinkEstablishmentReply(SYMBOLIC_ID_UNSET, false, SequenceNumber(0), SequenceNumber(0), 0) {}
 	};
 	
 }

@@ -18,6 +18,8 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 	class IArq {
 		public:
 			
+			virtual ~IArq() = default;
+			
 			/**
 			 * Notify the ARQ sublayer from the RLC sublayer about an outbound packet.
 			 * @param num_bits The number of bits present in the queue corresponding to 'id'.
@@ -95,6 +97,18 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			 * @param id
 			 */
 			virtual void notifyAboutRemovedLink(const MacId& id) = 0;
+			
+			/**
+			 * @return The number of hops to the nearest ground station according to current routing information.
+			 */
+			unsigned int getNumHopsToGS() const;
+			
+			/**
+			 * When a neighbor's update comes in, this reports it to the upper layers.
+			 * @param id
+			 * @param num_hops
+			 */
+			void reportNumHopsToGS(const MacId& id, unsigned int num_hops) const;
 		
 		protected:
 			/**

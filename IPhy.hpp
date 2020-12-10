@@ -17,6 +17,8 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 	class IPhy {
 		public:
 			
+			virtual ~IPhy() = default;
+			
 			/**
 			 * Notify the PHY layer about an outbound packet.
 			 * @param num_bits
@@ -43,6 +45,11 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			 */
 			IMac* getUpperLayer() {
 				return this->upper_layer;
+			}
+			
+			virtual bool isTransmitterIdle(unsigned int slot_offset, unsigned int num_slots) const {
+				// Should check whether the transmitter is utilized by A2G during the specified time.
+				return true;
 			}
 		
 		protected:
