@@ -144,7 +144,7 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			
 			virtual void update(int64_t num_slots);
 			
-			const Timestamp& getCurrentTime() const;
+			uint64_t getCurrentSlot() const;
 		
 		protected:
 			IArq* upper_layer = nullptr;
@@ -152,7 +152,7 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			MacId id;
 			std::map<MacId, CPRPosition> position_map;
 			std::map<MacId, CPRPosition::PositionQuality> position_quality_map;
-			Timestamp current_time = Timestamp();
+			uint64_t current_slot = 0;
 	};
 }
 
