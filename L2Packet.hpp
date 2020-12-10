@@ -73,6 +73,11 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			const MacId& getDestination() const;
 			
 			/**
+			 * @return This packet's originator ID.
+			 */
+			const MacId& getOrigin() const;
+			
+			/**
 			 * Register a callback that should be notified when this packet is about to be sent.
 			 * For example it is used for a P2P LinkManager that is notified when its link request is about to be sent,
 			 * so that it can compute the propsal.
@@ -101,6 +106,7 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			std::vector<Payload*> payloads;
 			
 			MacId dest_id;
+			MacId originator_id;
 			
 			/** Holds all registered callbacks. */
 			std::vector<L2PacketSentCallback*> callbacks;

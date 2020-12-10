@@ -6,7 +6,7 @@
 
 using namespace TUHH_INTAIRNET_MCSOTDMA;
 
-L2Packet::L2Packet() : dest_id(SYMBOLIC_ID_UNSET) {}
+L2Packet::L2Packet() : dest_id(SYMBOLIC_ID_UNSET), originator_id(SYMBOLIC_ID_UNSET) {}
 
 L2Packet::~L2Packet() {
 	for (auto* header : headers)
@@ -24,8 +24,12 @@ void L2Packet::addPayload(L2Header* header, L2Packet::Payload* payload) {
 	if (!headers.empty() && header->frame_type == L2Header::FrameType::base)
 		throw std::invalid_argument("Later headers of a packet cannot be a base header.");
 	
+	// Set the originator ID.
+	if (header->frame_type == L2Header::base)
+		originator_id = ((L2HeaderBase*) header)->icao_id;
+	
 	// Set the unicast destination ID if possible.
-	if (header->frame_type == L2Header::FrameType::unicast) {
+	if (header->frame_type == L2Header::FrameType::unicast || header->frame_type == L2Header::FrameType::link_establishment_request || header->frame_type == L2Header::FrameType::link_establishment_reply) {
 		MacId header_dest_id = ((L2HeaderUnicast*) header)->getDestId();
 		// Sanity check that the destination ID is actually set.
 		if (header_dest_id == SYMBOLIC_ID_UNSET)
@@ -101,5 +105,9 @@ void L2Packet::validateHeader() const {
 void L2Packet::notifyCallbacks() {
 	for (auto* callback : callbacks)
 		callback->notifyPacketBeingSent(this);
+}
+
+const MacId& L2Packet::getOrigin() const {
+	return this->originator_id;
 }
 
