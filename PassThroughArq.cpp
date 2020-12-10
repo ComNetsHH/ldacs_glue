@@ -19,7 +19,8 @@ L2Packet* PassThroughArq::requestSegment(unsigned int num_bits, const MacId& mac
     IRlc * rlc = getUpperLayer();
     return rlc->requestSegment(num_bits, mac_id);
 }
-bool PassThroughArq::shouldLinkBeArqProtected(const MacId& mac_id) {
+
+bool PassThroughArq::shouldLinkBeArqProtected(const MacId& mac_id) const {
     return false;
 }
 void PassThroughArq::injectIntoUpper(L2Packet* packet) {
@@ -41,4 +42,8 @@ void PassThroughArq::notifyAboutRemovedLink(const MacId& id) {
 
 void PassThroughArq::processIncomingHeader(L2Packet* incoming_packet) {
     return;
+}
+
+void PassThroughArq::onEvent(double time) {
+
 }

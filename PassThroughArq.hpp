@@ -12,16 +12,17 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 
 class PassThroughArq : public IArq, public IOmnetPluggable {
 public:
-    void notifyOutgoing(unsigned int num_bits, const MacId& mac_id);
-    L2Packet* requestSegment(unsigned int num_bits, const MacId& mac_id);
-    bool shouldLinkBeArqProtected(const MacId& mac_id);
-    void injectIntoUpper(L2Packet* packet);
-    void receiveFromLower(L2Packet* packet);
-    void notifyAboutNewLink(const MacId& id);
-    void notifyAboutRemovedLink(const MacId& id);
+    void notifyOutgoing(unsigned int num_bits, const MacId& mac_id) override;
+    L2Packet* requestSegment(unsigned int num_bits, const MacId& mac_id) override;
+    bool shouldLinkBeArqProtected(const MacId& mac_id) const override;
+    void injectIntoUpper(L2Packet* packet) override;
+    void receiveFromLower(L2Packet* packet) override;
+    void notifyAboutNewLink(const MacId& id) override;
+    void notifyAboutRemovedLink(const MacId& id) override;
+    void onEvent(double time) override;
 
 protected:
-    void processIncomingHeader(L2Packet* incoming_packet);
+    void processIncomingHeader(L2Packet* incoming_packet) override;
 };
 
 }
