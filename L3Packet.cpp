@@ -3,7 +3,6 @@
 //
 
 #include "L3Packet.hpp"
-#include "MacId.hpp"
 
 using namespace TUHH_INTAIRNET_MCSOTDMA;
 

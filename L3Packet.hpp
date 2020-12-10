@@ -5,6 +5,8 @@
 #ifndef INTAIRNET_LINKLAYER_GLUE_L3PACKET_HPP
 #define INTAIRNET_LINKLAYER_GLUE_L3PACKET_HPP
 
+#include "MacId.hpp"
+
 using namespace TUHH_INTAIRNET_MCSOTDMA;
 namespace inet {
     class Packet;
