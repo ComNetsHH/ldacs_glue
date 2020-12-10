@@ -12,6 +12,9 @@ namespace inet {
 
 class L3Packet {
 public:
+    /** default constructor **/
+    L3Packet();
+
     /** Size of the contained inet packet **/
     int size = 0;
 
