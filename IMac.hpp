@@ -7,6 +7,7 @@
 
 #include "MacId.hpp"
 #include "L2Packet.hpp"
+#include "Timestamp.hpp"
 #include <map>
 
 namespace TUHH_INTAIRNET_MCSOTDMA {
@@ -140,6 +141,10 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			}
 			
 			bool isTransmitterIdle(unsigned int slot_offset, unsigned int num_slots) const;
+			
+			virtual void update(int64_t num_slots);
+			
+			const Timestamp& getCurrentTime() const;
 		
 		protected:
 			IArq* upper_layer = nullptr;
@@ -147,6 +152,7 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			MacId id;
 			std::map<MacId, CPRPosition> position_map;
 			std::map<MacId, CPRPosition::PositionQuality> position_quality_map;
+			Timestamp current_time = Timestamp();
 	};
 }
 

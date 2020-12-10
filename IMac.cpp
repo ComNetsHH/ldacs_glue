@@ -68,3 +68,11 @@ bool IMac::isTransmitterIdle(unsigned int slot_offset, unsigned int num_slots) c
 	assert(lower_layer && "IMac::isTransmitterIdle for unset lower layer.");
 	return lower_layer->isTransmitterIdle(slot_offset, num_slots);
 }
+
+const Timestamp& IMac::getCurrentTime() const {
+	return current_time;
+}
+
+void IMac::update(int64_t num_slots) {
+	current_time += num_slots;
+}
