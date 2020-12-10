@@ -29,6 +29,9 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 	 * When MC-SOTDMA operation finishes, the original packet is passed on to the respective receiving layer.
 	 */
 	class L2Packet {
+		
+		friend class LinkManagerTests;
+		
 		public:
 			/**
 			 * Interface for a wrapper of an upper-layer packet.
