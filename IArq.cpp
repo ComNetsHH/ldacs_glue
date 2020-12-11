@@ -32,3 +32,8 @@ void IArq::reportNumHopsToGS(const MacId& id, unsigned int num_hops) const {
 	upper_layer->reportNumHopsToGS(id, num_hops);
 }
 
+bool IArq::isThereMoreData(const MacId& mac_id) const {
+	assert(this->upper_layer && "IArq::isThereMoreData called but upper layer is unset.");
+	return upper_layer->isThereMoreData(mac_id);
+}
+

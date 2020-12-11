@@ -76,3 +76,8 @@ void IMac::update(int64_t num_slots) {
 uint64_t IMac::getCurrentSlot() const {
 	return current_slot;
 }
+
+bool IMac::isThereMoreData(const MacId& mac_id) const {
+	assert(upper_layer && "IMac::isThereMoreData for unset upper layer.");
+	return upper_layer->isThereMoreData(mac_id);
+}

@@ -65,6 +65,12 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			 */
 			virtual L2Packet* requestSegment(unsigned int num_bits, const MacId& mac_id) = 0;
 			
+			/**
+			 * @param mac_id
+			 * @return Whether there's more data to be sent for the given ID.
+			 */
+			virtual bool isThereMoreData(const MacId& mac_id) const = 0;
+			
 			void setUpperLayer(INet* upper_layer) {
 				this->upper_layer = upper_layer;
 			}

@@ -40,6 +40,12 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			virtual L2Packet* requestSegment(unsigned int num_bits, const MacId& mac_id);
 			
 			/**
+			 * @param mac_id
+			 * @return Whether there's more data to be sent for the given ID.
+			 */
+			virtual bool isThereMoreData(const MacId& mac_id) const;
+			
+			/**
 			 * When a transmission slot arrives, this passes down a packet to the PHY layer.
 			 * @param packet
 			 * @param center_frequency
