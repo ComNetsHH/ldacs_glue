@@ -36,6 +36,12 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			virtual L2Packet* requestSegment(unsigned int num_bits, const MacId& mac_id) = 0;
 			
 			/**
+			 * @param mac_id
+			 * @return Whether there's more data to be sent for the given ID.
+			 */
+			virtual bool isThereMoreData(const MacId& mac_id) const;
+			
+			/**
 			 * The MAC sublayer may query whether a particular link should be ARQ protected.
 			 * It does so when new links are established.
 			 * @param mac_id MAC ID corresponding to the communication link for which ARQ protection is queried.

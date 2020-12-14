@@ -7,6 +7,7 @@
 
 #include "MacId.hpp"
 #include "L2Packet.hpp"
+#include "Timestamp.hpp"
 #include <map>
 
 namespace TUHH_INTAIRNET_MCSOTDMA {
@@ -37,6 +38,12 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			 * @return
 			 */
 			virtual L2Packet* requestSegment(unsigned int num_bits, const MacId& mac_id);
+			
+			/**
+			 * @param mac_id
+			 * @return Whether there's more data to be sent for the given ID.
+			 */
+			virtual bool isThereMoreData(const MacId& mac_id) const;
 			
 			/**
 			 * When a transmission slot arrives, this passes down a packet to the PHY layer.
@@ -140,6 +147,10 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			}
 			
 			bool isTransmitterIdle(unsigned int slot_offset, unsigned int num_slots) const;
+			
+			virtual void update(int64_t num_slots);
+			
+			uint64_t getCurrentSlot() const;
 		
 		protected:
 			IArq* upper_layer = nullptr;
@@ -147,6 +158,7 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			MacId id;
 			std::map<MacId, CPRPosition> position_map;
 			std::map<MacId, CPRPosition::PositionQuality> position_quality_map;
+			uint64_t current_slot = 0;
 	};
 }
 

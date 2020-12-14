@@ -68,3 +68,16 @@ bool IMac::isTransmitterIdle(unsigned int slot_offset, unsigned int num_slots) c
 	assert(lower_layer && "IMac::isTransmitterIdle for unset lower layer.");
 	return lower_layer->isTransmitterIdle(slot_offset, num_slots);
 }
+
+void IMac::update(int64_t num_slots) {
+	current_slot += num_slots;
+}
+
+uint64_t IMac::getCurrentSlot() const {
+	return current_slot;
+}
+
+bool IMac::isThereMoreData(const MacId& mac_id) const {
+	assert(upper_layer && "IMac::isThereMoreData for unset upper layer.");
+	return upper_layer->isThereMoreData(mac_id);
+}

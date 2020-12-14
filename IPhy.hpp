@@ -48,7 +48,7 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			}
 			
 			virtual bool isTransmitterIdle(unsigned int slot_offset, unsigned int num_slots) const {
-				// Should check whether the transmitter is utilized by A2G during the specified time.
+				// Should check whether the transmitter is utilized by either A2G or A2A during the specified time slots.
 				return true;
 			}
 		
