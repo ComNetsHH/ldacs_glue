@@ -113,9 +113,6 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			/** Several payloads can be concatenated (with resp. headers) to fill one packet. */
 			std::vector<Payload*> payloads;
 			
-			MacId dest_id;
-			MacId originator_id;
-			
 			/** Holds all registered callbacks. */
 			std::vector<L2PacketSentCallback*> callbacks;
 	};

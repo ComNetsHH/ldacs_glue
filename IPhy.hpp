@@ -5,6 +5,7 @@
 #ifndef INTAIRNET_LINKLAYER_GLUE_IPHY_HPP
 #define INTAIRNET_LINKLAYER_GLUE_IPHY_HPP
 
+#include <cassert>
 #include "L2Packet.hpp"
 
 namespace TUHH_INTAIRNET_MCSOTDMA {
@@ -36,21 +37,21 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			 * Connects the MAC sublayer above.
 			 * @param mac
 			 */
-			void setUpperLayer(IMac* mac) {
-				this->upper_layer = mac;
-			}
+			void setUpperLayer(IMac* mac);
 			
 			/**
 			 * @return A pointer to the MAC sublayer above.
 			 */
-			IMac* getUpperLayer() {
-				return this->upper_layer;
-			}
+			IMac* getUpperLayer();
 			
-			virtual bool isTransmitterIdle(unsigned int slot_offset, unsigned int num_slots) const {
-				// Should check whether the transmitter is utilized by either A2G or A2A during the specified time slots.
-				return true;
-			}
+			virtual bool isTransmitterIdle(unsigned int slot_offset, unsigned int num_slots) const;
+			
+			/**
+			 * When this PHY receives a packet, it is transformed into a L2Packet* and passed into this function.
+			 * @param packet
+			 * @param center_frequency
+			 */
+			virtual void onReception(L2Packet* packet, uint64_t center_frequency);
 		
 		protected:
 			IMac* upper_layer = nullptr;

@@ -57,10 +57,10 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			/** Number of slots until the next transmission. */
 			unsigned int offset;
 			/** Number of slots next frame will occupy. */
-			unsigned short length_next;
+			unsigned int length_next;
 			/** Remaining number of repetitions this reservation remains valid for. */
 			unsigned int timeout;
-			/** Source ID. */
+			/** Origin ID. */
 			MacId icao_id;
 			/** Combines authentication with error detection / correction. */
 			unsigned int message_authentication_code;
