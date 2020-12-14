@@ -34,6 +34,13 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			 * @param num_hops
 			 */
 			virtual void reportNumHopsToGS(const MacId& id, unsigned int num_hops) = 0;
+
+
+            /**
+             * Is called when a L3Packet was received and reassembled
+             * @param packet
+             */
+            virtual void receiveFromLower(L3Packet* packet) = 0;
 		
 		protected:
 			IRlc* lower_layer = nullptr;

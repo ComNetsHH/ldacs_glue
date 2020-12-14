@@ -109,3 +109,13 @@ void L2Packet::notifyCallbacks() {
 		callback->notifyPacketBeingSent(this);
 }
 
+std::string L2Packet::print() {
+    std::string result = "[";
+    for(int i = 0; i < headers.size(); i++) {
+        result += "H,";
+        result += "P | ";
+    }
+    result += "]";
+    return result;
+}
+
