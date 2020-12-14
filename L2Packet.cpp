@@ -6,7 +6,7 @@
 
 using namespace TUHH_INTAIRNET_MCSOTDMA;
 
-L2Packet::L2Packet() : dest_id(SYMBOLIC_ID_UNSET), originator_id(SYMBOLIC_ID_UNSET) {}
+L2Packet::L2Packet() = default;
 
 L2Packet::~L2Packet() {
 	for (auto* header : headers)
@@ -24,45 +24,32 @@ void L2Packet::addPayload(L2Header* header, L2Packet::Payload* payload) {
 	if (!headers.empty() && header->frame_type == L2Header::FrameType::base)
 		throw std::invalid_argument("Later headers of a packet cannot be a base header.");
 	
-	// Set the originator ID.
-	if (header->frame_type == L2Header::base)
-		originator_id = ((L2HeaderBase*) header)->icao_id;
-	
 	// Set the unicast destination ID if possible.
 	if (header->frame_type == L2Header::FrameType::unicast || header->frame_type == L2Header::FrameType::link_establishment_request || header->frame_type == L2Header::FrameType::link_establishment_reply) {
 		MacId header_dest_id = ((L2HeaderUnicast*) header)->getDestId();
 		// Sanity check that the destination ID is actually set.
 		if (header_dest_id == SYMBOLIC_ID_UNSET)
 			throw std::runtime_error("Cannot add a unicast header with an unset destination ID.");
-		// If currently there's no set destination, we set it now.
-		if (this->dest_id == SYMBOLIC_ID_UNSET)
-			this->dest_id = header_dest_id;
-			// If there is a set non-broadcast destination, it must be unicast.
-			// So if these differ, throw an error.
-		else if (this->dest_id != SYMBOLIC_LINK_ID_BROADCAST && this->dest_id != SYMBOLIC_LINK_ID_BEACON && header_dest_id != this->dest_id)
-			throw std::runtime_error("Cannot add a unicast header to this packet. It already has a unicast destination ID. Current dest='" + std::to_string(this->dest_id.getId()) + "' header dest='" + std::to_string(header_dest_id.getId()) + "'.");
+		// If there is a set non-broadcast destination, it must be unicast.
+		// So if these differ, throw an error.
+		const MacId current_destination = getDestination();
+		if (current_destination != SYMBOLIC_ID_UNSET && current_destination != SYMBOLIC_LINK_ID_BROADCAST && current_destination != SYMBOLIC_LINK_ID_BEACON && header_dest_id != current_destination)
+			throw std::runtime_error("Cannot add a unicast header to this packet. It already has a unicast destination ID. Current dest='" + std::to_string(current_destination.getId()) + "' header dest='" + std::to_string(header_dest_id.getId()) + "'.");
 	}
 	
 	// Set the broadcast destination ID if possible.
 	if (header->frame_type == L2Header::FrameType::broadcast) {
-		// If currently there's no set destination, we set it now.
-		if (this->dest_id == SYMBOLIC_ID_UNSET)
-			this->dest_id = SYMBOLIC_LINK_ID_BROADCAST;
-			// If there already is a set destination, it may only be a beacon.
-		else if (this->dest_id != SYMBOLIC_LINK_ID_BEACON)
-			throw std::runtime_error("Cannot add a broadcast header to this packet. It already has a destination ID: '" + std::to_string(this->dest_id.getId()) + "'.");
+		// If there already is a set destination, it may only be a beacon.
+		const MacId current_destination = getDestination();
+		if (current_destination != SYMBOLIC_ID_UNSET && current_destination != SYMBOLIC_LINK_ID_BEACON)
+			throw std::runtime_error("Cannot add a broadcast header to this packet. It already has a destination ID: '" + std::to_string(getDestination().getId()) + "'.");
 	}
 	
 	// Set the beacon destination ID if possible.
 	if (header->frame_type == L2Header::FrameType::beacon) {
-		// If currently there's no set destination, we set it now.
-		if (this->dest_id == SYMBOLIC_ID_UNSET)
-			this->dest_id = SYMBOLIC_LINK_ID_BEACON;
-			// If there already is a set destination, throw an error, as beacon headers must come first.
-		else
-			throw std::runtime_error(
-					"Cannot add a beacon header to this packet. It already has a destination ID: '" +
-					std::to_string(this->dest_id.getId()) + "'.");
+		// If there already is a set destination, throw an error, as beacon headers must come first.
+		if (getDestination() != SYMBOLIC_ID_UNSET)
+			throw std::runtime_error("Cannot add a beacon header to this packet. It already has a destination ID: '" + std::to_string(getDestination().getId()) + "'.");
 	}
 	
 	headers.push_back(header);
@@ -87,7 +74,22 @@ unsigned int L2Packet::getBits() const {
 }
 
 const MacId& L2Packet::getDestination() const {
-	return this->dest_id;
+	for (L2Header* header : headers) {
+		if (header->frame_type == L2Header::beacon)
+			return SYMBOLIC_LINK_ID_BEACON;
+		else if (header->frame_type == L2Header::broadcast)
+			return SYMBOLIC_LINK_ID_BROADCAST;
+		else if (header->frame_type == L2Header::link_establishment_reply || header->frame_type == L2Header::link_establishment_request || header->frame_type == L2Header::unicast)
+			return ((L2HeaderUnicast*) header)->getDestId();
+	}
+	return SYMBOLIC_ID_UNSET;
+}
+
+const MacId& L2Packet::getOrigin() const {
+	if (headers.empty())
+		return SYMBOLIC_ID_UNSET;
+	auto* base_header = (L2HeaderBase*) headers.at(0);
+	return base_header->icao_id;
 }
 
 void L2Packet::addCallback(L2PacketSentCallback* callback) {
@@ -105,9 +107,5 @@ void L2Packet::validateHeader() const {
 void L2Packet::notifyCallbacks() {
 	for (auto* callback : callbacks)
 		callback->notifyPacketBeingSent(this);
-}
-
-const MacId& L2Packet::getOrigin() const {
-	return this->originator_id;
 }
 
