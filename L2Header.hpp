@@ -188,6 +188,20 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 					: L2HeaderUnicast(icao_dest_id, use_arq, arq_seqno, arq_ack_no, arq_ack_slot, FrameType::link_establishment_request) {}
 					
 			L2HeaderLinkEstablishmentRequest() : L2HeaderLinkEstablishmentRequest(SYMBOLIC_ID_UNSET, false, SequenceNumber(0), SequenceNumber(0), 0) {}
+			
+			/** Number of slots until the next transmission. */
+			unsigned int offset = 0;
+			/** Number of slots next frame will occupy. */
+			unsigned int length_next = 0;
+			/** Remaining number of repetitions this reservation remains valid for. */
+			unsigned int timeout = 0;
+			
+			unsigned int getBits() const override {
+				return L2HeaderUnicast::getBits()
+					+ 8 /* offset */
+				    + 4 /* length_next */
+				    + 8 /* timeout */;
+			}
 	};
 	
 	class L2HeaderLinkEstablishmentReply : public L2HeaderUnicast {
