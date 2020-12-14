@@ -40,7 +40,8 @@ void DelayMac::passToUpper(L2Packet* packet) {
 void DelayMac::injectIntoUpper(L2Packet* packet) {
 
 }
-void DelayMac::receiveFromLower(L2Packet* packet, const MacId& id) {
-    IArq *arq = getUpperLayer();
-    arq->receiveFromLower(packet);
+
+void DelayMac::receiveFromLower(L2Packet* packet, uint64_t center_frequency) {
+	IArq *arq = getUpperLayer();
+	arq->receiveFromLower(packet);
 }
