@@ -50,7 +50,7 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			 * When this PHY receives a packet, it is transformed into a L2Packet* and passed into this function.
 			 * @param packet
 			 */
-			virtual void onReception(L2Packet* packet, const MacId& id);
+			virtual void onReception(L2Packet* packet, const MacId& dest_id);
 		
 		protected:
 			IMac* upper_layer = nullptr;
