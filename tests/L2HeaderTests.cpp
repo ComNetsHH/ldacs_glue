@@ -14,7 +14,7 @@ class L2HeaderTests : public CppUnit::TestFixture {
 		L2Header* header;
 		MacId id = MacId(42);
 		unsigned int offset = 12;
-		unsigned short length_next = 10;
+		unsigned int length_next = 10;
 		unsigned int timeout = 12;
 	
 	public:

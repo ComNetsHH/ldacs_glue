@@ -6,6 +6,7 @@
 #define INTAIRNET_LINKLAYER_GLUE_ICAOID_HPP
 
 #include <stdexcept>
+#include <string>
 
 namespace TUHH_INTAIRNET_MCSOTDMA {
 	class MacId {

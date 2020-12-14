@@ -7,6 +7,7 @@
 
 #include <cassert>
 #include "L2Packet.hpp"
+#include "IRadio.hpp"
 
 namespace TUHH_INTAIRNET_MCSOTDMA {
 	
@@ -55,6 +56,7 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		
 		protected:
 			IMac* upper_layer = nullptr;
+			IRadio *radio = nullptr;
 	};
 }
 
