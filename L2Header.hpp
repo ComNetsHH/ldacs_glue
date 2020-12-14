@@ -57,7 +57,7 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			/** Number of slots until the next transmission. */
 			unsigned int offset;
 			/** Number of slots next frame will occupy. */
-			unsigned short length_next;
+			unsigned int length_next;
 			/** Remaining number of repetitions this reservation remains valid for. */
 			unsigned int timeout;
 			/** Origin ID. */
