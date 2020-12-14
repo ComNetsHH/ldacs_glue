@@ -92,6 +92,11 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			 * Notify all currently registered callbacks.
 			 */
 			void notifyCallbacks();
+
+			/**
+			 * Prints the entire packet structure for convenience
+			 */
+			std::string print();
 		
 		protected:
 			/**

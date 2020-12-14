@@ -111,3 +111,13 @@ const MacId& L2Packet::getOrigin() const {
 	return this->originator_id;
 }
 
+std::string L2Packet::print() {
+    std::string result = "[";
+    for(int i = 0; i < headers.size(); i++) {
+        result += "H,";
+        result += "P | ";
+    }
+    result += "]";
+    return result;
+}
+
