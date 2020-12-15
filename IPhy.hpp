@@ -39,6 +39,12 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			 * @param mac
 			 */
 			void setUpperLayer(IMac* mac);
+
+            /**
+            * Connects to a radio instance.
+            * @param radio
+            */
+            void setRadio(IRadio* radio);
 			
 			/**
 			 * @return A pointer to the MAC sublayer above.
