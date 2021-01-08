@@ -20,7 +20,7 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			 * Callback interface for when a transmission slot arrives which is sending a particular packet.
 			 * @param packet
 			 */
-			virtual void notifyPacketBeingSent(TUHH_INTAIRNET_MCSOTDMA::L2Packet* packet) = 0;
+			virtual void packetBeingSentCallback(TUHH_INTAIRNET_MCSOTDMA::L2Packet* packet) = 0;
 	};
 	
 	/**

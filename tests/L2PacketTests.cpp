@@ -22,7 +22,7 @@ class L2PacketTests : public CppUnit::TestFixture {
 		
 		class TestCallback : public L2PacketSentCallback {
 			public:
-				void notifyPacketBeingSent(TUHH_INTAIRNET_MCSOTDMA::L2Packet* packet) override {
+				void packetBeingSentCallback(TUHH_INTAIRNET_MCSOTDMA::L2Packet* packet) override {
 					num_packets++;
 				}
 

@@ -106,7 +106,7 @@ void L2Packet::validateHeader() const {
 
 void L2Packet::notifyCallbacks() {
 	for (auto* callback : callbacks)
-		callback->notifyPacketBeingSent(this);
+		callback->packetBeingSentCallback(this);
 }
 
 std::string L2Packet::print() {
