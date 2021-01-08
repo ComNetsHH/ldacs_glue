@@ -81,3 +81,13 @@ bool IMac::isThereMoreData(const MacId& mac_id) const {
 	assert(upper_layer && "IMac::isThereMoreData for unset upper layer.");
 	return upper_layer->isThereMoreData(mac_id);
 }
+
+void IMac::notifyAboutNewLink(const MacId& id) {
+	assert(upper_layer && "IMac::notifyAboutNewLink for unset upper layer.");
+	upper_layer->notifyAboutNewLink(id);
+}
+
+void IMac::notifyAboutRemovedLink(const MacId& id) {
+	assert(upper_layer && "IMac::notifyAboutRemovedLink for unset upper layer.");
+	upper_layer->notifyAboutRemovedLink(id);
+}

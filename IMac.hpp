@@ -151,6 +151,18 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			virtual void update(int64_t num_slots);
 			
 			uint64_t getCurrentSlot() const;
+			
+			/**
+			 * The MAC calls this function to notify the ARQ sublayer of a newly negotiated link.
+			 * @param id
+			 */
+			void notifyAboutNewLink(const MacId& id);
+			
+			/**
+			 * The MAC calls this function to notify the ARQ sublayer of a deleted link.
+			 * @param id
+			 */
+			void notifyAboutRemovedLink(const MacId& id);
 		
 		protected:
 			IArq* upper_layer = nullptr;
