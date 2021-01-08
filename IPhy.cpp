@@ -24,3 +24,7 @@ IMac* IPhy::getUpperLayer() {
 void IPhy::setUpperLayer(IMac* mac) {
 	this->upper_layer = mac;
 }
+
+void IPhy::setRadio(IRadio *radio) {
+    this->radio = radio;
+}

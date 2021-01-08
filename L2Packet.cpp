@@ -68,6 +68,9 @@ unsigned int L2Packet::getBits() const {
 	unsigned int bits = 0;
 	for (size_t i = 0; i < headers.size(); i++) {
 		L2Packet::Payload* payload = payloads.at(i);
+		if(headers.at(i) == nullptr) {
+		    continue;
+		}
 		bits += headers.at(i)->getBits() + (payload == nullptr ? 0 : payload->getBits());
 	}
 	return bits;

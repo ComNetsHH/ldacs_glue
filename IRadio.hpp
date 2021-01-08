@@ -13,8 +13,8 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
     protected:
         IPhy *phy = nullptr;
     public:
-        virtual void send(L2Packet *, uint64_t center_frequency) = 0;
-        virtual void receiveFromChannel(L2Packet *packet, uint64_t center_frequency);
+        virtual void sendToChannel(L2Packet *packet, uint64_t center_frequency) = 0;
+        virtual void receiveFromChannel(L2Packet *packet, uint64_t center_frequency) = 0;
         void setPhy(IPhy * phy);
         IPhy* getPhy();
     };
