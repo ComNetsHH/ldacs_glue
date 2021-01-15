@@ -16,7 +16,7 @@ void IArq::injectIntoUpper(L2Packet* packet) {
 
 void IArq::receiveFromLower(L2Packet* packet) {
 	assert(this->upper_layer && "IArq::receiveFromLower called but upper layer is unset.");
-	// Parse header and update state.
+	// Parse header and shouldSendRequest state.
 	processIncomingHeader(packet);
 	// Pass it on.
 	this->upper_layer->receiveFromLower(packet);

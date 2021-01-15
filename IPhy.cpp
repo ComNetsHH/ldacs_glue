@@ -9,7 +9,7 @@ using namespace TUHH_INTAIRNET_MCSOTDMA;
 
 void IPhy::onReception(L2Packet* packet, uint64_t center_frequency) {
 	assert(upper_layer && "IPhy::onReception for unset upper layer.");
-	upper_layer->receiveFromLower(packet, center_frequency);
+	upper_layer->receiveFromLower(packet);
 }
 
 bool IPhy::isTransmitterIdle(unsigned int slot_offset, unsigned int num_slots) const {

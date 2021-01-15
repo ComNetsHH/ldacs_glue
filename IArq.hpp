@@ -110,7 +110,7 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			unsigned int getNumHopsToGS() const;
 			
 			/**
-			 * When a neighbor's update comes in, this reports it to the upper layers.
+			 * When a neighbor's shouldSendRequest comes in, this reports it to the upper layers.
 			 * @param id
 			 * @param num_hops
 			 */

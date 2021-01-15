@@ -55,9 +55,8 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			/**
 			 * Define what happens when the PHY passes a just-received data packet to the MAC.
 			 * @param packet
-			 * @param center_frequency
 			 */
-			virtual void receiveFromLower(L2Packet* packet, uint64_t center_frequency) = 0;
+			virtual void receiveFromLower(L2Packet* packet) = 0;
 			
 			/**
 			 * When a packet comes in, this passes it up to the next upper layer.
@@ -121,7 +120,7 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			unsigned int getNumHopsToGS() const;
 			
 			/**
-			 * When a neighbor's update comes in, this reports it to the upper layers.
+			 * When a neighbor's shouldSendRequest comes in, this reports it to the upper layers.
 			 * @param id
 			 * @param num_hops
 			 */
