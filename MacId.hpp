@@ -11,6 +11,7 @@
 namespace TUHH_INTAIRNET_MCSOTDMA {
 	class MacId {
 		public:
+	        MacId() : id(-1) {}
 			explicit MacId(int id) : id(id) {}
 			virtual ~MacId() = default;
 			

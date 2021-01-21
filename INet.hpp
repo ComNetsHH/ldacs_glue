@@ -29,7 +29,7 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			virtual unsigned int getNumHopsToGroundStation() const = 0;
 			
 			/**
-			 * When a neighbor's shouldSendRequest comes in at a lower layer, this forwards this info to the Network Layer.
+			 * When a neighbor's update comes in at a lower layer, this forwards this info to the Network Layer.
 			 * @param id
 			 * @param num_hops
 			 */

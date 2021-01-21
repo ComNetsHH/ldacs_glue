@@ -50,8 +50,20 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			 * @return A pointer to the MAC sublayer above.
 			 */
 			IMac* getUpperLayer();
-			
+
+			/**
+			 * @param slot_offset
+			 * @param num_slots
+			 * @return Whether the single transmitter is idle during the specified time range.
+			 */
 			virtual bool isTransmitterIdle(unsigned int slot_offset, unsigned int num_slots) const;
+
+			/**
+			 * @param slot_offset
+			 * @param num_slots
+			 * @return Whether any receiver is idle during the specified time range.
+			 */
+            virtual bool isAnyReceiverIdle(unsigned int slot_offset, unsigned int num_slots) const = 0;
 			
 			/**
 			 * When this PHY receives a packet, it is transformed into a L2Packet* and passed into this function.

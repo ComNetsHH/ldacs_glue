@@ -211,6 +211,10 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			
 			L2HeaderLinkEstablishmentReply() : L2HeaderLinkEstablishmentReply(SYMBOLIC_ID_UNSET, false, SequenceNumber(0), SequenceNumber(0), 0) {}
 	};
+
+	inline std::ostream& operator<<(std::ostream& stream, const L2HeaderLinkEstablishmentRequest& request) {
+		return stream << std::string("to=") << request.icao_dest_id << std::string(" offset=") << std::to_string(request.offset) << std::string(" timeout=") << std::to_string(request.timeout) << std::string(" length_next=") << std::to_string(request.length_next);
+	}
 	
 }
 
