@@ -19,7 +19,7 @@ public:
     void passToLower(L2Packet* packet, unsigned int center_frequency) override;
     void passToUpper(L2Packet* packet) override;
     void injectIntoUpper(L2Packet* packet) override;
-	void receiveFromLower(L2Packet* packet) override;
+	void receiveFromLower(L2Packet* packet, uint64_t center_frequency) override;
 	void onEvent(double time) override;
 };
 

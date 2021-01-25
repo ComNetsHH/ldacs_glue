@@ -56,7 +56,7 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			 * @param num_slots
 			 * @return Whether the single transmitter is idle during the specified time range.
 			 */
-			virtual bool isTransmitterIdle(unsigned int slot_offset, unsigned int num_slots) const;
+			virtual bool isTransmitterIdle(unsigned int slot_offset, unsigned int num_slots) const = 0;
 
 			/**
 			 * @param slot_offset
@@ -71,10 +71,23 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			 * @param center_frequency
 			 */
 			virtual void onReception(L2Packet* packet, uint64_t center_frequency);
+
+			virtual void update(uint64_t num_slots);
+
+            /**
+             * Tune a receiver to a particular frequency, allowing reception of packets during the current time slot.
+             * @param center_frequency
+             * @throws std::runtime_error If the number of available receivers is exceeded.
+             */
+            virtual void tuneReceiver(uint64_t center_frequency);
 		
 		protected:
 			IMac* upper_layer = nullptr;
 			IRadio *radio = nullptr;
+			/** Frequencies that receivers are tuned to in this time slot. */
+            std::vector<uint64_t> rx_frequencies;
+            /** One broadcast and one point-to-point receiver. */
+            const size_t num_receivers = 2;
 	};
 }
 

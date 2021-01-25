@@ -9,12 +9,7 @@ using namespace TUHH_INTAIRNET_MCSOTDMA;
 
 void IPhy::onReception(L2Packet* packet, uint64_t center_frequency) {
 	assert(upper_layer && "IPhy::onReception for unset upper layer.");
-	upper_layer->receiveFromLower(packet);
-}
-
-bool IPhy::isTransmitterIdle(unsigned int slot_offset, unsigned int num_slots) const {
-	// Should check whether the transmitter is utilized by either A2G or A2A during the specified time slots.
-	return true;
+	upper_layer->receiveFromLower(packet, center_frequency);
 }
 
 IMac* IPhy::getUpperLayer() {
@@ -27,4 +22,14 @@ void IPhy::setUpperLayer(IMac* mac) {
 
 void IPhy::setRadio(IRadio *radio) {
     this->radio = radio;
+}
+
+void IPhy::tuneReceiver(uint64_t center_frequency) {
+    if (rx_frequencies.size() == num_receivers)
+        throw std::runtime_error("IPhy::tuneReceiver exceeds number of available receivers.");
+    rx_frequencies.push_back(center_frequency);
+}
+
+void IPhy::update(uint64_t num_slots) {
+    rx_frequencies.clear();
 }

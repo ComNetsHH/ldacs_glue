@@ -56,7 +56,7 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			 * Define what happens when the PHY passes a just-received data packet to the MAC.
 			 * @param packet
 			 */
-			virtual void receiveFromLower(L2Packet* packet) = 0;
+			virtual void receiveFromLower(L2Packet* packet, uint64_t center_frequency) = 0;
 			
 			/**
 			 * When a packet comes in, this passes it up to the next upper layer.
@@ -146,8 +146,9 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			}
 			
 			bool isTransmitterIdle(unsigned int slot_offset, unsigned int num_slots) const;
-			
-			virtual void update(int64_t num_slots);
+
+			/** Increment time. Updates the linked PHY. */
+			virtual void update(uint64_t num_slots);
 			
 			uint64_t getCurrentSlot() const;
 			
