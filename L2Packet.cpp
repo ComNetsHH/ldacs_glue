@@ -92,7 +92,7 @@ const MacId& L2Packet::getOrigin() const {
 	if (headers.empty())
 		return SYMBOLIC_ID_UNSET;
 	auto* base_header = (L2HeaderBase*) headers.at(0);
-	return base_header->icao_id;
+	return base_header->icao_src_id;
 }
 
 void L2Packet::addCallback(L2PacketSentCallback* callback) {

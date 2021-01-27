@@ -41,13 +41,13 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 	class L2HeaderBase : public L2Header {
 		public:
 			L2HeaderBase(const MacId& icao_id, unsigned int offset, unsigned short length_next, unsigned int timeout)
-					: L2Header(FrameType::base), icao_id(icao_id), offset(offset), length_next(length_next), timeout(timeout), message_authentication_code(0) {
+					: L2Header(FrameType::base), icao_src_id(icao_id), offset(offset), length_next(length_next), timeout(timeout), message_authentication_code(0) {
 			}
 			L2HeaderBase() : L2HeaderBase(SYMBOLIC_ID_UNSET, 0, 0, 0) {}
 			
 			unsigned int getBits() const override {
-				return icao_id.getBits()
-				       + 8 /* offset */
+				return icao_src_id.getBits()
+                       + 8 /* offset */
 				       + 4 /* length_next */
 				       + 8 /* timeout */
 				       + 800 /* 100B MAC */
@@ -61,7 +61,7 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			/** Remaining number of repetitions this reservation remains valid for. */
 			unsigned int timeout;
 			/** Origin ID. */
-			MacId icao_id;
+			MacId icao_src_id;
 			/** Combines authentication with error detection / correction. */
 			unsigned int message_authentication_code;
 	};
