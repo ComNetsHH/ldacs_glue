@@ -41,9 +41,13 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 					virtual unsigned int getBits() const = 0;
 					
 					virtual ~Payload() = default;
+
+					virtual Payload* copy() const = 0;
 			};
 			
 			L2Packet();
+			L2Packet(const L2Packet& other);
+			L2Packet* copy() const;
 			
 			virtual ~L2Packet();
 			

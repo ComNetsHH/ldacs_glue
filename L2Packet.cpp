@@ -2,11 +2,23 @@
 // Created by Sebastian Lindner on 01.12.20.
 //
 
+#include <cassert>
 #include "L2Packet.hpp"
 
 using namespace TUHH_INTAIRNET_MCSOTDMA;
 
 L2Packet::L2Packet() = default;
+
+L2Packet::L2Packet(const L2Packet &other) : headers(other.headers), payloads(other.payloads), callbacks(other.callbacks) {}
+
+L2Packet *L2Packet::copy() const {
+    auto* copy = new L2Packet();
+    for (const auto *header : headers)
+        copy->headers.push_back(header == nullptr ? nullptr : header->copy());
+    for (const auto *payload : payloads)
+        copy->payloads.push_back(payload == nullptr ? nullptr : payload->copy());
+    return copy;
+}
 
 L2Packet::~L2Packet() {
 	for (auto* header : headers)

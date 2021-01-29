@@ -15,9 +15,19 @@ class L2PacketTests : public CppUnit::TestFixture {
 		L2Packet* packet;
 		
 		class TestPayload : public L2Packet::Payload {
+        public:
+		        TestPayload() : some_value(0) {}
+		        explicit TestPayload(int val) : some_value(val) {}
+
 				unsigned int getBits() const override {
 					return 1;
 				}
+
+                Payload *copy() const override {
+                    return new TestPayload(some_value);
+                }
+
+            int some_value;
 		};
 		
 		class TestCallback : public L2PacketSentCallback {
@@ -206,6 +216,27 @@ class L2PacketTests : public CppUnit::TestFixture {
 			packet->notifyCallbacks();
 			CPPUNIT_ASSERT_EQUAL(size_t(1), callback.num_packets);
 		}
+
+		void testCopy() {
+		    MacId id = MacId(1), id2 = MacId(2);
+		    unsigned int offset = 3, length_next = 1, timeout = 12, arq_ack_slot = 7;
+		    bool use_arq = true;
+		    SequenceNumber arq_seqno = 12, ack_seqno = 5;
+		    packet->addPayload(new L2HeaderBase(id, offset, length_next, timeout), nullptr);
+		    int payload_value = 42;
+		    packet->addPayload(new L2HeaderUnicast(id2, use_arq, arq_seqno, ack_seqno, arq_ack_slot), new TestPayload(payload_value));
+
+		    L2Packet* copy = packet->copy();
+		    CPPUNIT_ASSERT_EQUAL(size_t(2), packet->getHeaders().size());
+            CPPUNIT_ASSERT_EQUAL(copy->getHeaders().size(), packet->getHeaders().size());
+            auto* base_header_1 = (L2HeaderBase*) packet->getHeaders().at(0), *base_header_2 = (L2HeaderBase*) copy->getHeaders().at(0);
+            CPPUNIT_ASSERT(*base_header_1 == *base_header_2);
+            CPPUNIT_ASSERT_EQUAL(packet->getPayloads().at(0), copy->getPayloads().at(0));
+            auto *payload_1 = (TestPayload*) packet->getPayloads().at(1), *payload_2 = (TestPayload*) copy->getPayloads().at(1);
+            CPPUNIT_ASSERT_EQUAL(payload_value, payload_1->some_value);
+            CPPUNIT_ASSERT_EQUAL(payload_1->some_value, payload_2->some_value);
+            delete copy;
+		}
 	
 	CPPUNIT_TEST_SUITE(L2PacketTests);
 		CPPUNIT_TEST(testAddPayload);
@@ -213,5 +244,6 @@ class L2PacketTests : public CppUnit::TestFixture {
 		CPPUNIT_TEST(testBroadcastPayload);
 		CPPUNIT_TEST(testBeaconPayload);
 		CPPUNIT_TEST(testCallback);
+        CPPUNIT_TEST(testCopy);
 	CPPUNIT_TEST_SUITE_END();
 };
