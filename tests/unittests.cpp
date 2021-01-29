@@ -13,12 +13,12 @@ int main(int argc, const char* argv[]) {
 //    CppUnit::TestResult result;
 //    CppUnit::TestResultCollector collectedResults;
 //    CppUnit::BriefTestProgressListener progress;
-    CppUnit::TextUi::TestRunner runner;
+	CppUnit::TextUi::TestRunner runner;
 
 //    result.addListener (&collectedResults);
 //    result.addListener (&progress);
 
-    runner.addTest(SequenceNumberTests::suite());
+	runner.addTest(SequenceNumberTests::suite());
 	runner.addTest(L2HeaderTests::suite());
 	runner.addTest(L2PacketTests::suite());
 

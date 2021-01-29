@@ -9,15 +9,15 @@ using namespace TUHH_INTAIRNET_MCSOTDMA;
 
 L2Packet::L2Packet() = default;
 
-L2Packet::L2Packet(const L2Packet &other) : headers(other.headers), payloads(other.payloads), callbacks(other.callbacks) {}
+L2Packet::L2Packet(const L2Packet& other) : headers(other.headers), payloads(other.payloads), callbacks(other.callbacks) {}
 
-L2Packet *L2Packet::copy() const {
-    auto* copy = new L2Packet();
-    for (const auto *header : headers)
-        copy->headers.push_back(header == nullptr ? nullptr : header->copy());
-    for (const auto *payload : payloads)
-        copy->payloads.push_back(payload == nullptr ? nullptr : payload->copy());
-    return copy;
+L2Packet* L2Packet::copy() const {
+	auto* copy = new L2Packet();
+	for (const auto* header : headers)
+		copy->headers.push_back(header == nullptr ? nullptr : header->copy());
+	for (const auto* payload : payloads)
+		copy->payloads.push_back(payload == nullptr ? nullptr : payload->copy());
+	return copy;
 }
 
 L2Packet::~L2Packet() {
@@ -31,11 +31,11 @@ void L2Packet::addPayload(L2Header* header, L2Packet::Payload* payload) {
 	// Ensure that the first header is a base header.
 	if (headers.empty() && header->frame_type != L2Header::FrameType::base)
 		throw std::invalid_argument("First header of a packet *must* be a base header.");
-	
+
 	// Ensure that later headers are *not* base headers.
 	if (!headers.empty() && header->frame_type == L2Header::FrameType::base)
 		throw std::invalid_argument("Later headers of a packet cannot be a base header.");
-	
+
 	// Set the unicast destination ID if possible.
 	if (header->frame_type == L2Header::FrameType::unicast || header->frame_type == L2Header::FrameType::link_establishment_request || header->frame_type == L2Header::FrameType::link_establishment_reply) {
 		MacId header_dest_id = ((L2HeaderUnicast*) header)->getDestId();
@@ -46,9 +46,10 @@ void L2Packet::addPayload(L2Header* header, L2Packet::Payload* payload) {
 		// So if these differ, throw an error.
 		const MacId current_destination = getDestination();
 		if (current_destination != SYMBOLIC_ID_UNSET && current_destination != SYMBOLIC_LINK_ID_BROADCAST && current_destination != SYMBOLIC_LINK_ID_BEACON && header_dest_id != current_destination)
-			throw std::runtime_error("Cannot add a unicast header to this packet. It already has a unicast destination ID. Current dest='" + std::to_string(current_destination.getId()) + "' header dest='" + std::to_string(header_dest_id.getId()) + "'.");
+			throw std::runtime_error(
+					"Cannot add a unicast header to this packet. It already has a unicast destination ID. Current dest='" + std::to_string(current_destination.getId()) + "' header dest='" + std::to_string(header_dest_id.getId()) + "'.");
 	}
-	
+
 	// Set the broadcast destination ID if possible.
 	if (header->frame_type == L2Header::FrameType::broadcast) {
 		// If there already is a set destination, it may only be a beacon.
@@ -56,14 +57,14 @@ void L2Packet::addPayload(L2Header* header, L2Packet::Payload* payload) {
 		if (current_destination != SYMBOLIC_ID_UNSET && current_destination != SYMBOLIC_LINK_ID_BEACON)
 			throw std::runtime_error("Cannot add a broadcast header to this packet. It already has a destination ID: '" + std::to_string(getDestination().getId()) + "'.");
 	}
-	
+
 	// Set the beacon destination ID if possible.
 	if (header->frame_type == L2Header::FrameType::beacon) {
 		// If there already is a set destination, throw an error, as beacon headers must come first.
 		if (getDestination() != SYMBOLIC_ID_UNSET)
 			throw std::runtime_error("Cannot add a beacon header to this packet. It already has a destination ID: '" + std::to_string(getDestination().getId()) + "'.");
 	}
-	
+
 	headers.push_back(header);
 	payloads.push_back(payload);
 }
@@ -80,8 +81,8 @@ unsigned int L2Packet::getBits() const {
 	unsigned int bits = 0;
 	for (size_t i = 0; i < headers.size(); i++) {
 		L2Packet::Payload* payload = payloads.at(i);
-		if(headers.at(i) == nullptr) {
-		    continue;
+		if (headers.at(i) == nullptr) {
+			continue;
 		}
 		bits += headers.at(i)->getBits() + (payload == nullptr ? 0 : payload->getBits());
 	}
@@ -125,12 +126,12 @@ void L2Packet::notifyCallbacks() {
 }
 
 std::string L2Packet::print() {
-    std::string result = "[";
-    for(int i = 0; i < headers.size(); i++) {
-        result += "H,";
-        result += "P | ";
-    }
-    result += "]";
-    return result;
+	std::string result = "[";
+	for (int i = 0; i < headers.size(); i++) {
+		result += "H,";
+		result += "P | ";
+	}
+	result += "]";
+	return result;
 }
 

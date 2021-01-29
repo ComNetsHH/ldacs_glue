@@ -8,16 +8,20 @@
 #include "L2Packet.hpp"
 
 namespace TUHH_INTAIRNET_MCSOTDMA {
-    class IPhy;
-    class IRadio {
-    protected:
-        IPhy *phy = nullptr;
-    public:
-        virtual void sendToChannel(L2Packet *packet, uint64_t center_frequency) = 0;
-        virtual void receiveFromChannel(L2Packet *packet, uint64_t center_frequency) = 0;
-        void setPhy(IPhy * phy);
-        IPhy* getPhy();
-    };
+	class IPhy;
+
+	class IRadio {
+	protected:
+		IPhy* phy = nullptr;
+	public:
+		virtual void sendToChannel(L2Packet* packet, uint64_t center_frequency) = 0;
+
+		virtual void receiveFromChannel(L2Packet* packet, uint64_t center_frequency) = 0;
+
+		void setPhy(IPhy* phy);
+
+		IPhy* getPhy();
+	};
 }
 
 

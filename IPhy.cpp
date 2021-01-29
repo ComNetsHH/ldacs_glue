@@ -20,16 +20,16 @@ void IPhy::setUpperLayer(IMac* mac) {
 	this->upper_layer = mac;
 }
 
-void IPhy::setRadio(IRadio *radio) {
-    this->radio = radio;
+void IPhy::setRadio(IRadio* radio) {
+	this->radio = radio;
 }
 
 void IPhy::tuneReceiver(uint64_t center_frequency) {
-    if (rx_frequencies.size() == num_receivers)
-        throw std::runtime_error("IPhy::tuneReceiver exceeds number of available receivers.");
-    rx_frequencies.push_back(center_frequency);
+	if (rx_frequencies.size() == num_receivers)
+		throw std::runtime_error("IPhy::tuneReceiver exceeds number of available receivers.");
+	rx_frequencies.push_back(center_frequency);
 }
 
 void IPhy::update(uint64_t num_slots) {
-    rx_frequencies.clear();
+	rx_frequencies.clear();
 }
