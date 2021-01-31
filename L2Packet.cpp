@@ -135,3 +135,17 @@ std::string L2Packet::print() {
 	return result;
 }
 
+int L2Packet::getRequestIndex() const {
+	for (int i = 0; i < headers.size(); i++)
+		if (headers.at(i)->frame_type == L2Header::FrameType::link_establishment_request)
+			return i;
+	return -1;
+}
+
+int L2Packet::getReplyIndex() const {
+	for (int i = 0; i < headers.size(); i++)
+		if (headers.at(i)->frame_type == L2Header::FrameType::link_establishment_reply)
+			return i;
+	return -1;
+}
+
