@@ -69,6 +69,11 @@ bool IMac::isTransmitterIdle(unsigned int slot_offset, unsigned int num_slots) c
 	return lower_layer->isTransmitterIdle(slot_offset, num_slots);
 }
 
+bool IMac::isAnyReceiverIdle(unsigned int slot_offset, unsigned int num_slots) const {
+	assert(lower_layer && "IMac::isAnyReceiverIdle for unset lower layer.");
+	return lower_layer->isAnyReceiverIdle(slot_offset, num_slots);
+}
+
 void IMac::update(uint64_t num_slots) {
 	current_slot += num_slots;
 }
