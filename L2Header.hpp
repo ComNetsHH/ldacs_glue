@@ -284,6 +284,42 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		}
 	};
 
+	class L2HeaderLinkRequest : public L2Header {
+	public:
+		unsigned int burst_offset = 0;
+		unsigned int burst_length = 0;
+		unsigned int burst_length_tx = 0;
+		MacId dest_id;
+
+		explicit L2HeaderLinkRequest(const MacId& dest_id) : L2Header(FrameType::link_establishment_request), dest_id(dest_id) {}
+		L2HeaderLinkRequest() : L2HeaderLinkRequest(SYMBOLIC_ID_UNSET) {}
+		L2HeaderLinkRequest(const L2HeaderLinkRequest& other) : L2HeaderLinkRequest(other.dest_id) {
+			burst_offset = other.burst_offset;
+			burst_length = other.burst_length;
+			burst_length_tx = other.burst_length_tx;
+		}
+
+		L2Header* copy() const override {
+			return new L2HeaderLinkRequest(*this);
+		}
+
+		unsigned int getBits() const override {
+			return L2Header::getBits() + 8 + 4 + 4 + MacId::getBits();
+		}
+
+		bool operator==(const L2HeaderLinkRequest& other) const {
+			return burst_offset == other.burst_offset
+				&& burst_length == other.burst_length
+				&& burst_length_tx == other.burst_length_tx
+				&& dest_id == other.dest_id
+				&& ((L2Header) *this) == ((L2Header) other);
+		}
+
+		bool operator!=(const L2HeaderLinkRequest& other) const {
+			return !((*this) == other);
+		}
+	};
+
 	class L2HeaderLinkEstablishmentRequest : public L2HeaderUnicast {
 	public:
 		L2HeaderLinkEstablishmentRequest(const MacId& icao_dest_id, bool use_arq, const SequenceNumber& arq_seqno, const SequenceNumber& arq_ack_no, unsigned int arq_ack_slot)
