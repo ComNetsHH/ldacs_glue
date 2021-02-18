@@ -59,7 +59,7 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		 * @param header
 		 * @param payload
 		 */
-		void addPayload(L2Header* header, Payload* payload);
+		void addMessage(L2Header* header, Payload* payload);
 
 		/**
 		 * @return All payloads.

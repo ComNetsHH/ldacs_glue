@@ -27,7 +27,7 @@ L2Packet::~L2Packet() {
 		delete payload;
 }
 
-void L2Packet::addPayload(L2Header* header, L2Packet::Payload* payload) {
+void L2Packet::addMessage(L2Header* header, L2Packet::Payload* payload) {
 	// Ensure that the first header is a base header.
 	if (headers.empty() && header->frame_type != L2Header::FrameType::base)
 		throw std::invalid_argument("First header of a packet *must* be a base header.");
