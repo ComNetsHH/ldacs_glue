@@ -7,6 +7,7 @@
 
 #include <algorithm>
 #include <vector>
+#include <array>
 #include "MacId.hpp"
 #include "CPRPosition.hpp"
 #include "SequenceNumber.hpp"
@@ -176,7 +177,7 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 	class L2HeaderUnicast : public L2Header {
 	public:
 		L2HeaderUnicast(const MacId& icao_dest_id, bool use_arq, const SequenceNumber& seqno, const SequenceNumber& seqno_next_expected, unsigned int arq_ack_slot, FrameType frame_type)
-				: L2Header(frame_type), icao_dest_id(icao_dest_id), use_arq(use_arq), seqno(seqno), seqno_next_expected(seqno_next_expected), srej_size(0), arq_ack_slot(arq_ack_slot) {
+				: L2Header(frame_type), icao_dest_id(icao_dest_id), use_arq(use_arq), seqno(seqno), seqno_next_expected(seqno_next_expected), arq_ack_slot(arq_ack_slot) {
 			if (frame_type != FrameType::unicast && frame_type != FrameType::link_establishment_reply && frame_type != FrameType::link_establishment_request)
 				throw std::invalid_argument("Cannot instantiate a unicast header with a non-unicast type.");
 		}
@@ -190,8 +191,6 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			use_arq = other.use_arq;
 			seqno = other.seqno;
 			seqno_next_expected = other.seqno_next_expected;
-			srej_size = other.srej_size;
-			srej_list = other.srej_list;
 			arq_ack_slot = other.arq_ack_slot;
 			icao_dest_id = other.icao_dest_id;
 		}
@@ -213,14 +212,13 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			       + 8 /* ARQ ACK number */
 			       + 8 /* ARQ slot indication number */
 			       + icao_dest_id.getBits() /* destination ID */
-			       + 8 * srej_list.size()
-			       + 8 /* List size of srej_list */
+			       + 16 /* Srej bit map */
 			       + L2Header::getBits();
 		}
 
 		bool operator==(const L2HeaderUnicast& other) const {
 			return other.is_pkt_start == is_pkt_start && other.is_pkt_end == is_pkt_end && other.use_arq == use_arq && other.seqno == seqno && other.seqno_next_expected == seqno_next_expected
-			       && other.srej_size == srej_size && other.arq_ack_slot == arq_ack_slot && other.srej_list == srej_list && other.icao_dest_id == icao_dest_id;
+			        && other.arq_ack_slot == arq_ack_slot && other.icao_dest_id == icao_dest_id;
 		}
 
 		bool operator!=(const L2HeaderUnicast& other) const {
@@ -239,10 +237,8 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		SequenceNumber seqno;
 		/** ARQ acknowledgement. */
 		SequenceNumber seqno_next_expected;
-		/** Selective rejection list size */
-		unsigned int srej_size;
 		/** Selective rejection list. */
-		std::vector<SequenceNumber> srej_list;
+        std::array<bool, 16> srej_bitmap = {false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false};
 		/** The offset to the next reserved slot where an acknowledgement is expected. */
 		unsigned int arq_ack_slot;
 		/** Destination ICAO ID. */
@@ -258,19 +254,9 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			this->seqno_next_expected = seqno;
 		}
 
-		/** Srej list setter function */
-		void setSrejList(std::vector<SequenceNumber> list) {
-			this->srej_list = list;
-		}
-
-		/** Get srej list length */
-		uint8_t getSrejListLength() {
-			return this->srej_list.size();
-		}
-
 		/** Get srej list */
-		std::vector<SequenceNumber> getSrejList() {
-			return this->srej_list;
+		std::array<bool, 16> getSrejList() {
+			return this->srej_bitmap;
 		}
 
 		/** Get sequence number */
