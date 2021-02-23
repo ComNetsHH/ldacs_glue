@@ -31,7 +31,7 @@ public:
 	}
 
 	void testBaseHeader() {
-		L2HeaderBase header_base = L2HeaderBase(id, offset, length_next, timeout);
+		L2HeaderBase header_base = L2HeaderBase(id, offset, length_next, length_next, timeout);
 		CPPUNIT_ASSERT_EQUAL(L2Header::FrameType::base, header_base.frame_type);
 		CPPUNIT_ASSERT(header_base.src_id == id);
 		CPPUNIT_ASSERT_EQUAL(offset, header_base.burst_offset);
@@ -59,23 +59,30 @@ public:
 
 
 		SequenceNumber seqNo(1);
-		std::vector<SequenceNumber> selRejList;
-		selRejList.push_back(SequenceNumber(2));
-		selRejList.push_back(SequenceNumber(3));
 
 		header_unicast.setSeqno(seqNo);
 		header_unicast.setSeqnoNextExpected(seqNo);
-		header_unicast.setSrejList(selRejList);
+		auto srej_bitmap = header_unicast.getSrejList();
 
-		CPPUNIT_ASSERT_EQUAL(header_unicast.getSrejListLength(), uint8_t(2));
-		CPPUNIT_ASSERT_EQUAL(header_unicast.getSrejList().size(), (unsigned long) 2);
+        srej_bitmap[10] = true;
+        srej_bitmap[11] = true;
+
+		int sum = 0;
+		for(int i =0; i< srej_bitmap.size(); i++) {
+		    if(srej_bitmap[i]) {
+		        sum++;
+		    }
+		}
+
+		CPPUNIT_ASSERT_EQUAL(sum, 2);
+		CPPUNIT_ASSERT_EQUAL(header_unicast.getSrejList().size(), (unsigned long)16);
 		CPPUNIT_ASSERT_EQUAL(header_unicast.getSeqno().get(), seqNo.get());
 		CPPUNIT_ASSERT_EQUAL(header_unicast.getSeqnoNextExpected().get(), seqNo.get());
 	}
 
 	void testHeaderSizes() {
-		L2HeaderBase base_header = L2HeaderBase(id, offset, length_next, timeout);
-		CPPUNIT_ASSERT_EQUAL(uint(850), base_header.getBits());
+		L2HeaderBase base_header = L2HeaderBase(id, offset, length_next, length_next, timeout);
+		CPPUNIT_ASSERT_EQUAL(uint(854), base_header.getBits());
 
 		MacId dest_id = MacId(99);
 		bool use_arq = true;
@@ -83,23 +90,13 @@ public:
 		SequenceNumber arq_ack_no = SequenceNumber(51);
 		unsigned int arq_ack_slot = 52;
 		L2HeaderUnicast unicast_header = L2HeaderUnicast(dest_id, use_arq, arq_seqno, arq_ack_no, arq_ack_slot);
-		CPPUNIT_ASSERT_EQUAL(uint(65), unicast_header.getBits());
-
-
-		std::vector<SequenceNumber> selRejList;
-		selRejList.push_back(SequenceNumber(2));
-		selRejList.push_back(SequenceNumber(3));
-		unicast_header.setSrejList(selRejList);
+		CPPUNIT_ASSERT_EQUAL(uint(73), unicast_header.getBits());
 
 		L2HeaderBroadcast broadcast_header = L2HeaderBroadcast();
-		CPPUNIT_ASSERT_EQUAL(uint(5), broadcast_header.getBits());
-		CPPUNIT_ASSERT_EQUAL(uint(81), unicast_header.getBits());
+		CPPUNIT_ASSERT_EQUAL(uint(32), broadcast_header.getBits());
 
 
 		L2Header simple_header = L2Header(L2Header::FrameType::unset);
-
-		// Broadcast headers have two more bits
-		CPPUNIT_ASSERT(simple_header.getBits() + 2 == broadcast_header.getBits());
 
 		L2HeaderBeacon beacon_header = L2HeaderBeacon(CPRPosition(), CPRPosition().odd, 12, CPRPosition::PositionQuality::hi);
 		CPPUNIT_ASSERT_EQUAL(uint(49), beacon_header.getBits());

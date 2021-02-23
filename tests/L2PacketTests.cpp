@@ -61,7 +61,7 @@ public:
 		CPPUNIT_ASSERT_EQUAL(true, exception_occurred);
 
 		// Can add a base header.
-		L2HeaderBase* base_header = new L2HeaderBase(MacId(42), 12, 13, 14);
+		L2HeaderBase* base_header = new L2HeaderBase(MacId(42), 12, 13, 13, 14);
 		exception_occurred = false;
 		try {
 			packet->addMessage(base_header, nullptr);
@@ -92,7 +92,7 @@ public:
 
 	void testUnicastPayload() {
 		L2HeaderUnicast* unicast_header = new L2HeaderUnicast(MacId(43), true, 100, 101, 102);
-		L2HeaderBase* base_header = new L2HeaderBase(MacId(42), 12, 13, 14);
+		L2HeaderBase* base_header = new L2HeaderBase(MacId(42), 12, 13, 13, 14);
 		TestPayload* payload = nullptr;
 
 		// Add a base and a unicast header.
@@ -139,7 +139,7 @@ public:
 	}
 
 	void testBroadcastPayload() {
-		L2HeaderBase* base_header = new L2HeaderBase(MacId(42), 12, 13, 14);
+		L2HeaderBase* base_header = new L2HeaderBase(MacId(42), 12, 13, 13, 14);
 		L2HeaderBroadcast* broadcast_header = new L2HeaderBroadcast();
 		L2HeaderUnicast* unicast_header = new L2HeaderUnicast(MacId(43), true, 100, 101, 102);
 		TestPayload* payload = nullptr;
@@ -176,7 +176,7 @@ public:
 	}
 
 	void testBeaconPayload() {
-		L2HeaderBase* base_header = new L2HeaderBase(MacId(42), 12, 13, 14);
+		L2HeaderBase* base_header = new L2HeaderBase(MacId(42), 12, 13, 13, 14);
 		L2HeaderBeacon* beacon_header = new L2HeaderBeacon(CPRPosition(), CPRPosition().odd, 50, CPRPosition::PositionQuality::hi);
 		TestPayload* payload = nullptr;
 		// Should be able to add a beacon header.
@@ -223,7 +223,7 @@ public:
 		unsigned int offset = 3, length_next = 1, timeout = 12, arq_ack_slot = 7;
 		bool use_arq = true;
 		SequenceNumber arq_seqno = 12, ack_seqno = 5;
-		packet->addMessage(new L2HeaderBase(id, offset, length_next, timeout), nullptr);
+		packet->addMessage(new L2HeaderBase(id, offset, length_next, length_next, timeout), nullptr);
 		int payload_value = 42;
 		packet->addMessage(new L2HeaderUnicast(id2, use_arq, arq_seqno, ack_seqno, arq_ack_slot), new TestPayload(payload_value));
 
