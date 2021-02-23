@@ -33,9 +33,9 @@ public:
 	void testBaseHeader() {
 		L2HeaderBase header_base = L2HeaderBase(id, offset, length_next, timeout);
 		CPPUNIT_ASSERT_EQUAL(L2Header::FrameType::base, header_base.frame_type);
-		CPPUNIT_ASSERT(header_base.icao_src_id == id);
-		CPPUNIT_ASSERT_EQUAL(offset, header_base.offset);
-		CPPUNIT_ASSERT_EQUAL(length_next, header_base.length_next);
+		CPPUNIT_ASSERT(header_base.src_id == id);
+		CPPUNIT_ASSERT_EQUAL(offset, header_base.burst_offset);
+		CPPUNIT_ASSERT_EQUAL(length_next, header_base.burst_length);
 		CPPUNIT_ASSERT_EQUAL(timeout, header_base.timeout);
 	}
 

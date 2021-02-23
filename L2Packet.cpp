@@ -80,10 +80,9 @@ const std::vector<L2Header*>& L2Packet::getHeaders() {
 unsigned int L2Packet::getBits() const {
 	unsigned int bits = 0;
 	for (size_t i = 0; i < headers.size(); i++) {
-		L2Packet::Payload* payload = payloads.at(i);
-		if (headers.at(i) == nullptr) {
+		if (headers.at(i) == nullptr)
 			continue;
-		}
+		L2Packet::Payload* payload = payloads.at(i);
 		bits += headers.at(i)->getBits() + (payload == nullptr ? 0 : payload->getBits());
 	}
 	return bits;
@@ -105,7 +104,7 @@ const MacId& L2Packet::getOrigin() const {
 	if (headers.empty())
 		return SYMBOLIC_ID_UNSET;
 	auto* base_header = (L2HeaderBase*) headers.at(0);
-	return base_header->icao_src_id;
+	return base_header->src_id;
 }
 
 void L2Packet::addCallback(L2PacketSentCallback* callback) {
