@@ -176,6 +176,7 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			is_cpr_odd = other.is_cpr_odd;
 			num_hops_to_ground_station = other.num_hops_to_ground_station;
 			pos_quality = other.pos_quality;
+			next_hop_towards_gs = other.next_hop_towards_gs;
 		}
 
 		L2HeaderBeacon* copy() const override {
@@ -191,7 +192,7 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		}
 
 		bool operator==(const L2HeaderBeacon& other) const {
-			return other.position == position && other.is_cpr_odd == is_cpr_odd && other.num_hops_to_ground_station == num_hops_to_ground_station && other.pos_quality == pos_quality;
+			return other.position == position && other.is_cpr_odd == is_cpr_odd && other.num_hops_to_ground_station == num_hops_to_ground_station && other.pos_quality == pos_quality && next_hop_towards_gs == other.next_hop_towards_gs;
 		}
 
 		bool operator!=(const L2HeaderBeacon& other) const {
@@ -201,6 +202,7 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		CPRPosition position;
 		bool is_cpr_odd;
 		unsigned int num_hops_to_ground_station;
+		MacId next_hop_towards_gs = SYMBOLIC_ID_UNSET;
 		CPRPosition::PositionQuality pos_quality;
 	};
 
@@ -222,6 +224,7 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			seqno = other.seqno;
 			seqno_next_expected = other.seqno_next_expected;
 			arq_ack_slot = other.arq_ack_slot;
+			burst_length_tx_desire = other.burst_length_tx_desire;
 		}
 
 		L2HeaderUnicast* copy() const override {
@@ -236,13 +239,14 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			       + 8 /* ARQ sequence number */
 			       + 8 /* ARQ ACK number */
 			       + 8 /* ARQ slot indication number */
+			       + 4 /* burst length desire */
 			       + 16 /* Srej bit map */
 			       + L2HeaderWithDestination::getBits();
 		}
 
 		bool operator==(const L2HeaderUnicast& other) const {
 			return other.is_pkt_start == is_pkt_start && other.is_pkt_end == is_pkt_end && other.use_arq == use_arq && other.seqno == seqno && other.seqno_next_expected == seqno_next_expected
-			       && other.arq_ack_slot == arq_ack_slot && ((L2HeaderWithDestination&) *this == (L2HeaderWithDestination&) other);
+			       && other.arq_ack_slot == arq_ack_slot && burst_length_tx_desire == other.burst_length_tx_desire && ((L2HeaderWithDestination&) *this == (L2HeaderWithDestination&) other);
 		}
 
 		bool operator!=(const L2HeaderUnicast& other) const {
@@ -265,6 +269,8 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
         std::array<bool, 16> srej_bitmap = {false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false};
 		/** The offset to the next reserved slot where an acknowledgement is expected. */
 		unsigned int arq_ack_slot;
+		/** The number of transmission slots the local node would like to have, which will be respected upon link renewal. */
+		unsigned int burst_length_tx_desire = 0;
 
 		/** Sequence number setter */
 		void setSeqno(SequenceNumber seqno) {
