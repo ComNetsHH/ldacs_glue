@@ -90,7 +90,7 @@ public:
 		SequenceNumber arq_ack_no = SequenceNumber(51);
 		unsigned int arq_ack_slot = 52;
 		L2HeaderUnicast unicast_header = L2HeaderUnicast(dest_id, use_arq, arq_seqno, arq_ack_no, arq_ack_slot);
-		CPPUNIT_ASSERT_EQUAL(uint(73), unicast_header.getBits());
+		CPPUNIT_ASSERT_EQUAL(uint(77), unicast_header.getBits());
 
 		L2HeaderBroadcast broadcast_header = L2HeaderBroadcast();
 		CPPUNIT_ASSERT_EQUAL(uint(32), broadcast_header.getBits());
