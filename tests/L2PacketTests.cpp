@@ -239,6 +239,17 @@ public:
 		delete copy;
 	}
 
+	void testPacketSize() {
+		CPPUNIT_ASSERT_EQUAL(uint32_t(0), packet->getBits());
+		auto *base_header = new L2HeaderBase();
+		packet->addMessage(base_header, nullptr);
+		CPPUNIT_ASSERT_EQUAL(base_header->getBits(), packet->getBits());
+		auto *unicast_header = new L2HeaderUnicast(MacId(42), false, SequenceNumber(1), SequenceNumber(2), 3);
+		auto *unicast_payload = new TestPayload();
+		packet->addMessage(unicast_header, unicast_payload);
+		CPPUNIT_ASSERT_EQUAL(base_header->getBits() + unicast_header->getBits() + unicast_payload->getBits(), packet->getBits());
+	}
+
 CPPUNIT_TEST_SUITE(L2PacketTests);
 		CPPUNIT_TEST(testAddPayload);
 		CPPUNIT_TEST(testUnicastPayload);
@@ -246,5 +257,6 @@ CPPUNIT_TEST_SUITE(L2PacketTests);
 		CPPUNIT_TEST(testBeaconPayload);
 		CPPUNIT_TEST(testCallback);
 		CPPUNIT_TEST(testCopy);
+		CPPUNIT_TEST(testPacketSize);
 	CPPUNIT_TEST_SUITE_END();
 };
