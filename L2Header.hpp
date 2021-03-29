@@ -80,7 +80,7 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			       + 4 /* burst_length */
 			       + 4 /* burst_length_tx */
 			       + 8 /* timeout */
-			       + 800 /* 100B MAC */
+			       + 100 /* 100bit MAC */
 			       + L2Header::getBits();
 		}
 
