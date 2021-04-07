@@ -82,7 +82,7 @@ public:
 
 	void testHeaderSizes() {
 		L2HeaderBase base_header = L2HeaderBase(id, offset, length_next, length_next, timeout);
-		CPPUNIT_ASSERT_EQUAL(uint(854), base_header.getBits());
+		CPPUNIT_ASSERT_EQUAL(uint(155), base_header.getBits());
 
 		MacId dest_id = MacId(99);
 		bool use_arq = true;
