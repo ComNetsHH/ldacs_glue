@@ -32,6 +32,7 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		explicit L2Header(L2Header::FrameType frame_type) : frame_type(frame_type) {}
 
 		L2Header(const L2Header& other) = default;
+		virtual ~L2Header() = default;
 
 		virtual L2Header* copy() const {
 			return new L2Header(*this);
