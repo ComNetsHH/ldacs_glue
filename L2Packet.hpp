@@ -114,6 +114,11 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		 */
 		int getReplyIndex() const;
 
+		/**
+		 * @return Index of a contained link reply, or -1 if it doesn't contain one.
+		 */
+		int getBeaconIndex() const;
+
 	protected:
 		/**
 		 * Ensures that at least one header is present, which must be a base header.

@@ -148,3 +148,9 @@ int L2Packet::getReplyIndex() const {
 	return -1;
 }
 
+int L2Packet::getBeaconIndex() const {
+	for (int i = 0; i < headers.size(); i++)
+		if (headers.at(i)->frame_type == L2Header::FrameType::beacon)
+			return i;
+	return -1;
+}
