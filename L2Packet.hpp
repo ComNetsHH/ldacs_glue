@@ -61,6 +61,8 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		 */
 		void addMessage(L2Header* header, Payload* payload);
 
+		void addMessage(std::pair<L2Header*, Payload*> message);
+
 		/**
 		 * @return All payloads.
 		 */
@@ -79,7 +81,7 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		/**
 		 * @return This packet's destination ID.
 		 */
-		const MacId& getDestination() const;
+		MacId getDestination() const;
 
 		/**
 		 * @return This packet's originator ID.

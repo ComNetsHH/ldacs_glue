@@ -103,7 +103,7 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		}
 
 		/**
-		 * When a neighbor's update comes in, this reports it to the upper layers.
+		 * When a neighbor's onSlotEnd comes in, this reports it to the upper layers.
 		 * @param id
 		 * @param num_hops
 		 */

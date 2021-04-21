@@ -50,6 +50,14 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			return !((*this) == other);
 		}
 
+		bool isUnicastType() const {
+			return frame_type == L2Header::link_establishment_reply || frame_type == L2Header::link_establishment_request || frame_type == L2Header::unicast;
+		}
+
+		bool isBroadcastType() const {
+			return frame_type == L2Header::broadcast || frame_type == L2Header::beacon;
+		}
+
 		/** This frame's type. */
 		const FrameType frame_type;
 	};

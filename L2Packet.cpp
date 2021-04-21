@@ -54,7 +54,7 @@ void L2Packet::addMessage(L2Header* header, L2Packet::Payload* payload) {
 	if (header->frame_type == L2Header::FrameType::broadcast) {
 		// If there already is a set destination, it may only be a beacon.
 		const MacId current_destination = getDestination();
-		if (current_destination != SYMBOLIC_ID_UNSET && current_destination != SYMBOLIC_LINK_ID_BEACON)
+		if (current_destination != SYMBOLIC_LINK_ID_BROADCAST && current_destination != SYMBOLIC_ID_UNSET && current_destination != SYMBOLIC_LINK_ID_BEACON)
 			throw std::runtime_error("Cannot add a broadcast header to this packet. It already has a destination ID: '" + std::to_string(getDestination().getId()) + "'.");
 	}
 
@@ -67,6 +67,10 @@ void L2Packet::addMessage(L2Header* header, L2Packet::Payload* payload) {
 
 	headers.push_back(header);
 	payloads.push_back(payload);
+}
+
+void L2Packet::addMessage(std::pair<L2Header*, Payload*> message) {
+	this->addMessage(message.first, message.second);
 }
 
 std::vector<L2Packet::Payload*>& L2Packet::getPayloads() {
@@ -88,16 +92,18 @@ unsigned int L2Packet::getBits() const {
 	return bits;
 }
 
-const MacId& L2Packet::getDestination() const {
-	for (L2Header* header : headers) {
-		if (header->frame_type == L2Header::beacon)
-			return SYMBOLIC_LINK_ID_BEACON;
-		else if (header->frame_type == L2Header::broadcast)
+MacId L2Packet::getDestination() const {
+	// Default to UNSET.
+	MacId id = SYMBOLIC_ID_UNSET;
+	for (const L2Header *header : headers) {
+		// Return BROADCAST-type destinations immediately, s.t. a single BROADCAST determines a packet's destination.
+		if (header->isBroadcastType())
 			return SYMBOLIC_LINK_ID_BROADCAST;
-		else if (header->frame_type == L2Header::link_establishment_reply || header->frame_type == L2Header::link_establishment_request || header->frame_type == L2Header::unicast)
-			return ((L2HeaderUnicast*) header)->getDestId();
+		// Save UNICAST-type destinations, overwriting the UNSET default if present.
+		else if (header->isUnicastType())
+			id = ((L2HeaderUnicast*) header)->getDestId();
 	}
-	return SYMBOLIC_ID_UNSET;
+	return id;
 }
 
 const MacId& L2Packet::getOrigin() const {
