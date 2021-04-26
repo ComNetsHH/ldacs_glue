@@ -26,7 +26,8 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			broadcast,
 			unicast,
 			link_establishment_request,
-			link_establishment_reply
+			link_establishment_reply,
+			link_info
 		};
 
 		explicit L2Header(L2Header::FrameType frame_type) : frame_type(frame_type) {}
@@ -55,7 +56,7 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		}
 
 		bool isBroadcastType() const {
-			return frame_type == L2Header::broadcast || frame_type == L2Header::beacon;
+			return frame_type == L2Header::broadcast || frame_type == L2Header::beacon || frame_type == link_info;
 		}
 
 		/** This frame's type. */
@@ -174,6 +175,15 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 
 		unsigned int getBits() const override {
 			return L2HeaderWithDestination::getBits() + 2; // Two additional bits for start and end flags
+		}
+	};
+
+	class L2HeaderLinkInfo : public L2HeaderWithDestination {
+	public:
+		L2HeaderLinkInfo() : L2HeaderWithDestination(link_info, SYMBOLIC_LINK_ID_BROADCAST) {}
+		L2HeaderLinkInfo(const L2HeaderLinkInfo &other) = default;
+		L2HeaderLinkInfo* copy() const override {
+			return new L2HeaderLinkInfo(*this);
 		}
 	};
 
