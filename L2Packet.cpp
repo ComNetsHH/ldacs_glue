@@ -131,10 +131,38 @@ void L2Packet::notifyCallbacks() {
 }
 
 std::string L2Packet::print() {
-	std::string result = "[";
+	std::string result = "[ ";
 	for (int i = 0; i < headers.size(); i++) {
-		result += "H,";
-		result += "P | ";
+	    auto headerType = headers[i]->frame_type;
+	    if(headerType == L2Header::FrameType::broadcast) {
+            result += "BC,";
+	    }
+	    else if (headerType == L2Header::FrameType::base) {
+            result += "B,";
+	    }
+        else if (headerType == L2Header::FrameType::link_establishment_request) {
+            result += "LINK_REQ,";
+        }
+        else if (headerType == L2Header::FrameType::link_establishment_reply) {
+            result += "LINK_REP,";
+        }
+        else if (headerType == L2Header::FrameType::unicast) {
+            result += "U,";
+        }
+        else {
+            result += "H,";
+        }
+
+        if(payloads[i] == nullptr) {
+            result += "N ";
+        }
+        else {
+            result += "P ";
+        }
+        if(i != headers.size() -1) {
+            result += "| ";
+        }
+
 	}
 	result += "]";
 	return result;
