@@ -145,34 +145,19 @@ public:
 		TestPayload* payload = nullptr;
 
 		// Add a base and a broadcast header and then a unicast header.
-		bool exception_occurred = false;
-		try {
-			packet->addMessage(base_header, payload);
-			packet->addMessage(broadcast_header, payload);
-			packet->addMessage(unicast_header, payload);
-		} catch (const std::exception& e) {
-			exception_occurred = true;
-		}
-		CPPUNIT_ASSERT_EQUAL(false, exception_occurred);
+		L2Packet another_packet = L2Packet();
+		another_packet.addMessage(base_header->copy(), payload);
+		another_packet.addMessage(broadcast_header->copy(), payload);
+		CPPUNIT_ASSERT_NO_THROW(another_packet.addMessage(unicast_header, payload));
 
-		// Shouldn't be able to add a broadcast header.
-		exception_occurred = false;
-		try {
-			packet->addMessage(broadcast_header, payload);
-		} catch (const std::exception& e) {
-			exception_occurred = true;
-		}
-		CPPUNIT_ASSERT_EQUAL(true, exception_occurred);
+		packet->addMessage(base_header, payload);
+		packet->addMessage(broadcast_header, payload);
+		CPPUNIT_ASSERT_NO_THROW(packet->addMessage(broadcast_header->copy(), payload));
 
 		// Shouldn't be able to add a beacon header.
-		exception_occurred = false;
-		try {
-			L2HeaderBeacon beacon_header = L2HeaderBeacon(CPRPosition(), CPRPosition().odd, 2, CPRPosition::PositionQuality::hi);
-			packet->addMessage(&beacon_header, payload);
-		} catch (const std::exception& e) {
-			exception_occurred = true;
-		}
-		CPPUNIT_ASSERT_EQUAL(true, exception_occurred);
+		auto *beacon_header = new L2HeaderBeacon(CPRPosition(), CPRPosition().odd, 2, CPRPosition::PositionQuality::hi);
+		CPPUNIT_ASSERT_THROW(packet->addMessage(beacon_header, payload), std::runtime_error);
+		delete beacon_header;
 	}
 
 	void testBeaconPayload() {
