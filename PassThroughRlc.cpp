@@ -23,7 +23,7 @@ void PassThroughRlc::onEvent(double time) {
 
 void PassThroughRlc::receiveFromUpper(L3Packet* data, MacId dest, PacketPriority priority) {
 	networkLayerPackets.push_back(data);
-	emit("rlc_nw_queue", 100);
+	emit("rlc_nw_queue", size_t(100));
 	debug("rlc_nw_queue");
 	IArq* arq = getLowerLayer();
 	arq->notifyOutgoing(100, dest);
