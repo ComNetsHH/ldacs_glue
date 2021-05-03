@@ -40,8 +40,14 @@ public:
 	std::function<void(std::string, double)> emitCallback;
 	std::function<void(std::string)> debugCallback;
 
-	// will be called for every scheduleAt call
-	virtual void onEvent(double time) = 0;
+	/**
+	 * To hook into OMNeT++'s scheduling mechanism.
+	 * Override this function to make use of it.
+	 * @param time
+	 */
+	virtual void onEvent(double time) {
+		// Do nothing by default.
+	}
 
 	void registerGetTimeCallback(std::function<double()> callback) {
 		getTimeCallback = callback;
