@@ -23,13 +23,17 @@ public:
 		}
 	}
 
-	void emit(std::string event_name, double value) {
+	void emit(const std::string& event_name, double value) {
 		if (emitCallback) {
 			emitCallback(event_name, value);
 		}
 	}
 
-	void debug(std::string message) {
+	void emit(const std::string& event_name, size_t value) {
+		this->emit(event_name, (double) value);
+	}
+
+	void debug(const std::string& message) {
 		if (debugCallback) {
 			debugCallback(message);
 		}
