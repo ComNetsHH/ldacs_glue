@@ -78,7 +78,6 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			timeout = other.timeout;
 			src_id = other.src_id;
 			message_authentication_code = other.message_authentication_code;
-			link_renewal_negotiated = other.link_renewal_negotiated;
 		}
 
 		L2HeaderBase* copy() const override {
@@ -104,8 +103,6 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			return !((*this) == other);
 		}
 
-		/** Flag that indicates the next link renewal has been negotiated. */
-		bool link_renewal_negotiated = false;
 		/** Number of slots until the next transmission. */
 		unsigned int burst_offset;
 		/** Number of slots next frame will occupy. */
