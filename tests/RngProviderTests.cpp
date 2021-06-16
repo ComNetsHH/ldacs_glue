@@ -23,12 +23,7 @@ public:
 		delete tester;
 	}
 
-	void testIntegerRngNoSignup() {
-		CPPUNIT_ASSERT_THROW(tester->getRandomInt(0, 1), std::invalid_argument);
-	}
-
 	void testGetInts() {
-		tester->signupInt();
 		int min = 0, max = 11;
 		CPPUNIT_ASSERT_NO_THROW(tester->getRandomInt(min, max));
 		size_t num_tries = 10000;
@@ -47,7 +42,6 @@ public:
 	}
 
 	CPPUNIT_TEST_SUITE(RngProviderTests);
-		CPPUNIT_TEST(testIntegerRngNoSignup);
 		CPPUNIT_TEST(testGetInts);
 	CPPUNIT_TEST_SUITE_END();
 };

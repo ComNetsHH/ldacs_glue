@@ -99,9 +99,8 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 	public:
 		/**
 		 * Signs up to receive an integer RNG.
-		 * Must be called prior to using getRandomInt().
 		 */
-		void signupInt();
+		IRng();
 		int getRandomInt(int min, int max);
 	};
 }

@@ -13,7 +13,7 @@ int IntegerUniformRng::get(int min, int max) {
 	return dist(generator);
 }
 
-void IRng::signupInt() {
+IRng::IRng() {
 	RngProvider::getInstance().signupInt(this);
 }
 
