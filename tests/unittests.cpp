@@ -6,6 +6,7 @@
 #include "SequenceNumberTests.cpp"
 #include "L2HeaderTests.cpp"
 #include "L2PacketTests.cpp"
+#include "RngProviderTests.cpp"
 
 using namespace std;
 
@@ -21,6 +22,7 @@ int main(int argc, const char* argv[]) {
 	runner.addTest(SequenceNumberTests::suite());
 	runner.addTest(L2HeaderTests::suite());
 	runner.addTest(L2PacketTests::suite());
+	runner.addTest(RngProviderTests::suite());
 
 //    runner.run(result);
 	runner.run();
