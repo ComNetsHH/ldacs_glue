@@ -8,6 +8,7 @@
 #include <map>
 #include <stdexcept>
 #include <random>
+#include <functional>
 
 namespace TUHH_INTAIRNET_MCSOTDMA {
 	class IntRng {
@@ -21,7 +22,7 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		virtual ~IntRng() = default;
 	};
 	/**
-	 *
+	 * C++-default random number generator for integer values.
 	 */
 	class IntegerUniformRng : public IntRng {
 	public:
@@ -36,6 +37,20 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 
 	};
 
+	// Forward-declaration of OMNeT++-provided random number generator for integer values.
+		class OmnetIntegerUniformRng : public IntRng {
+
+		friend class RngProviderTests;
+
+	public:
+		explicit OmnetIntegerUniformRng(int k) : k(k) {}
+
+		int get(int min, int max) override;
+
+	protected:
+		int k;
+	};
+
 	// Forward-declaration of users of RNGs.
 	class IRng;
 
@@ -45,7 +60,19 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 	 * Implemented through a singleton instance inspired by https://stackoverflow.com/questions/1008019/c-singleton-design-pattern
 	 */
 	class RngProvider {
+
+		friend class RngProviderTests;
+
 	public:
+		/** Function that should be replaced by the OMNeT++ simulator. */
+		std::function<int (int min, int max, int k)> omnetGetInt = [] (int min, int max, int k) {throw std::runtime_error("not implemented"); return 0;};
+
+		RngProvider(RngProvider const&) = delete;
+		void operator=(RngProvider const&) = delete;
+		~RngProvider() {
+			reset();
+		}
+
 		static RngProvider& getInstance() {
 			static RngProvider instance; // Instantiated on first use.
 			return instance;
@@ -67,7 +94,7 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 				if (use_default_rngs)
 					int_rng_callers[caller] = new IntegerUniformRng();
 				else
-					throw std::runtime_error("not yet implemented");
+					int_rng_callers[caller] = new OmnetIntegerUniformRng((int) int_rng_callers.size());
 			}
 		}
 
@@ -78,20 +105,28 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			return it->second->get(min, max);
 		}
 
-	private:
-		RngProvider() {} // hide constructor
+		void reset() {
+			// Delete just the RNGs, not the callers.
+			for (auto pair : int_rng_callers)
+				delete pair.second;
+			int_rng_callers.clear();
+		}
+
+		/**
+		 * Sets the function that is called whenever an OMNeT++-based RNG should be used.
+		 * @param func
+		 */
+		void setOmnetGetInt(std::function<int (int min, int max, int k)> func) {
+			omnetGetInt = func;
+		}
 
 	protected:
 		std::map<IRng*, IntRng*> int_rng_callers;
 		bool use_default_rngs = true;
 
-	public:
-		RngProvider(RngProvider const&) = delete;
-		void operator=(RngProvider const&) = delete;
-		~RngProvider() {
-			for (auto pair : int_rng_callers)
-				delete pair.second;
-		}
+	private:
+		// hide constructor
+		RngProvider() {}
 	};
 
 	/** Interface that classes that wish to obtain a random number generator must implement. */
