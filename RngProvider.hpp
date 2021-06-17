@@ -61,6 +61,12 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		 * Signs up to receive an integer RNG.
 		 */
 		IRng();
+
+		/**
+		 * @param min Inclusive.
+		 * @param max Exclusive.
+		 * @return A random integer from [min, max).
+		 */
 		int getRandomInt(int min, int max);
 	};
 
@@ -75,8 +81,11 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		/** Function that should be replaced by the OMNeT++ simulator. */
 		std::function<int (int min, int max, int k)> omnetGetInt = [] (int min, int max, int k) {throw std::runtime_error("not implemented"); return 0;};
 
+		// Make sure there can't be >1 instances of the RngProvider.
 		RngProvider(RngProvider const&) = delete;
 		void operator=(RngProvider const&) = delete;
+
+		/** Clears the <user, RNG> mapping. */
 		~RngProvider() {
 			reset();
 		}
@@ -106,6 +115,13 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			}
 		}
 
+		/**
+		 * Retrieves the RNG saved for the caller, and utilizes it to obtain a random integer.
+		 * @param caller
+		 * @param min Inclusive
+		 * @param max Exclusive
+		 * @return A random integer from [min, max).
+		 */
 		int getInt(IRng* caller, int min, int max) {
 			auto it = int_rng_callers.find(caller);
 			if (it == int_rng_callers.end())
@@ -113,6 +129,9 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			return it->second->get(min, max);
 		}
 
+		/**
+		 * Clears the <user, RNG> mappings.
+		 */
 		void reset() {
 			// Delete just the RNGs, not the callers.
 			for (auto pair : int_rng_callers)
@@ -129,11 +148,13 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		}
 
 	protected:
+		/** Maps RNG-user to RNG. */
 		std::map<IRng*, IntRng*> int_rng_callers;
+		/** Whether to use C++-default RNGs when true, or OMNeT++-provided RNGs when false. */
 		bool use_default_rngs = true;
 
 	private:
-		// hide constructor
+		/** Private-hidden constructor as per singleton implementation pattern. */
 		RngProvider() {}
 	};
 }
