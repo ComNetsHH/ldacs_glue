@@ -16,7 +16,7 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		/**
 		 * @param min Inclusive
 		 * @param max Exclusive
-		 * @return
+		 * @return Random integer from [min, max).
 		 */
 		virtual int get(int min, int max) = 0;
 		virtual ~IntRng() = default;
@@ -34,25 +34,35 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		std::uniform_int_distribution<> dist;
 		std::random_device random_device;
 		std::mt19937 generator;
-
 	};
 
-	// Forward-declaration of OMNeT++-provided random number generator for integer values.
-		class OmnetIntegerUniformRng : public IntRng {
-
+	/**
+	 * OMNeT++-provided random number generator for integer values.
+	 */
+	class OmnetIntegerUniformRng : public IntRng {
 		friend class RngProviderTests;
-
 	public:
+		/**
+		 * @param k Index of the OMNeT++-RNG that should be associated with this instance.
+		 */
 		explicit OmnetIntegerUniformRng(int k) : k(k) {}
 
 		int get(int min, int max) override;
 
 	protected:
+		/** Association to the OMNeT++-provided RNG at index k. */
 		int k;
 	};
 
-	// Forward-declaration of users of RNGs.
-	class IRng;
+	/** Interface that classes that wish to obtain a random number generator must implement. */
+	class IRng {
+	public:
+		/**
+		 * Signs up to receive an integer RNG.
+		 */
+		IRng();
+		int getRandomInt(int min, int max);
+	};
 
 	/**
 	 * Provides Random Number Generators (RNGs) to classes.
@@ -60,9 +70,7 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 	 * Implemented through a singleton instance inspired by https://stackoverflow.com/questions/1008019/c-singleton-design-pattern
 	 */
 	class RngProvider {
-
 		friend class RngProviderTests;
-
 	public:
 		/** Function that should be replaced by the OMNeT++ simulator. */
 		std::function<int (int min, int max, int k)> omnetGetInt = [] (int min, int max, int k) {throw std::runtime_error("not implemented"); return 0;};
@@ -127,16 +135,6 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 	private:
 		// hide constructor
 		RngProvider() {}
-	};
-
-	/** Interface that classes that wish to obtain a random number generator must implement. */
-	class IRng {
-	public:
-		/**
-		 * Signs up to receive an integer RNG.
-		 */
-		IRng();
-		int getRandomInt(int min, int max);
 	};
 }
 
