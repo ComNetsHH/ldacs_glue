@@ -166,6 +166,8 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		 */
 		void notifyAboutRemovedLink(const MacId& id);
 
+		virtual void setBroadcastTargetCollisionProb(double value);
+
 	protected:
 		IArq* upper_layer = nullptr;
 		IPhy* lower_layer = nullptr;

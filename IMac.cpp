@@ -96,3 +96,7 @@ void IMac::notifyAboutRemovedLink(const MacId& id) {
 	assert(upper_layer && "IMac::notifyAboutRemovedLink for unset upper layer.");
 	upper_layer->notifyAboutRemovedLink(id);
 }
+
+void IMac::setBroadcastTargetCollisionProb(double value) {
+	throw std::runtime_error("setBroadcastTargetCollisionProb not implemented");
+}
