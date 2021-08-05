@@ -93,17 +93,18 @@ unsigned int L2Packet::getBits() const {
 }
 
 MacId L2Packet::getDestination() const {
-	// Default to UNSET.
-	MacId id = SYMBOLIC_ID_UNSET;
 	for (const L2Header *header : headers) {
 		// Return BROADCAST-type destinations immediately, s.t. a single BROADCAST determines a packet's destination.
-		if (header->isBroadcastType())
+		if (header->frame_type == L2Header::FrameType::beacon)
+			return SYMBOLIC_LINK_ID_BEACON;
+		else if (header->frame_type == L2Header::FrameType::broadcast || header->frame_type == L2Header::FrameType::link_info)
 			return SYMBOLIC_LINK_ID_BROADCAST;
-		// Save UNICAST-type destinations, overwriting the UNSET default if present.
+		// Return UNICAST-type destinations.
 		else if (header->isUnicastType())
-			id = ((L2HeaderUnicast*) header)->getDestId();
+			return ((L2HeaderUnicast*) header)->getDestId();
 	}
-	return id;
+	// Default to UNSET.
+	return SYMBOLIC_ID_UNSET;
 }
 
 const MacId& L2Packet::getOrigin() const {
