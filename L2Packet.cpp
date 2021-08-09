@@ -135,30 +135,31 @@ std::string L2Packet::print() {
 	std::string result = "[ ";
 	for (int i = 0; i < headers.size(); i++) {
 	    auto headerType = headers[i]->frame_type;
+	    int size = (int)headers[i]->getBits();
 	    if(headerType == L2Header::FrameType::broadcast) {
-            result += "BC,";
+            result += "BC(" + std::to_string(size) + "),";
 	    }
 	    else if (headerType == L2Header::FrameType::base) {
-            result += "B,";
+            result += "B(" + std::to_string(size) + "),";
 	    }
         else if (headerType == L2Header::FrameType::link_establishment_request) {
-            result += "LINK_REQ,";
+            result += "LINK_REQ(" + std::to_string(size) + "),";
         }
         else if (headerType == L2Header::FrameType::link_establishment_reply) {
-            result += "LINK_REP,";
+            result += "LINK_REP(" + std::to_string(size) + "),";
         }
         else if (headerType == L2Header::FrameType::unicast) {
-            result += "U,";
+            result += "U(" + std::to_string(size) + "),";
         }
         else {
             result += "H,";
         }
 
         if(payloads[i] == nullptr) {
-            result += "N ";
+            result += "N(0) ";
         }
         else {
-            result += "P ";
+            result += "P(" + std::to_string((int)payloads[i]->getBits()) + ") ";
         }
         if(i != headers.size() -1) {
             result += "| ";
