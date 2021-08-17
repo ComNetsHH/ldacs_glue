@@ -100,3 +100,7 @@ void IMac::notifyAboutRemovedLink(const MacId& id) {
 void IMac::setBroadcastTargetCollisionProb(double value) {
 	throw std::runtime_error("setBroadcastTargetCollisionProb not implemented");
 }
+
+void IMac::setBcSlotSelectionMinNumCandidateSlots(int value) {
+	throw std::runtime_error("setBcSlotSelectionMinNumCandidateSlots not implemented");
+}

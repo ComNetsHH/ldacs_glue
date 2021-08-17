@@ -166,7 +166,17 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		 */
 		void notifyAboutRemovedLink(const MacId& id);
 
+		/**
+		 * Set target collision probability during broadcast slot selection.
+		 * @param value
+		 */
 		virtual void setBroadcastTargetCollisionProb(double value);
+
+		/**
+		 * Set minimum number of candidate slots during broadcast slot selection.
+		 * @param value
+		 */
+		virtual void setBcSlotSelectionMinNumCandidateSlots(int value);
 
 	protected:
 		IArq* upper_layer = nullptr;
