@@ -104,3 +104,7 @@ void IMac::setBroadcastTargetCollisionProb(double value) {
 void IMac::setBcSlotSelectionMinNumCandidateSlots(int value) {
 	throw std::runtime_error("setBcSlotSelectionMinNumCandidateSlots not implemented");
 }
+
+void IMac::setUseBinomialContentionEstimation(bool value) {
+	throw std::runtime_error("setUseBinomialContentionEstimation not implemented");
+}

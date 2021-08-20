@@ -178,6 +178,13 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		 */
 		virtual void setBcSlotSelectionMinNumCandidateSlots(int value);
 
+		/**
+		 * If 'true': estimate the number of contending channel accesses from a Binomial distribution over 0..all recently active neighbors.
+		 * If 'false': assume that all recently active neighbors (within the contention window) will be active again.
+		 * @param value
+		 */
+		virtual void setUseBinomialContentionEstimation(bool value);
+
 	protected:
 		IArq* upper_layer = nullptr;
 		IPhy* lower_layer = nullptr;
