@@ -7,6 +7,7 @@
 
 #include <functional>
 #include <string>
+#include "L2Packet.hpp"
 
 class IOmnetPluggable {
 public:
@@ -39,10 +40,17 @@ public:
 		}
 	}
 
+	void deletePacket(TUHH_INTAIRNET_MCSOTDMA::L2Packet* packet) {
+        if (deleteCallback) {
+            deleteCallback(packet);
+        }
+	}
+
 	std::function<double()> getTimeCallback;
 	std::function<void(double)> scheduleAtCallback;
 	std::function<void(std::string, double)> emitCallback;
 	std::function<void(std::string)> debugCallback;
+	std::function<void(TUHH_INTAIRNET_MCSOTDMA::L2Packet *)> deleteCallback;
 
 	/**
 	 * To hook into OMNeT++'s scheduling mechanism.
@@ -68,6 +76,10 @@ public:
 	void registerDebugMessageCallback(std::function<void(std::string)> callback) {
 		debugCallback = callback;
 	}
+
+    void registerDeleteCallback(std::function<void(TUHH_INTAIRNET_MCSOTDMA::L2Packet*)> callback) {
+        deleteCallback = callback;
+    }
 };
 
 #endif //INTAIRNET_LINKLAYER_GLUE_IOMNETPLUGGABLE_HPP
