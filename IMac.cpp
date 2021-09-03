@@ -108,3 +108,7 @@ void IMac::setBcSlotSelectionMinNumCandidateSlots(int value) {
 void IMac::setUseBinomialContentionEstimation(bool value) {
 	throw std::runtime_error("setUseBinomialContentionEstimation not implemented");
 }
+
+void IMac::setAlwaysScheduleNextBroadcastSlot(bool value) {
+	throw std::runtime_error("setAlwaysScheduleNextBroadcastSlot not implemented");
+}

@@ -185,6 +185,13 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		 */
 		virtual void setUseBinomialContentionEstimation(bool value);
 
+		/**
+		 * If 'true': always schedule the next broadcast slot and advertise it in the header.
+		 * If 'false: only schedule the next broadcast slot if there's more data queued up.
+		 * @param value
+		 */
+		virtual void setAlwaysScheduleNextBroadcastSlot(bool value);
+
 	protected:
 		IArq* upper_layer = nullptr;
 		IPhy* lower_layer = nullptr;
