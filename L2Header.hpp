@@ -241,10 +241,11 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			is_pkt_start = other.is_pkt_start;
 			is_pkt_end = other.is_pkt_end;
 			use_arq = other.use_arq;
-			seqno = other.seqno;
-			seqno_next_expected = other.seqno_next_expected;
+			seqno = SequenceNumber(other.seqno);
+			seqno_next_expected = SequenceNumber(other.seqno_next_expected);
 			arq_ack_slot = other.arq_ack_slot;
 			burst_length_tx_desire = other.burst_length_tx_desire;
+            srej_bitmap = other.srej_bitmap;
 		}
 
 		L2HeaderUnicast* copy() const override {
@@ -305,6 +306,11 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		/** Get srej list */
 		std::array<bool, 16> getSrejList() {
 			return this->srej_bitmap;
+		}
+
+        /** Set srej list */
+        void setSrejBitmap(std::array<bool, 16> srej) {
+            this->srej_bitmap = srej;
 		}
 
 		/** Get sequence number */

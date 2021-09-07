@@ -8,6 +8,7 @@
 #include <functional>
 #include <string>
 #include "L2Packet.hpp"
+#include "L3Packet.hpp"
 
 class IOmnetPluggable {
 public:
@@ -41,16 +42,23 @@ public:
 	}
 
 	void deletePacket(TUHH_INTAIRNET_MCSOTDMA::L2Packet* packet) {
-        if (deleteCallback) {
-            deleteCallback(packet);
+        if (deleteL2Callback) {
+            deleteL2Callback(packet);
         }
 	}
+
+    void deletePacket(L3Packet* packet) {
+        if (deleteL3Callback) {
+            deleteL3Callback(packet);
+        }
+    }
 
 	std::function<double()> getTimeCallback;
 	std::function<void(double)> scheduleAtCallback;
 	std::function<void(std::string, double)> emitCallback;
 	std::function<void(std::string)> debugCallback;
-	std::function<void(TUHH_INTAIRNET_MCSOTDMA::L2Packet *)> deleteCallback;
+    std::function<void(TUHH_INTAIRNET_MCSOTDMA::L2Packet *)> deleteL2Callback;
+    std::function<void(L3Packet *)> deleteL3Callback;
 
 	/**
 	 * To hook into OMNeT++'s scheduling mechanism.
@@ -77,8 +85,12 @@ public:
 		debugCallback = callback;
 	}
 
-    void registerDeleteCallback(std::function<void(TUHH_INTAIRNET_MCSOTDMA::L2Packet*)> callback) {
-        deleteCallback = callback;
+    void registerDeleteL2Callback(std::function<void(TUHH_INTAIRNET_MCSOTDMA::L2Packet*)> callback) {
+        deleteL2Callback = callback;
+    }
+
+    void registerDeleteL3Callback(std::function<void(L3Packet*)> callback) {
+        deleteL3Callback = callback;
     }
 };
 

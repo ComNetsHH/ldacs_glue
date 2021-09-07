@@ -9,7 +9,7 @@ set(GLUE_SRC_CPP SequenceNumber.cpp L2Packet.cpp IMac.cpp IArq.cpp IPhy.cpp IRad
 set(GLUE_SRC_TESTS tests/unittests.cpp tests/SequenceNumberTests.cpp tests/L2HeaderTests.cpp tests/L2PacketTests.cpp RngProvider.cpp RngProvider.hpp tests/RngProviderTests.cpp)
 
 # Remove if not needed
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -I/usr/include -I/usr/local/include/ -L/usr/local/Cellar/cppunit/1.15.1/lib")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -I/usr/local/include/ -L/usr/local/Cellar/cppunit/1.15.1/lib")
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 add_library(intairnet_linklayer_glue SHARED ${GLUE_SRC_HPP} ${GLUE_SRC_CPP})

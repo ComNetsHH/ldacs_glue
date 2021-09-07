@@ -5,6 +5,7 @@
 
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
+#include <iostream>
 #include "../L2Header.hpp"
 
 using namespace TUHH_INTAIRNET_MCSOTDMA;
@@ -64,8 +65,12 @@ public:
 		header_unicast.setSeqnoNextExpected(seqNo);
 		auto srej_bitmap = header_unicast.getSrejList();
 
+
+
         srej_bitmap[10] = true;
         srej_bitmap[11] = true;
+
+        header_unicast.srej_bitmap = srej_bitmap;
 
 		int sum = 0;
 		for(int i =0; i< srej_bitmap.size(); i++) {
@@ -74,10 +79,20 @@ public:
 		    }
 		}
 
-		CPPUNIT_ASSERT_EQUAL(sum, 2);
+        CPPUNIT_ASSERT_EQUAL(sum, 2);
 		CPPUNIT_ASSERT_EQUAL(header_unicast.getSrejList().size(), (unsigned long)16);
 		CPPUNIT_ASSERT_EQUAL(header_unicast.getSeqno().get(), seqNo.get());
 		CPPUNIT_ASSERT_EQUAL(header_unicast.getSeqnoNextExpected().get(), seqNo.get());
+
+		auto copy = header_unicast.copy();
+        auto oldSrej = header_unicast.getSrejList();
+        auto newSrej = copy->getSrejList();
+
+		for(int i= 0; i< newSrej.size(); i++) {
+            CPPUNIT_ASSERT_EQUAL(oldSrej[i], newSrej[i]);
+            std::cout << oldSrej[i] << std::endl;
+		}
+
 	}
 
 	void testHeaderSizes() {
