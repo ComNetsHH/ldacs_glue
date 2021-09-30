@@ -94,3 +94,15 @@ bool SequenceNumber::isLowerThan(SequenceNumber other, uint8_t windowSize) {
 bool SequenceNumber::isLowerThanEqual(SequenceNumber other, uint8_t windowSize) {
 	return isLowerThan(other, windowSize) || *this == other;
 }
+
+SequenceNumber SequenceNumber::next() {
+    auto result = SequenceNumber(this->get());
+    result.increment();
+    return result;
+}
+
+SequenceNumber SequenceNumber::prev() {
+    auto result = SequenceNumber(this->get());
+    result = result -1;
+    return result;
+}

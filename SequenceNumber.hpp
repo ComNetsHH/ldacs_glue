@@ -36,6 +36,10 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 
 		void increment();
 
+        SequenceNumber next();
+
+        SequenceNumber prev();
+
 	protected:
 		uint8_t sequence_number;
 	};

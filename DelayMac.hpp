@@ -12,8 +12,10 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 
 	class DelayMac : public IMac, public IOmnetPluggable {
 	private:
-		unsigned int nextPktSize = 0;
+	    int nextPktSize = 0;
 		MacId nextMacId;
+
+		int counter = 0;
 	public:
 		explicit DelayMac(const MacId& id);
 
@@ -28,6 +30,12 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		void receiveFromLower(L2Packet* packet, uint64_t center_frequency) override;
 
 		void onEvent(double time) override;
+
+        void update(uint64_t num_slots);
+
+		void execute();
+
+		void onSlotEnd();
 	};
 
 }
