@@ -467,6 +467,22 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		              << std::to_string(request.length_next);
 	}
 
+	inline std::ostream& operator<<(std::ostream& stream, const L2Header::FrameType& frame_type) {
+		std::string s;
+		switch (frame_type) {
+			case L2Header::FrameType::unset: {s = "unset"; break;}
+			case L2Header::FrameType::base: {s = "base"; break;}
+			case L2Header::FrameType::link_info: {s = "link_info"; break;}
+			case L2Header::FrameType::beacon: {s = "beacon"; break;}
+			case L2Header::FrameType::broadcast: {s = "broadcast"; break;}
+			case L2Header::FrameType::unicast: {s = "unicast"; break;}
+			case L2Header::FrameType::link_establishment_reply: {s = "link_reply"; break;}
+			case L2Header::FrameType::link_establishment_request: {s = "link_request"; break;}
+			default: {throw std::invalid_argument("please add new header type to operator<< of FrameType: " + std::to_string(frame_type) + "!");}
+		}
+		return stream << s;
+	}
+
 }
 
 #endif //INTAIRNET_LINKLAYER_GLUE_L2HEADER_HPP

@@ -8,6 +8,7 @@
 #include "MacId.hpp"
 #include "L2Packet.hpp"
 #include "Timestamp.hpp"
+#include "ContentionMethod.hpp"
 #include <map>
 
 namespace TUHH_INTAIRNET_MCSOTDMA {
@@ -179,11 +180,16 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		virtual void setBcSlotSelectionMinNumCandidateSlots(int value);
 
 		/**
-		 * If 'true': estimate the number of contending channel accesses from a Binomial distribution over 0..all recently active neighbors.
-		 * If 'false': assume that all recently active neighbors (within the contention window) will be active again.
+		 * @param method: Broadcast contention method.
+		 */
+		virtual void setContentionMethod(ContentionMethod method);
+
+		/**
+		 * If 'true': always schedule the next broadcast slot and advertise it in the header.
+		 * If 'false: only schedule the next broadcast slot if there's more data queued up.
 		 * @param value
 		 */
-		virtual void setUseBinomialContentionEstimation(bool value);
+		virtual void setAlwaysScheduleNextBroadcastSlot(bool value);
 
 	protected:
 		IArq* upper_layer = nullptr;

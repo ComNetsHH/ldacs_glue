@@ -97,7 +97,7 @@ MacId L2Packet::getDestination() const {
 		// Return BROADCAST-type destinations immediately, s.t. a single BROADCAST determines a packet's destination.
 		if (header->frame_type == L2Header::FrameType::beacon)
 			return SYMBOLIC_LINK_ID_BEACON;
-		else if (header->frame_type == L2Header::FrameType::broadcast || header->frame_type == L2Header::FrameType::link_info)
+		else if (header->isBroadcastType())
 			return SYMBOLIC_LINK_ID_BROADCAST;
 		// Return UNICAST-type destinations.
 		else if (header->isUnicastType())
@@ -136,22 +136,20 @@ std::string L2Packet::print() {
 	for (int i = 0; i < headers.size(); i++) {
 	    auto headerType = headers[i]->frame_type;
 	    int size = (int)headers[i]->getBits();
-	    if(headerType == L2Header::FrameType::broadcast) {
+	    if (headerType == L2Header::FrameType::broadcast) {
             result += "BC(" + std::to_string(size) + "),";
 	    }
 	    else if (headerType == L2Header::FrameType::base) {
             result += "B(" + std::to_string(size) + "),";
-	    }
-        else if (headerType == L2Header::FrameType::link_establishment_request) {
+	    } else if (headerType == L2Header::FrameType::link_establishment_request) {
             result += "LINK_REQ(" + std::to_string(size) + "),";
-        }
-        else if (headerType == L2Header::FrameType::link_establishment_reply) {
+        } else if (headerType == L2Header::FrameType::link_establishment_reply) {
             result += "LINK_REP(" + std::to_string(size) + "),";
-        }
-        else if (headerType == L2Header::FrameType::unicast) {
+        } else if (headerType == L2Header::FrameType::unicast) {
             result += "U(" + std::to_string(size) + "),";
-        }
-        else {
+	    } else if (headerType == L2Header::FrameType::link_info) {
+	    	result += "LINK_INF(" + std::to_string(size) + "),";
+	    } else {
             result += "H,";
         }
 
