@@ -235,6 +235,28 @@ public:
 		CPPUNIT_ASSERT_EQUAL(base_header->getBits() + unicast_header->getBits() + unicast_payload->getBits(), packet->getBits());
 	}
 
+	void testErase() {
+		MacId id = MacId(1), id2 = MacId(2);
+		unsigned int offset = 3, length_next = 1, timeout = 12, arq_ack_slot = 7;
+		bool use_arq = true;
+		SequenceNumber arq_seqno = 12, ack_seqno = 5;
+		packet->addMessage(new L2HeaderBase(id, offset, length_next, length_next, timeout), nullptr);
+		int payload_value = 42;
+		packet->addMessage(new L2HeaderUnicast(id2, use_arq, arq_seqno, ack_seqno, arq_ack_slot), new TestPayload(payload_value));
+
+		CPPUNIT_ASSERT_EQUAL(size_t(2), packet->getHeaders().size());
+		CPPUNIT_ASSERT_EQUAL(L2Header::FrameType::base, packet->getHeaders().at(0)->frame_type);
+		CPPUNIT_ASSERT_EQUAL(L2Header::FrameType::unicast, packet->getHeaders().at(1)->frame_type);		
+
+		packet->erase(0);
+		CPPUNIT_ASSERT_EQUAL(size_t(1), packet->getHeaders().size());
+		CPPUNIT_ASSERT_EQUAL(L2Header::FrameType::unicast, packet->getHeaders().at(0)->frame_type);		
+
+		packet->erase(0);
+		CPPUNIT_ASSERT_EQUAL(size_t(0), packet->getHeaders().size());
+		CPPUNIT_ASSERT_THROW(packet->erase(0), std::invalid_argument);
+	}
+
 CPPUNIT_TEST_SUITE(L2PacketTests);
 		CPPUNIT_TEST(testAddPayload);
 		CPPUNIT_TEST(testUnicastPayload);
@@ -243,5 +265,6 @@ CPPUNIT_TEST_SUITE(L2PacketTests);
 		CPPUNIT_TEST(testCallback);
 		CPPUNIT_TEST(testCopy);
 		CPPUNIT_TEST(testPacketSize);
+		CPPUNIT_TEST(testErase);
 	CPPUNIT_TEST_SUITE_END();
 };

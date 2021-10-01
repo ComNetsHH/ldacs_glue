@@ -126,6 +126,11 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		 */
 		int getLinkInfoIndex() const;
 
+		/**
+		 * Erases header and payload at the given index.
+		 */
+		void erase(size_t index);
+
 	protected:
 		/**
 		 * Ensures that at least one header is present, which must be a base header.

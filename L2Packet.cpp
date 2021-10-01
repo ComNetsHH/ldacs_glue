@@ -195,3 +195,10 @@ int L2Packet::getLinkInfoIndex() const {
 			return i;
 	return -1;
 }
+
+void L2Packet::erase(size_t index) {
+	if (index >= this->headers.size() || index >= this->payloads.size())
+		throw std::invalid_argument("L2Packet::erase for index out of bounds.");
+	this->headers.erase(this->headers.begin() + index);
+	this->payloads.erase(this->payloads.begin() + index);
+}
