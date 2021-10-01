@@ -116,6 +116,11 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		 */
 		void reportNumHopsToGS(const MacId& id, unsigned int num_hops) const;
 
+		/**
+		 * @return Maximum number of retransmission attempts, not including the initial try.
+		 */
+		size_t getMaxNumRtxAttempts() const;
+
 	protected:
 		/**
 		 * When a packet comes in via PHY and MAC, this function parses its header and updates the internal ARQ state.
@@ -125,6 +130,8 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 
 		IRlc* upper_layer = nullptr;
 		IMac* lower_layer = nullptr;
+		/** Maximum number of retransmission attempts (not including the initial try). */
+		size_t max_num_rtx_attempts = 2;
 	};
 }
 

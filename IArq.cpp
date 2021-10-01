@@ -37,3 +37,6 @@ bool IArq::isThereMoreData(const MacId& mac_id) const {
 	return upper_layer->isThereMoreData(mac_id);
 }
 
+size_t IArq::getMaxNumRtxAttempts() const {
+	return this->max_num_rtx_attempts;
+}
