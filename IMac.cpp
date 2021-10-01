@@ -112,3 +112,7 @@ void IMac::setContentionMethod(ContentionMethod method) {
 void IMac::setAlwaysScheduleNextBroadcastSlot(bool value) {
 	throw std::runtime_error("setAlwaysScheduleNextBroadcastSlot not implemented");
 }
+
+void IMac::setCloseP2PLinksEarly(bool flag) {
+	throw std::runtime_error("setCloseP2PLinksEarly not implemented");
+}
