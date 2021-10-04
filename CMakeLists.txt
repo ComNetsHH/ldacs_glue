@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.13)
+cmake_minimum_required(VERSION 3.1)
 project(intairnet_linklayer_glue)
 
 set(CMAKE_CXX_STANDARD 14)
