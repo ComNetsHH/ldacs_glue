@@ -26,6 +26,11 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 
 		double get() const;
 
+		/** Stop the emission of this statistic until the first report. If this is not called, then a first value will be emitted even before the first report has been made, s.t. the simulation result always contains values. */
+		void dontEmitBeforeFirstReport();
+
+		bool wasUpdated() const;
+
 	protected:
 		const std::string name;
 		double value;
