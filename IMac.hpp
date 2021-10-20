@@ -196,6 +196,9 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		 */
 		virtual void setCloseP2PLinksEarly(bool flag);
 
+		virtual void setMinBeaconOffset(unsigned int value);
+		virtual void setMaxBeaconOffset(unsigned int value);
+
 	protected:
 		IArq* upper_layer = nullptr;
 		IPhy* lower_layer = nullptr;
