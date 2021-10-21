@@ -124,3 +124,7 @@ void IMac::setMinBeaconOffset(unsigned int value) {
 void IMac::setMaxBeaconOffset(unsigned int value) {
 	throw std::runtime_error("setMaxBeaconOffset not implemented");
 }
+
+void IMac::onBeaconReception(MacId origin_id, L2HeaderBeacon header) {
+	passUpBeaconFct(origin_id, header);
+}

@@ -7,9 +7,11 @@
 
 #include "MacId.hpp"
 #include "L2Packet.hpp"
+#include "L2Header.hpp"
 #include "Timestamp.hpp"
 #include "ContentionMethod.hpp"
 #include <map>
+#include <functional>
 
 namespace TUHH_INTAIRNET_MCSOTDMA {
 
@@ -199,6 +201,15 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		virtual void setMinBeaconOffset(unsigned int value);
 		virtual void setMaxBeaconOffset(unsigned int value);
 
+		/** 
+		 * When a beacon arrives at the MAC, it may be passed up to the Network Layer through this function.
+		 */
+		virtual void onBeaconReception(MacId origin_id, L2HeaderBeacon header);
+
+		void setOmnetPassUpBeaconFct(std::function<void (MacId origin_id, L2HeaderBeacon header)> func) {
+			this->passUpBeaconFct = func;
+		}
+
 	protected:
 		IArq* upper_layer = nullptr;
 		IPhy* lower_layer = nullptr;
@@ -206,6 +217,7 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		std::map<MacId, CPRPosition> position_map;
 		std::map<MacId, CPRPosition::PositionQuality> position_quality_map;
 		uint64_t current_slot = 0;
+		std::function<void (MacId origin_id, L2HeaderBeacon header)> passUpBeaconFct = [] (MacId origin_id, L2HeaderBeacon header) {/* do nothing */};
 	};
 }
 
