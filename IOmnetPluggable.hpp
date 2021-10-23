@@ -61,7 +61,7 @@ public:
 	}
 
     L2Packet::Payload* deepCopy(L2Packet::Payload * payload) {
-        if(copyL2Callback) {
+        if(copyL2PayloadCallback) {
             return copyL2PayloadCallback(payload);
         }
         return payload;
