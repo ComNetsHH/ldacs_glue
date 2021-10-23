@@ -53,6 +53,12 @@ public:
         }
     }
 
+    void deletePayload (L2Packet::Payload * payload) {
+        if (deleteL2PayloadCallback) {
+            deleteL2PayloadCallback(payload);
+        }
+	}
+
     L2Packet* deepCopy(L2Packet * packet) {
 	    if(copyL2Callback) {
 	        return copyL2Callback(packet);
@@ -73,6 +79,7 @@ public:
 	std::function<void(std::string)> debugCallback;
     std::function<void(TUHH_INTAIRNET_MCSOTDMA::L2Packet *)> deleteL2Callback;
     std::function<void(L3Packet *)> deleteL3Callback;
+    std::function<void(L2Packet::Payload*)> deleteL2PayloadCallback;
     std::function<L2Packet*(L2Packet*)> copyL2Callback;
     std::function<L2Packet::Payload*(L2Packet::Payload*)> copyL2PayloadCallback;
 
@@ -107,6 +114,10 @@ public:
 
     void registerDeleteL3Callback(std::function<void(L3Packet*)> callback) {
         deleteL3Callback = callback;
+    }
+
+    void registerDeleteL2PayloadCallback(std::function<void(L2Packet::Payload*)> callback) {
+        deleteL2PayloadCallback = callback;
     }
 
     void registerCopyL2Callback(std::function<L2Packet*(L2Packet*)> callback) {
