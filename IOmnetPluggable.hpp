@@ -53,12 +53,20 @@ public:
         }
     }
 
+    L2Packet* deepCopy(L2Packet * packet) {
+	    if(copyL2Callback) {
+	        return copyL2Callback(packet);
+	    }
+	    return packet;
+	}
+
 	std::function<double()> getTimeCallback;
 	std::function<void(double)> scheduleAtCallback;
 	std::function<void(std::string, double)> emitCallback;
 	std::function<void(std::string)> debugCallback;
     std::function<void(TUHH_INTAIRNET_MCSOTDMA::L2Packet *)> deleteL2Callback;
     std::function<void(L3Packet *)> deleteL3Callback;
+    std::function<L2Packet*(L2Packet*)> copyL2Callback;
 
 	/**
 	 * To hook into OMNeT++'s scheduling mechanism.
@@ -92,6 +100,10 @@ public:
     void registerDeleteL3Callback(std::function<void(L3Packet*)> callback) {
         deleteL3Callback = callback;
     }
+
+    void registerCopyL2Callback(std::function<L2Packet*(L2Packet*)> callback) {
+        copyL2Callback = callback;
+	}
 };
 
 #endif //INTAIRNET_LINKLAYER_GLUE_IOMNETPLUGGABLE_HPP
