@@ -50,7 +50,7 @@ SequenceNumber SequenceNumber::operator-(uint8_t decrement) {
 	if (raw > decrement) {
 		return SequenceNumber(raw - decrement);
 	} else {
-		uint8_t wrapAroundDistance = decrement - raw;
+		uint8_t wrapAroundDistance = decrement - raw + 1;
 		return SequenceNumber(SEQNO_MAX - wrapAroundDistance);
 	}
 }
