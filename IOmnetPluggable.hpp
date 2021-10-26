@@ -53,12 +53,20 @@ public:
         }
     }
 
+    SimulatorPosition getHostPosition() {
+        if(getPositionCallback) {
+            return getPositionCallback();
+        }
+        return SimulatorPosition(0,0,0);
+    }
+
 	std::function<double()> getTimeCallback;
 	std::function<void(double)> scheduleAtCallback;
 	std::function<void(std::string, double)> emitCallback;
 	std::function<void(std::string)> debugCallback;
     std::function<void(TUHH_INTAIRNET_MCSOTDMA::L2Packet *)> deleteL2Callback;
     std::function<void(L3Packet *)> deleteL3Callback;
+    std::function<SimulatorPosition()> getPositionCallback;
 
 	/**
 	 * To hook into OMNeT++'s scheduling mechanism.
@@ -92,6 +100,10 @@ public:
     void registerDeleteL3Callback(std::function<void(L3Packet*)> callback) {
         deleteL3Callback = callback;
     }
+
+    void registerGetPositionCallback(std::function<SimulatorPosition()> callback) {
+	    getPositionCallback = callback;
+	}
 };
 
 #endif //INTAIRNET_LINKLAYER_GLUE_IOMNETPLUGGABLE_HPP
