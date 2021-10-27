@@ -128,3 +128,11 @@ void IMac::setMaxBeaconOffset(unsigned int value) {
 void IMac::onBeaconReception(MacId origin_id, L2HeaderBeacon header) {
 	passUpBeaconFct(origin_id, header);
 }
+
+void IMac::setForceBidirectionalLinks(bool flag) {
+	this->should_force_bidirectional_links = flag;
+}
+
+void IMac::setInitializeBidirectionalLinks(bool flag) {
+	this->should_initialize_bidirectional_links = flag;
+}

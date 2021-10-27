@@ -210,6 +210,16 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			this->passUpBeaconFct = func;
 		}
 
+		/**
+		 * @param flag: If true, P2P links will always be bidirectional, i.e. have TX reservations for both sides.
+		 * */
+		virtual void setForceBidirectionalLinks(bool flag);
+
+		/**
+		 * @param flag: If true, initial P2P links will be bidirectional, and later links are steered by the reported TX requirements.
+		 * */
+		virtual void setInitializeBidirectionalLinks(bool flag);
+
 	protected:
 		IArq* upper_layer = nullptr;
 		IPhy* lower_layer = nullptr;
@@ -218,6 +228,8 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		std::map<MacId, CPRPosition::PositionQuality> position_quality_map;
 		uint64_t current_slot = 0;
 		std::function<void (MacId origin_id, L2HeaderBeacon header)> passUpBeaconFct = [] (MacId origin_id, L2HeaderBeacon header) {/* do nothing */};
+		bool should_force_bidirectional_links = false;
+		bool should_initialize_bidirectional_links = false;
 	};
 }
 
