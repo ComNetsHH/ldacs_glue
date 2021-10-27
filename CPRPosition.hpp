@@ -5,6 +5,8 @@
 #ifndef INTAIRNET_LINKLAYER_GLUE_CPRPOSITION_HPP
 #define INTAIRNET_LINKLAYER_GLUE_CPRPOSITION_HPP
 
+#include "SimulatorPosition.hpp"
+
 namespace TUHH_INTAIRNET_MCSOTDMA {
 
 	/** The Compact Position Report-encoded position of latitude, longitude, altitude as ADS-B uses it. */
@@ -24,6 +26,8 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 
 		CPRPosition(const CPRPosition& other) = default;
 
+		CPRPosition(SimulatorPosition simulatorPosition): encodedPosition(simulatorPosition) {};
+
 		/** Number of bits required to encode this position. */
 		unsigned int getBits() const {
 			return 12 /* latitude */ + 14 /* longitutde */ + 12 /* altitude */;
@@ -41,6 +45,9 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 
 		double latitude, longitude, altitude;
 		bool odd;
+
+		// holds the xyz position from the simulator that is encoded in this
+		SimulatorPosition encodedPosition;
 	};
 }
 
