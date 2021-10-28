@@ -190,10 +190,17 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 
 	class L2HeaderBeacon : public L2Header {
 	public:
-		L2HeaderBeacon(const CPRPosition& position, bool is_cpr_odd, unsigned int num_hops_to_ground_station, CPRPosition::PositionQuality pos_quality = CPRPosition::PositionQuality::low)
-				: L2Header(L2Header::FrameType::beacon), position(position), is_cpr_odd(is_cpr_odd), pos_quality(pos_quality) {}
+		enum CongestionLevel {
+			uncongested,
+			slightly_congested,
+			quite_congested,
+			congested
+		};
 
-		L2HeaderBeacon() : L2HeaderBeacon(CPRPosition(), CPRPosition().odd, 0, CPRPosition::PositionQuality::low) {}
+		L2HeaderBeacon(const CPRPosition& position, bool is_cpr_odd, L2HeaderBeacon::CongestionLevel congestion_level, CPRPosition::PositionQuality pos_quality)
+				: L2Header(L2Header::FrameType::beacon), position(position), is_cpr_odd(is_cpr_odd), pos_quality(pos_quality), congestion_level(congestion_level) {}
+
+		L2HeaderBeacon() : L2HeaderBeacon(CPRPosition(), CPRPosition().odd, L2HeaderBeacon::CongestionLevel::uncongested, CPRPosition::PositionQuality::low) {}
 
 		L2HeaderBeacon(const L2HeaderBeacon& other) : L2Header((const L2Header&) other) {
 			position = other.position;
@@ -214,7 +221,7 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		}
 
 		bool operator==(const L2HeaderBeacon& other) const {
-			return other.position == position && other.is_cpr_odd == is_cpr_odd && other.pos_quality == pos_quality;
+			return other.position == position && other.is_cpr_odd == is_cpr_odd && other.pos_quality == pos_quality && congestion_level == other.congestion_level;
 		}
 
 		bool operator!=(const L2HeaderBeacon& other) const {
@@ -224,6 +231,7 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		CPRPosition position;
 		bool is_cpr_odd;				
 		CPRPosition::PositionQuality pos_quality;
+		L2HeaderBeacon::CongestionLevel congestion_level;
 	};
 
 	class L2HeaderUnicast : public L2HeaderWithDestination {

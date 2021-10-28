@@ -130,7 +130,7 @@ public:
 		// Shouldn't be able to add a beacon header.
 		exception_occurred = false;
 		try {
-			L2HeaderBeacon beacon_header = L2HeaderBeacon(CPRPosition(), CPRPosition().odd, 2, CPRPosition::PositionQuality::hi);
+			L2HeaderBeacon beacon_header = L2HeaderBeacon(CPRPosition(), CPRPosition().odd, L2HeaderBeacon::CongestionLevel::uncongested, CPRPosition::PositionQuality::hi);
 			packet->addMessage(&beacon_header, payload);
 		} catch (const std::exception& e) {
 			exception_occurred = true;
@@ -155,14 +155,14 @@ public:
 		CPPUNIT_ASSERT_NO_THROW(packet->addMessage(broadcast_header->copy(), payload));
 
 		// Shouldn't be able to add a beacon header.
-		auto *beacon_header = new L2HeaderBeacon(CPRPosition(), CPRPosition().odd, 2, CPRPosition::PositionQuality::hi);
+		auto *beacon_header = new L2HeaderBeacon(CPRPosition(), CPRPosition().odd, L2HeaderBeacon::CongestionLevel::uncongested, CPRPosition::PositionQuality::hi);
 		CPPUNIT_ASSERT_THROW(packet->addMessage(beacon_header, payload), std::runtime_error);
 		delete beacon_header;
 	}
 
 	void testBeaconPayload() {
 		L2HeaderBase* base_header = new L2HeaderBase(MacId(42), 12, 13, 13, 14);
-		L2HeaderBeacon* beacon_header = new L2HeaderBeacon(CPRPosition(), CPRPosition().odd, 50, CPRPosition::PositionQuality::hi);
+		L2HeaderBeacon* beacon_header = new L2HeaderBeacon(CPRPosition(), CPRPosition().odd, L2HeaderBeacon::CongestionLevel::uncongested, CPRPosition::PositionQuality::hi);
 		TestPayload* payload = nullptr;
 		// Should be able to add a beacon header.
 		bool exception_occurred = false;
