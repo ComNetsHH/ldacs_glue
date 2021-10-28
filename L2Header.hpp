@@ -193,7 +193,7 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		enum CongestionLevel {
 			uncongested,
 			slightly_congested,
-			quite_congested,
+			moderately_congested,
 			congested
 		};
 
