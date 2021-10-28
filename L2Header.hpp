@@ -59,6 +59,10 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			return frame_type == L2Header::broadcast || frame_type == L2Header::beacon || frame_type == link_info;
 		}
 
+		bool isLinkInfo() const {
+			return frame_type == L2Header::link_info;
+		}
+
 		/** This frame's type. */
 		const FrameType frame_type;
 	};
