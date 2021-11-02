@@ -59,6 +59,10 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			return frame_type == L2Header::broadcast || frame_type == L2Header::beacon || frame_type == link_info;
 		}
 
+		bool isLinkInfo() const {
+			return frame_type == L2Header::link_info;
+		}
+
 		/** This frame's type. */
 		const FrameType frame_type;
 	};
@@ -186,17 +190,22 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 
 	class L2HeaderBeacon : public L2Header {
 	public:
-		L2HeaderBeacon(const CPRPosition& position, bool is_cpr_odd, unsigned int num_hops_to_ground_station, CPRPosition::PositionQuality pos_quality)
-				: L2Header(L2Header::FrameType::beacon), position(position), is_cpr_odd(is_cpr_odd), num_hops_to_ground_station(num_hops_to_ground_station), pos_quality(pos_quality) {}
+		enum CongestionLevel {
+			uncongested,
+			slightly_congested,
+			moderately_congested,
+			congested
+		};
 
-		L2HeaderBeacon() : L2HeaderBeacon(CPRPosition(), CPRPosition().odd, 0, CPRPosition::PositionQuality::low) {}
+		L2HeaderBeacon(const CPRPosition& position, bool is_cpr_odd, L2HeaderBeacon::CongestionLevel congestion_level, CPRPosition::PositionQuality pos_quality)
+				: L2Header(L2Header::FrameType::beacon), position(position), is_cpr_odd(is_cpr_odd), pos_quality(pos_quality), congestion_level(congestion_level) {}
+
+		L2HeaderBeacon() : L2HeaderBeacon(CPRPosition(), CPRPosition().odd, L2HeaderBeacon::CongestionLevel::uncongested, CPRPosition::PositionQuality::low) {}
 
 		L2HeaderBeacon(const L2HeaderBeacon& other) : L2Header((const L2Header&) other) {
 			position = other.position;
-			is_cpr_odd = other.is_cpr_odd;
-			num_hops_to_ground_station = other.num_hops_to_ground_station;
+			is_cpr_odd = other.is_cpr_odd;		
 			pos_quality = other.pos_quality;
-			next_hop_towards_gs = other.next_hop_towards_gs;
 		}
 
 		L2HeaderBeacon* copy() const override {
@@ -212,7 +221,7 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		}
 
 		bool operator==(const L2HeaderBeacon& other) const {
-			return other.position == position && other.is_cpr_odd == is_cpr_odd && other.num_hops_to_ground_station == num_hops_to_ground_station && other.pos_quality == pos_quality && next_hop_towards_gs == other.next_hop_towards_gs;
+			return other.position == position && other.is_cpr_odd == is_cpr_odd && other.pos_quality == pos_quality && congestion_level == other.congestion_level;
 		}
 
 		bool operator!=(const L2HeaderBeacon& other) const {
@@ -220,10 +229,9 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		}
 
 		CPRPosition position;
-		bool is_cpr_odd;
-		unsigned int num_hops_to_ground_station;
-		MacId next_hop_towards_gs = SYMBOLIC_ID_UNSET;
+		bool is_cpr_odd;				
 		CPRPosition::PositionQuality pos_quality;
+		L2HeaderBeacon::CongestionLevel congestion_level;
 	};
 
 	class L2HeaderUnicast : public L2HeaderWithDestination {

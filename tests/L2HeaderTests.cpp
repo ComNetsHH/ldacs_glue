@@ -113,7 +113,7 @@ public:
 
 		L2Header simple_header = L2Header(L2Header::FrameType::unset);
 
-		L2HeaderBeacon beacon_header = L2HeaderBeacon(CPRPosition(), CPRPosition().odd, 12, CPRPosition::PositionQuality::hi);
+		L2HeaderBeacon beacon_header = L2HeaderBeacon(CPRPosition(), CPRPosition().odd, L2HeaderBeacon::CongestionLevel::uncongested, CPRPosition::PositionQuality::hi);
 		CPPUNIT_ASSERT_EQUAL(uint(49), beacon_header.getBits());
 	}
 

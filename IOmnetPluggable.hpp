@@ -71,6 +71,13 @@ public:
             return copyL2PayloadCallback(payload);
         }
         return payload;
+		
+	}
+    SimulatorPosition getHostPosition() {
+        if(getPositionCallback) {
+            return getPositionCallback();
+        }
+        return SimulatorPosition(0,0,0);
     }
 
 	std::function<double()> getTimeCallback;
@@ -82,6 +89,7 @@ public:
     std::function<void(L2Packet::Payload*)> deleteL2PayloadCallback;
     std::function<L2Packet*(L2Packet*)> copyL2Callback;
     std::function<L2Packet::Payload*(L2Packet::Payload*)> copyL2PayloadCallback;
+    std::function<SimulatorPosition()> getPositionCallback;
 
 	/**
 	 * To hook into OMNeT++'s scheduling mechanism.
@@ -127,6 +135,9 @@ public:
     void registerCopyL2PayloadCallback(std::function<L2Packet::Payload*(L2Packet::Payload*)> callback) {
         copyL2PayloadCallback = callback;
     }
+    void registerGetPositionCallback(std::function<SimulatorPosition()> callback) {
+	    getPositionCallback = callback;
+	}
 };
 
 #endif //INTAIRNET_LINKLAYER_GLUE_IOMNETPLUGGABLE_HPP
