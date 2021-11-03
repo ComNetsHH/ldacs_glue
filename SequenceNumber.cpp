@@ -27,32 +27,35 @@ void SequenceNumber::increment() {
 		this->increment();
 }
 
+void SequenceNumber::decrement() {
+	this->sequence_number = (uint8_t) ((this->sequence_number -1) % SEQNO_MAX);
+	// Skip over UNSET.
+	if (this->get() == SEQNO_UNSET)
+		this->decrement();
+}
+
 bool SequenceNumber::operator==(const SequenceNumber& other) const {
 	return other.get() == this->get();
 }
 
 SequenceNumber SequenceNumber::operator+(uint8_t increment) {
 	assert(increment > 0);
-	uint8_t raw = this->get();
-
-	if (SEQNO_MAX - raw > increment) {
-		return SequenceNumber(raw + increment);
-	} else {
-		uint8_t wrapAroundDistance = SEQNO_MAX - raw;
-		return SequenceNumber(SEQNO_FIRST + (increment - wrapAroundDistance) - 1);
+	SequenceNumber ret = SequenceNumber(this->get());
+	for (uint8_t i = 0; i< increment; i++) {
+		ret.increment();
 	}
+
+	return ret;
 }
 
 SequenceNumber SequenceNumber::operator-(uint8_t decrement) {
 	assert(decrement > 0);
-	uint8_t raw = this->get();
-
-	if (raw > decrement) {
-		return SequenceNumber(raw - decrement);
-	} else {
-		uint8_t wrapAroundDistance = decrement - raw + 1;
-		return SequenceNumber(SEQNO_MAX - wrapAroundDistance);
+	SequenceNumber ret = SequenceNumber(this->get());
+	for (uint8_t i = 0; i< decrement; i++) {
+		ret.decrement();
 	}
+
+	return ret;
 }
 
 bool SequenceNumber::operator>(const SequenceNumber& other) const {
