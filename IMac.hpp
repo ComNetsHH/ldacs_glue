@@ -182,6 +182,12 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		virtual void setBcSlotSelectionMinNumCandidateSlots(int value);
 
 		/**
+		 * Set maximum number of candidate slots during broadcast slot selection.
+		 * @param value
+		 */
+		virtual void setBcSlotSelectionMaxNumCandidateSlots(int value);
+
+		/**
 		 * @param method: Broadcast contention method.
 		 */
 		virtual void setContentionMethod(ContentionMethod method);

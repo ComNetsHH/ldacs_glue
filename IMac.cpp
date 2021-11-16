@@ -105,6 +105,10 @@ void IMac::setBcSlotSelectionMinNumCandidateSlots(int value) {
 	throw std::runtime_error("setBcSlotSelectionMinNumCandidateSlots not implemented");
 }
 
+void IMac::setBcSlotSelectionMaxNumCandidateSlots(int value) {
+	throw std::runtime_error("setBcSlotSelectionMaxNumCandidateSlots not implemented");
+}
+
 void IMac::setContentionMethod(ContentionMethod method) {
 	throw std::runtime_error("setContentionMethod not implemented");
 }
