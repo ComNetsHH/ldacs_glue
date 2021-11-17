@@ -227,6 +227,7 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		virtual void setInitializeBidirectionalLinks(bool flag);
 
 		virtual void setWriteResourceUtilizationIntoBeacon(bool flag);
+		virtual void setEnableBeacons(bool flag);
 
 	protected:
 		IArq* upper_layer = nullptr;

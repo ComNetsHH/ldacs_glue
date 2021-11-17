@@ -144,3 +144,7 @@ void IMac::setInitializeBidirectionalLinks(bool flag) {
 void IMac::setWriteResourceUtilizationIntoBeacon(bool flag) {
 	throw std::runtime_error("setWriteResourceUtilizationIntoBeacon not implemented");
 }
+
+void IMac::setEnableBeacons(bool flag) {
+	throw std::runtime_error("setEnableBeacons not implemented");
+}
