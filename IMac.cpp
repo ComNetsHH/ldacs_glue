@@ -148,3 +148,7 @@ void IMac::setWriteResourceUtilizationIntoBeacon(bool flag) {
 void IMac::setEnableBeacons(bool flag) {
 	throw std::runtime_error("setEnableBeacons not implemented");
 }
+
+void IMac::setAdvertiseNextBroadcastSlotInCurrentHeader(bool flag) {
+	throw std::runtime_error("setAdvertiseNextBroadcastSlotInCurrentHeader not implemented");
+}
