@@ -112,6 +112,12 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			upper_layer->reportNumHopsToGS(id, num_hops);
 		}
 
+        /**
+         * Request the current amount of data queued up for sending
+         * @param dest
+         */
+		virtual unsigned int getQueuedDataSize(MacId dest) = 0;
+
 	protected:
 		IArq* lower_layer = nullptr;
 		INet* upper_layer = nullptr;

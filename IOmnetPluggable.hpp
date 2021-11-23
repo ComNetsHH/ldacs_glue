@@ -53,6 +53,26 @@ public:
         }
     }
 
+    void deletePayload (L2Packet::Payload * payload) {
+        if (deleteL2PayloadCallback) {
+            deleteL2PayloadCallback(payload);
+        }
+	}
+
+    L2Packet* deepCopy(L2Packet * packet) {
+	    if(copyL2Callback) {
+	        return copyL2Callback(packet);
+	    }
+	    return packet;
+	}
+
+    L2Packet::Payload* deepCopy(L2Packet::Payload * payload) {
+        if(copyL2PayloadCallback) {
+            return copyL2PayloadCallback(payload);
+        }
+        return payload;
+		
+	}
     SimulatorPosition getHostPosition() {
         if(getPositionCallback) {
             return getPositionCallback();
@@ -66,6 +86,9 @@ public:
 	std::function<void(std::string)> debugCallback;
     std::function<void(TUHH_INTAIRNET_MCSOTDMA::L2Packet *)> deleteL2Callback;
     std::function<void(L3Packet *)> deleteL3Callback;
+    std::function<void(L2Packet::Payload*)> deleteL2PayloadCallback;
+    std::function<L2Packet*(L2Packet*)> copyL2Callback;
+    std::function<L2Packet::Payload*(L2Packet::Payload*)> copyL2PayloadCallback;
     std::function<SimulatorPosition()> getPositionCallback;
 
 	/**
@@ -101,6 +124,17 @@ public:
         deleteL3Callback = callback;
     }
 
+    void registerDeleteL2PayloadCallback(std::function<void(L2Packet::Payload*)> callback) {
+        deleteL2PayloadCallback = callback;
+    }
+
+    void registerCopyL2Callback(std::function<L2Packet*(L2Packet*)> callback) {
+        copyL2Callback = callback;
+	}
+
+    void registerCopyL2PayloadCallback(std::function<L2Packet::Payload*(L2Packet::Payload*)> callback) {
+        copyL2PayloadCallback = callback;
+    }
     void registerGetPositionCallback(std::function<SimulatorPosition()> callback) {
 	    getPositionCallback = callback;
 	}
