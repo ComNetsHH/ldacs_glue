@@ -182,6 +182,12 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		virtual void setBcSlotSelectionMinNumCandidateSlots(int value);
 
 		/**
+		 * Set maximum number of candidate slots during broadcast slot selection.
+		 * @param value
+		 */
+		virtual void setBcSlotSelectionMaxNumCandidateSlots(int value);
+
+		/**
 		 * @param method: Broadcast contention method.
 		 */
 		virtual void setContentionMethod(ContentionMethod method);
@@ -192,6 +198,7 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		 * @param value
 		 */
 		virtual void setAlwaysScheduleNextBroadcastSlot(bool value);
+		virtual void setAdvertiseNextBroadcastSlotInCurrentHeader(bool flag);
 
 		/**
 		 * @param flag: My link is established after I've sent my link reply and receive the first data packet. If that doesn't arrive within as many attempts as ARQ allows, I should close the link early if this flag is set. 
@@ -219,6 +226,9 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		 * @param flag: If true, initial P2P links will be bidirectional, and later links are steered by the reported TX requirements.
 		 * */
 		virtual void setInitializeBidirectionalLinks(bool flag);
+
+		virtual void setWriteResourceUtilizationIntoBeacon(bool flag);
+		virtual void setEnableBeacons(bool flag);
 
 	protected:
 		IArq* upper_layer = nullptr;

@@ -105,6 +105,10 @@ void IMac::setBcSlotSelectionMinNumCandidateSlots(int value) {
 	throw std::runtime_error("setBcSlotSelectionMinNumCandidateSlots not implemented");
 }
 
+void IMac::setBcSlotSelectionMaxNumCandidateSlots(int value) {
+	throw std::runtime_error("setBcSlotSelectionMaxNumCandidateSlots not implemented");
+}
+
 void IMac::setContentionMethod(ContentionMethod method) {
 	throw std::runtime_error("setContentionMethod not implemented");
 }
@@ -135,4 +139,16 @@ void IMac::setForceBidirectionalLinks(bool flag) {
 
 void IMac::setInitializeBidirectionalLinks(bool flag) {
 	this->should_initialize_bidirectional_links = flag;
+}
+
+void IMac::setWriteResourceUtilizationIntoBeacon(bool flag) {
+	throw std::runtime_error("setWriteResourceUtilizationIntoBeacon not implemented");
+}
+
+void IMac::setEnableBeacons(bool flag) {
+	throw std::runtime_error("setEnableBeacons not implemented");
+}
+
+void IMac::setAdvertiseNextBroadcastSlotInCurrentHeader(bool flag) {
+	throw std::runtime_error("setAdvertiseNextBroadcastSlotInCurrentHeader not implemented");
 }

@@ -11,10 +11,10 @@ enum ContentionMethod {
 	binomial_estimate,
 	/** each neighbor's channel access is an independent Bernoulli trial with its own probability */
 	poisson_binomial_estimate,
-	/** assume that all users that have been active recently will again be active */
-	all_active_again_assumption,
+	/** calculate the number of candidate slots required to meet a certain collision probability */
+	randomized_slotted_aloha,
 	/** don't utilize contention estimation in any way, just pick a random slot out of the next 100 slots */
-	naive_random_access
+	naive_random_access,	
 };
 
 #endif //TUHH_INTAIRNET_MC_SOTDMA_CONTENTIONMETHOD_HPP
