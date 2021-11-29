@@ -131,6 +131,11 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		 */
 		void erase(size_t index);
 
+		/**
+		 * Flag that indicates whether an error was introduced by transmitting over the channel
+		 */
+		 bool hasChannelError = false;
+
 	protected:
 		/**
 		 * Ensures that at least one header is present, which must be a base header.
