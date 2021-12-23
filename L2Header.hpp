@@ -338,6 +338,7 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		unsigned int burst_offset = 0;
 		unsigned int burst_length = 0;
 		unsigned int burst_length_tx = 0;
+		unsigned int reply_offset = 0;
 
 		explicit L2HeaderLinkRequest(const MacId& dest_id) : L2HeaderWithDestination(FrameType::link_establishment_request, dest_id) {}
 		L2HeaderLinkRequest() : L2HeaderLinkRequest(SYMBOLIC_ID_UNSET) {}
@@ -346,6 +347,7 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			burst_offset = other.burst_offset;
 			burst_length = other.burst_length;
 			burst_length_tx = other.burst_length_tx;
+			reply_offset = other.reply_offset;
 		}
 
 		L2HeaderLinkRequest* copy() const override {
@@ -353,7 +355,13 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		}
 
 		unsigned int getBits() const override {
-			return L2HeaderWithDestination::getBits() + 8 + 8 + 4 + 4 + MacId::getBits();
+			return L2HeaderWithDestination::getBits() 
+					+ 8 /* timeout */ 
+					+ 8 /* burst_offset */ 
+					+ 4 /* burst_length */ 
+					+ 4 /* burst_length_tx */ 
+					+ 8 /* reply_offset */ 
+					+ MacId::getBits();
 		}
 
 		bool operator==(const L2HeaderLinkRequest& other) const {
@@ -362,6 +370,7 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 				&& burst_length == other.burst_length
 				&& burst_length_tx == other.burst_length_tx
 				&& dest_id == other.dest_id
+				&& reply_offset == other.reply_offset
 				&& ((L2Header&) *this) == ((L2Header&) other);
 		}
 
