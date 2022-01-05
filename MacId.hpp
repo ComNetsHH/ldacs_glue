@@ -69,7 +69,7 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 				str = "UNSET";
 				break;
 			case -2:
-				str = "BROADCAST";
+				str = "SH";
 				break;
 			case -3:
 				str = "BEACON";
