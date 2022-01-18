@@ -415,74 +415,7 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		bool operator!=(const L2HeaderLinkReply& other) const {
 			return !((*this) == other);
 		}
-	};
-
-	class L2HeaderLinkEstablishmentRequest : public L2HeaderUnicast {
-	public:
-		L2HeaderLinkEstablishmentRequest(const MacId& icao_dest_id, bool use_arq, const SequenceNumber& arq_seqno, const SequenceNumber& arq_ack_no, unsigned int arq_ack_slot)
-				: L2HeaderUnicast(icao_dest_id, use_arq, arq_seqno, arq_ack_no, arq_ack_slot, FrameType::link_establishment_request) {}
-
-		L2HeaderLinkEstablishmentRequest() : L2HeaderLinkEstablishmentRequest(SYMBOLIC_ID_UNSET, false, SequenceNumber(0), SequenceNumber(0), 0) {}
-
-		L2HeaderLinkEstablishmentRequest(const L2HeaderLinkEstablishmentRequest& other) : L2HeaderUnicast((const L2HeaderUnicast&) other) {
-			offset = other.offset;
-			length_next = other.length_next;
-			timeout = other.timeout;
-		}
-
-		L2HeaderLinkEstablishmentRequest* copy() const override {
-			return new L2HeaderLinkEstablishmentRequest(*this);
-		}
-
-		bool operator==(const L2HeaderLinkEstablishmentRequest& other) const {
-			return other.offset == offset && other.length_next == length_next && other.timeout == timeout && (L2HeaderUnicast) (*this) == ((L2HeaderUnicast) other);
-		}
-
-		bool operator!=(const L2HeaderLinkEstablishmentRequest& other) const {
-			return !((*this) == other);
-		}
-
-		/** Number of slots until the next transmission. */
-		unsigned int offset = 0;
-		/** Number of slots next frame will occupy. */
-		unsigned int length_next = 0;
-		/** Remaining number of repetitions this reservation remains valid for. */
-		unsigned int timeout = 0;
-
-		unsigned int getBits() const override {
-			return L2HeaderUnicast::getBits()
-			       + 8 /* offset */
-			       + 4 /* length_next */
-			       + 8 /* timeout */;
-		}
-	};
-
-	class L2HeaderLinkEstablishmentReply : public L2HeaderUnicast {
-	public:
-		L2HeaderLinkEstablishmentReply(const MacId& icao_dest_id, bool use_arq, const SequenceNumber& arq_seqno, const SequenceNumber& arq_ack_no, unsigned int arq_ack_slot)
-				: L2HeaderUnicast(icao_dest_id, use_arq, arq_seqno, arq_ack_no, arq_ack_slot, FrameType::link_establishment_reply) {}
-
-		L2HeaderLinkEstablishmentReply() : L2HeaderLinkEstablishmentReply(SYMBOLIC_ID_UNSET, false, SequenceNumber(0), SequenceNumber(0), 0) {}
-
-		L2HeaderLinkEstablishmentReply(const L2HeaderLinkEstablishmentReply& other) : L2HeaderUnicast((const L2HeaderUnicast&) other) {}
-
-		L2HeaderLinkEstablishmentReply* copy() const override {
-			return new L2HeaderLinkEstablishmentReply(*this);
-		}
-
-		bool operator==(const L2HeaderLinkEstablishmentReply& other) const {
-			return (L2HeaderUnicast) (*this) == ((L2HeaderUnicast) other);
-		}
-
-		bool operator!=(const L2HeaderLinkEstablishmentReply& other) const {
-			return !((*this) == other);
-		}
-	};
-
-	inline std::ostream& operator<<(std::ostream& stream, const L2HeaderLinkEstablishmentRequest& request) {
-		return stream << std::string("to=") << request.dest_id << std::string(" offset=") << std::to_string(request.offset) << std::string(" timeout=") << std::to_string(request.timeout) << std::string(" length_next=")
-		              << std::to_string(request.length_next);
-	}
+	};		
 
 	inline std::ostream& operator<<(std::ostream& stream, const L2Header::FrameType& frame_type) {
 		std::string s;
