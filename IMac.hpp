@@ -220,13 +220,7 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		/**
 		 * @param flag: If true, P2P links will always be bidirectional, i.e. have TX reservations for both sides.
 		 * */
-		virtual void setForceBidirectionalLinks(bool flag);
-
-		/**
-		 * @param flag: If true, initial P2P links will be bidirectional, and later links are steered by the reported TX requirements.
-		 * */
-		virtual void setInitializeBidirectionalLinks(bool flag);
-
+		virtual void setForceBidirectionalLinks(bool flag);		
 		virtual void setWriteResourceUtilizationIntoBeacon(bool flag);
 		virtual void setEnableBeacons(bool flag);
 
