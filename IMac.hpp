@@ -198,13 +198,7 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		 * @param value
 		 */
 		virtual void setAlwaysScheduleNextBroadcastSlot(bool value);
-		virtual void setAdvertiseNextBroadcastSlotInCurrentHeader(bool flag);
-
-		/**
-		 * @param flag: My link is established after I've sent my link reply and receive the first data packet. If that doesn't arrive within as many attempts as ARQ allows, I should close the link early if this flag is set. 
-		 */
-		virtual void setCloseP2PLinksEarly(bool flag);
-
+		virtual void setAdvertiseNextBroadcastSlotInCurrentHeader(bool flag);		
 		virtual void setMinBeaconOffset(unsigned int value);
 		virtual void setMaxBeaconOffset(unsigned int value);
 
