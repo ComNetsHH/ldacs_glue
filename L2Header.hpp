@@ -26,8 +26,7 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			broadcast,
 			unicast,
 			link_establishment_request,
-			link_establishment_reply,
-			link_info
+			link_establishment_reply
 		};
 
 		explicit L2Header(L2Header::FrameType frame_type) : frame_type(frame_type) {}
@@ -56,12 +55,8 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		}
 
 		bool isBroadcastType() const {
-			return frame_type == L2Header::broadcast || frame_type == L2Header::beacon || frame_type == link_info;
-		}
-
-		bool isLinkInfo() const {
-			return frame_type == L2Header::link_info;
-		}
+			return frame_type == L2Header::broadcast || frame_type == L2Header::beacon;
+		}		
 
 		/** This frame's type. */
 		const FrameType frame_type;
@@ -89,14 +84,15 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		}
 
 		unsigned int getBits() const override {
-			return MacId::getBits()
-				   + 1 /* link_renewal_negotiated flag */
+			return MacId::getBits()				   
+				   + L2Header::getBits()
 			       + 8 /* burst_offset */
 			       + 4 /* burst_length */
 			       + 4 /* burst_length_tx */
 			       + 8 /* timeout */
-			       + 100 /* 100bit MAC */
-			       + L2Header::getBits();
+			       + 96 /* message authentication code */
+				   + 1 /* padding */
+			       ;
 		}
 
 		bool operator==(const L2HeaderBase& other) const {
@@ -147,13 +143,15 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		}
 	};
 
-	class L2HeaderBroadcast : public L2HeaderWithDestination {
+	class L2HeaderBroadcast : public L2Header {
 	public:
-		L2HeaderBroadcast() : L2HeaderWithDestination(FrameType::broadcast, SYMBOLIC_LINK_ID_BROADCAST) {}
+		L2HeaderBroadcast() : L2Header(FrameType::broadcast) {}
 
-		L2HeaderBroadcast(const L2HeaderBroadcast& other) : L2HeaderWithDestination((const L2HeaderWithDestination&) other) {
+		L2HeaderBroadcast(const L2HeaderBroadcast& other) : L2Header((const L2Header&) other) {
 			is_pkt_start = other.is_pkt_start;
 			is_pkt_end = other.is_pkt_end;
+			seqno = other.seqno;
+			payload_length = other.payload_length;
 		}
 
 		L2HeaderBroadcast* copy() const override {
@@ -167,7 +165,7 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		bool is_pkt_end = false;
 
 		bool operator==(const L2HeaderBroadcast& other) const {
-			return other.is_pkt_start == is_pkt_start && other.is_pkt_end == is_pkt_end;
+			return other.is_pkt_start == is_pkt_start && other.is_pkt_end == is_pkt_end && other.seqno == seqno && other.payload_length == payload_length;
 		}
 
 		bool operator!=(const L2HeaderBroadcast& other) const {
@@ -175,18 +173,17 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		}
 
 		unsigned int getBits() const override {
-			return L2HeaderWithDestination::getBits() + 2; // Two additional bits for start and end flags
+			return L2Header::getBits() 
+					+ 2 /** Two additional bits for start and end flags */
+					+ 8 /** seqno */
+					+ 12 /** payload length */
+					+ 7 /** padding */
+					;
 		}
-	};
 
-	class L2HeaderLinkInfo : public L2HeaderWithDestination {
-	public:
-		L2HeaderLinkInfo() : L2HeaderWithDestination(link_info, SYMBOLIC_LINK_ID_BROADCAST) {}
-		L2HeaderLinkInfo(const L2HeaderLinkInfo &other) = default;
-		L2HeaderLinkInfo* copy() const override {
-			return new L2HeaderLinkInfo(*this);
-		}
-	};
+		unsigned int seqno = 0;
+		unsigned int payload_length = 0;
+	};	
 
 	class L2HeaderBeacon : public L2Header {
 	public:
@@ -198,14 +195,15 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		};
 
 		L2HeaderBeacon(const CPRPosition& position, bool is_cpr_odd, L2HeaderBeacon::CongestionLevel congestion_level, CPRPosition::PositionQuality pos_quality)
-				: L2Header(L2Header::FrameType::beacon), position(position), is_cpr_odd(is_cpr_odd), pos_quality(pos_quality), congestion_level(congestion_level) {}
+				: L2Header(L2Header::FrameType::beacon), position(position), is_cpr_odd(is_cpr_odd), congestion_level(congestion_level), payload_length(0) {}
 
 		L2HeaderBeacon() : L2HeaderBeacon(CPRPosition(), CPRPosition().odd, L2HeaderBeacon::CongestionLevel::uncongested, CPRPosition::PositionQuality::low) {}
 
 		L2HeaderBeacon(const L2HeaderBeacon& other) : L2Header((const L2Header&) other) {
 			position = other.position;
-			is_cpr_odd = other.is_cpr_odd;		
-			pos_quality = other.pos_quality;
+			is_cpr_odd = other.is_cpr_odd;					
+			payload_length = other.payload_length;
+			congestion_level = other.congestion_level;			
 		}
 
 		L2HeaderBeacon* copy() const override {
@@ -215,13 +213,15 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		unsigned int getBits() const override {
 			return position.getBits()
 			       + 1 /* odd/even identifier */
-			       + 5 /* number of hops to ground station */
-			       + 2 /* position quality */
-			       + L2Header::getBits();
+			       + 4 /* congestion level */
+			       + 12 /* payload length */
+			       + L2Header::getBits()
+				   + 6 /* padding */
+				   ;
 		}
 
 		bool operator==(const L2HeaderBeacon& other) const {
-			return other.position == position && other.is_cpr_odd == is_cpr_odd && other.pos_quality == pos_quality && congestion_level == other.congestion_level;
+			return other.position == position && other.is_cpr_odd == is_cpr_odd && congestion_level == other.congestion_level && payload_length == other.payload_length;
 		}
 
 		bool operator!=(const L2HeaderBeacon& other) const {
@@ -229,53 +229,57 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		}
 
 		CPRPosition position;
-		bool is_cpr_odd;				
-		CPRPosition::PositionQuality pos_quality;
+		bool is_cpr_odd;						
 		L2HeaderBeacon::CongestionLevel congestion_level;
+		unsigned int payload_length;
 	};
 
 	class L2HeaderUnicast : public L2HeaderWithDestination {
 	public:
-		L2HeaderUnicast(const MacId& icao_dest_id, bool use_arq, const SequenceNumber& seqno, const SequenceNumber& seqno_next_expected, unsigned int arq_ack_slot, FrameType frame_type)
-				: L2HeaderWithDestination(frame_type, icao_dest_id), use_arq(use_arq), seqno(seqno), seqno_next_expected(seqno_next_expected), arq_ack_slot(arq_ack_slot) {
+		L2HeaderUnicast(const MacId& icao_dest_id, bool use_arq, const SequenceNumber& seqno, const SequenceNumber& seqno_next_expected, FrameType frame_type)
+				: L2HeaderWithDestination(frame_type, icao_dest_id), use_arq(use_arq), seqno(seqno), seqno_next_expected(seqno_next_expected) {
 			if (frame_type != FrameType::unicast && frame_type != FrameType::link_establishment_reply && frame_type != FrameType::link_establishment_request)
 				throw std::invalid_argument("Cannot instantiate a unicast header with a non-unicast type.");
 		}
 
-		L2HeaderUnicast(const MacId& icao_dest_id, bool use_arq, SequenceNumber arq_seqno, SequenceNumber arq_ack_no, unsigned int arq_ack_slot)
-				: L2HeaderUnicast(icao_dest_id, use_arq, arq_seqno, arq_ack_no, arq_ack_slot, FrameType::unicast) {}
+		L2HeaderUnicast(const MacId& icao_dest_id, bool use_arq, SequenceNumber arq_seqno, SequenceNumber arq_ack_no)
+				: L2HeaderUnicast(icao_dest_id, use_arq, arq_seqno, arq_ack_no, FrameType::unicast) {}
 
 		L2HeaderUnicast(const L2HeaderUnicast& other) : L2HeaderWithDestination((const L2HeaderWithDestination&) other) {
 			is_pkt_start = other.is_pkt_start;
 			is_pkt_end = other.is_pkt_end;
 			use_arq = other.use_arq;
 			seqno = SequenceNumber(other.seqno);
-			seqno_next_expected = SequenceNumber(other.seqno_next_expected);
-			arq_ack_slot = other.arq_ack_slot;
+			seqno_next_expected = SequenceNumber(other.seqno_next_expected);			
 			burst_length_tx_desire = other.burst_length_tx_desire;
             srej_bitmap = other.srej_bitmap;
+			payload_length = other.payload_length;
 		}
 
 		L2HeaderUnicast* copy() const override {
 			return new L2HeaderUnicast(*this);
 		}
 
-		explicit L2HeaderUnicast(FrameType frame_type) : L2HeaderUnicast(SYMBOLIC_ID_UNSET, false, SequenceNumber(0), SequenceNumber(0), 0, frame_type) {}
+		explicit L2HeaderUnicast(FrameType frame_type) : L2HeaderUnicast(SYMBOLIC_ID_UNSET, false, SequenceNumber(0), SequenceNumber(0), frame_type) {}
+
+		L2HeaderUnicast() : L2HeaderUnicast(FrameType::unicast) {}
 
 		unsigned int getBits() const override {
-			return 1 /* Whether ARQ is used */
+			return L2HeaderWithDestination::getBits()
+				   + 1 /* Whether ARQ is used */				   
 			       + 2 /* RLC start and end flags */
 			       + 8 /* ARQ sequence number */
-			       + 8 /* ARQ ACK number */
-			       + 8 /* ARQ slot indication number */
+			       + 8 /* ARQ ACK number */			       
 			       + 4 /* burst length desire */
 			       + 16 /* Srej bit map */
-			       + L2HeaderWithDestination::getBits();
+				   + 12 /* payload length */			       
+				   + 6 /* padding */
+				   ;
 		}
 
 		bool operator==(const L2HeaderUnicast& other) const {
 			return other.is_pkt_start == is_pkt_start && other.is_pkt_end == is_pkt_end && other.use_arq == use_arq && other.seqno == seqno && other.seqno_next_expected == seqno_next_expected
-			       && other.arq_ack_slot == arq_ack_slot && burst_length_tx_desire == other.burst_length_tx_desire && ((L2HeaderWithDestination&) *this == (L2HeaderWithDestination&) other);
+			       && burst_length_tx_desire == other.burst_length_tx_desire && payload_length == other.payload_length && ((L2HeaderWithDestination&) *this == (L2HeaderWithDestination&) other);
 		}
 
 		bool operator!=(const L2HeaderUnicast& other) const {
@@ -295,11 +299,10 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		/** ARQ acknowledgement. */
 		SequenceNumber seqno_next_expected;
 		/** Selective rejection list. */
-        std::array<bool, 16> srej_bitmap = {false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false};
-		/** The offset to the next reserved slot where an acknowledgement is expected. */
-		unsigned int arq_ack_slot;
+        std::array<bool, 16> srej_bitmap = {false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false};		
 		/** The number of transmission slots the local node would like to have, which will be respected upon link renewal. */
 		unsigned int burst_length_tx_desire = 0;
+		unsigned int payload_length = 0;
 
 		/** Sequence number setter */
 		void setSeqno(SequenceNumber seqno) {
@@ -334,12 +337,6 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 
 	class L2HeaderLinkRequest : public L2HeaderWithDestination {
 	public:
-		unsigned int timeout = 0;
-		unsigned int burst_offset = 0;
-		unsigned int burst_length = 0;
-		unsigned int burst_length_tx = 0;
-		unsigned int reply_offset = 0;
-
 		explicit L2HeaderLinkRequest(const MacId& dest_id) : L2HeaderWithDestination(FrameType::link_establishment_request, dest_id) {}
 		L2HeaderLinkRequest() : L2HeaderLinkRequest(SYMBOLIC_ID_UNSET) {}
 		L2HeaderLinkRequest(const L2HeaderLinkRequest& other) : L2HeaderLinkRequest(other.dest_id) {
@@ -348,6 +345,7 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			burst_length = other.burst_length;
 			burst_length_tx = other.burst_length_tx;
 			reply_offset = other.reply_offset;
+			payload_length = other.payload_length;
 		}
 
 		L2HeaderLinkRequest* copy() const override {
@@ -356,12 +354,14 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 
 		unsigned int getBits() const override {
 			return L2HeaderWithDestination::getBits() 
-					+ 8 /* timeout */ 
+					+ 8 /* reply_offset */ 					
 					+ 8 /* burst_offset */ 
 					+ 4 /* burst_length */ 
-					+ 4 /* burst_length_tx */ 
-					+ 8 /* reply_offset */ 
-					+ MacId::getBits();
+					+ 4 /* burst_length_tx */ 					
+					+ 8 /* timeout */ 
+					+ 12 /* payload length */
+					+ 5 /* padding */
+					;
 		}
 
 		bool operator==(const L2HeaderLinkRequest& other) const {
@@ -377,15 +377,17 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		bool operator!=(const L2HeaderLinkRequest& other) const {
 			return !((*this) == other);
 		}
-	};
 
-	class L2HeaderLinkReply : public L2HeaderWithDestination {
-	public:
 		unsigned int timeout = 0;
 		unsigned int burst_offset = 0;
 		unsigned int burst_length = 0;
 		unsigned int burst_length_tx = 0;
+		unsigned int reply_offset = 0;
+		unsigned int payload_length = 0;
+	};
 
+	class L2HeaderLinkReply : public L2HeaderWithDestination {
+	public:
 		explicit L2HeaderLinkReply(const MacId& dest_id) : L2HeaderWithDestination(FrameType::link_establishment_reply, dest_id) {}
 		L2HeaderLinkReply() : L2HeaderLinkReply(SYMBOLIC_ID_UNSET) {}
 		L2HeaderLinkReply(const L2HeaderLinkReply& other) : L2HeaderLinkReply(other.dest_id) {
@@ -393,6 +395,7 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			burst_offset = other.burst_offset;
 			burst_length = other.burst_length;
 			burst_length_tx = other.burst_length_tx;
+			payload_length = other.payload_length;
 		}
 
 		L2HeaderLinkReply* copy() const override {
@@ -400,7 +403,14 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		}
 
 		unsigned int getBits() const override {
-			return L2HeaderWithDestination::getBits() + 8 + 8 + 4 + 4 + MacId::getBits();
+			return L2HeaderWithDestination::getBits() 					
+					+ 8 /* burst_offset */ 
+					+ 4 /* burst_length */ 
+					+ 4 /* burst_length_tx */ 					
+					+ 8 /* timeout */ 
+					+ 12 /* payload length */
+					+ 5 /* padding */
+					;
 		}
 
 		bool operator==(const L2HeaderLinkReply& other) const {
@@ -415,14 +425,19 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		bool operator!=(const L2HeaderLinkReply& other) const {
 			return !((*this) == other);
 		}
+
+		unsigned int timeout = 0;
+		unsigned int burst_offset = 0;
+		unsigned int burst_length = 0;
+		unsigned int burst_length_tx = 0;
+		unsigned int payload_length = 0;
 	};		
 
 	inline std::ostream& operator<<(std::ostream& stream, const L2Header::FrameType& frame_type) {
 		std::string s;
 		switch (frame_type) {
 			case L2Header::FrameType::unset: {s = "unset"; break;}
-			case L2Header::FrameType::base: {s = "base"; break;}
-			case L2Header::FrameType::link_info: {s = "link_info"; break;}
+			case L2Header::FrameType::base: {s = "base"; break;}			
 			case L2Header::FrameType::beacon: {s = "beacon"; break;}
 			case L2Header::FrameType::broadcast: {s = "broadcast"; break;}
 			case L2Header::FrameType::unicast: {s = "unicast"; break;}

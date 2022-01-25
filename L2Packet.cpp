@@ -52,7 +52,7 @@ void L2Packet::addMessage(L2Header* header, L2Packet::Payload* payload) {
 	}
 
 	// Set the broadcast destination ID if possible.
-	if (header->frame_type == L2Header::FrameType::broadcast || header->frame_type == L2Header::link_info) {
+	if (header->frame_type == L2Header::FrameType::broadcast) {
 		// If there already is a set destination, it may only be a beacon.
 		const MacId current_destination = getDestination();
 		if (current_destination != SYMBOLIC_LINK_ID_BROADCAST && current_destination != SYMBOLIC_ID_UNSET && current_destination != SYMBOLIC_LINK_ID_BEACON)
@@ -147,9 +147,7 @@ std::string L2Packet::print() {
         } else if (headerType == L2Header::FrameType::link_establishment_reply) {
             result += "LINK_REP(" + std::to_string(size) + "),";
         } else if (headerType == L2Header::FrameType::unicast) {
-            result += "U(" + std::to_string(size) + "),";
-	    } else if (headerType == L2Header::FrameType::link_info) {
-	    	result += "LINK_INF(" + std::to_string(size) + "),";
+            result += "U(" + std::to_string(size) + "),";	    
 	    } else {
             result += "H,";
         }
@@ -186,13 +184,6 @@ int L2Packet::getReplyIndex() const {
 int L2Packet::getBeaconIndex() const {
 	for (int i = 0; i < headers.size(); i++)
 		if (headers.at(i)->frame_type == L2Header::FrameType::beacon)
-			return i;
-	return -1;
-}
-
-int L2Packet::getLinkInfoIndex() const {
-	for (int i = 0; i < headers.size(); i++)
-		if (headers.at(i)->frame_type == L2Header::FrameType::link_info)
 			return i;
 	return -1;
 }

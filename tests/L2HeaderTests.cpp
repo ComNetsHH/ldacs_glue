@@ -49,14 +49,12 @@ public:
 		MacId dest_id = MacId(99);
 		bool use_arq = true;
 		SequenceNumber arq_seqno = SequenceNumber(50);
-		SequenceNumber arq_ack_no = SequenceNumber(51);
-		unsigned int arq_ack_slot = 52;
-		L2HeaderUnicast header_unicast = L2HeaderUnicast(dest_id, use_arq, arq_seqno, arq_ack_no, arq_ack_slot);
+		SequenceNumber arq_ack_no = SequenceNumber(51);		
+		L2HeaderUnicast header_unicast = L2HeaderUnicast(dest_id, use_arq, arq_seqno, arq_ack_no);
 		CPPUNIT_ASSERT_EQUAL(L2Header::FrameType::unicast, header_unicast.frame_type);
 		CPPUNIT_ASSERT_EQUAL(use_arq, header_unicast.use_arq);
 		CPPUNIT_ASSERT(arq_seqno == header_unicast.seqno);
-		CPPUNIT_ASSERT(arq_ack_no == header_unicast.seqno_next_expected);
-		CPPUNIT_ASSERT_EQUAL(arq_ack_slot, header_unicast.arq_ack_slot);
+		CPPUNIT_ASSERT(arq_ack_no == header_unicast.seqno_next_expected);		
 
 
 		SequenceNumber seqNo(1);
@@ -95,26 +93,34 @@ public:
 
 	}
 
-	void testHeaderSizes() {
-		L2HeaderBase base_header = L2HeaderBase(id, offset, length_next, length_next, timeout);
-		CPPUNIT_ASSERT_EQUAL(uint(155), base_header.getBits());
+	void testHeaderSizes_Base() {
+		auto header = L2HeaderBase(id, offset, length_next, length_next, timeout);
+		CPPUNIT_ASSERT_EQUAL(uint(152), header.getBits());		
+	}
 
-		MacId dest_id = MacId(99);
-		bool use_arq = true;
-		SequenceNumber arq_seqno = SequenceNumber(50);
-		SequenceNumber arq_ack_no = SequenceNumber(51);
-		unsigned int arq_ack_slot = 52;
-		L2HeaderUnicast unicast_header = L2HeaderUnicast(dest_id, use_arq, arq_seqno, arq_ack_no, arq_ack_slot);
-		CPPUNIT_ASSERT_EQUAL(uint(77), unicast_header.getBits());
+	void testHeaderSizes_Broadcast() {
+		auto header = L2HeaderBroadcast();
+		CPPUNIT_ASSERT_EQUAL(uint(32), header.getBits());		
+	}
 
-		L2HeaderBroadcast broadcast_header = L2HeaderBroadcast();
-		CPPUNIT_ASSERT_EQUAL(uint(32), broadcast_header.getBits());
+	void testHeaderSizes_Request() {
+		auto header = L2HeaderLinkRequest();
+		CPPUNIT_ASSERT_EQUAL(uint(80), header.getBits());		
+	}
 
+	void testHeaderSizes_Reply() {
+		auto header = L2HeaderLinkReply();
+		CPPUNIT_ASSERT_EQUAL(uint(72), header.getBits());		
+	}
 
-		L2Header simple_header = L2Header(L2Header::FrameType::unset);
+	void testHeaderSizes_Unicast() {
+		auto header = L2HeaderUnicast();
+		CPPUNIT_ASSERT_EQUAL(uint(88), header.getBits());		
+	}
 
-		L2HeaderBeacon beacon_header = L2HeaderBeacon(CPRPosition(), CPRPosition().odd, L2HeaderBeacon::CongestionLevel::uncongested, CPRPosition::PositionQuality::hi);
-		CPPUNIT_ASSERT_EQUAL(uint(49), beacon_header.getBits());
+	void testHeaderSizes_Beacon() {
+		auto header = L2HeaderBeacon();
+		CPPUNIT_ASSERT_EQUAL(uint(64), header.getBits());		
 	}
 
 
@@ -123,6 +129,11 @@ CPPUNIT_TEST_SUITE(L2HeaderTests);
 		CPPUNIT_TEST(testBaseHeader);
 		CPPUNIT_TEST(testBroadcastHeader);
 		CPPUNIT_TEST(testUnicastHeader);
-		CPPUNIT_TEST(testHeaderSizes);
+		CPPUNIT_TEST(testHeaderSizes_Base);
+		CPPUNIT_TEST(testHeaderSizes_Broadcast);
+		CPPUNIT_TEST(testHeaderSizes_Request);
+		CPPUNIT_TEST(testHeaderSizes_Reply);
+		CPPUNIT_TEST(testHeaderSizes_Unicast);
+		CPPUNIT_TEST(testHeaderSizes_Beacon);
 	CPPUNIT_TEST_SUITE_END();
 };

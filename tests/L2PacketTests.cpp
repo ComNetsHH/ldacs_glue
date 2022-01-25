@@ -50,7 +50,7 @@ public:
 	}
 
 	void testAddPayload() {
-		L2HeaderUnicast* unicast_header = new L2HeaderUnicast(MacId(43), true, 100, 101, 102);
+		L2HeaderUnicast* unicast_header = new L2HeaderUnicast(MacId(43), true, 100, 101);
 		bool exception_occurred = false;
 		// Can't add a non-base header as first header.
 		try {
@@ -91,7 +91,7 @@ public:
 	}
 
 	void testUnicastPayload() {
-		L2HeaderUnicast* unicast_header = new L2HeaderUnicast(MacId(43), true, 100, 101, 102);
+		L2HeaderUnicast* unicast_header = new L2HeaderUnicast(MacId(43), true, 100, 101);
 		L2HeaderBase* base_header = new L2HeaderBase(MacId(42), 12, 13, 13, 14);
 		TestPayload* payload = nullptr;
 
@@ -107,7 +107,7 @@ public:
 
 		// Shouldn't be able to add a unicast header to a different destination.
 		MacId id_dest_2 = MacId(44);
-		L2HeaderUnicast* second_unicast_header = new L2HeaderUnicast(id_dest_2, true, 100, 101, 102);
+		L2HeaderUnicast* second_unicast_header = new L2HeaderUnicast(id_dest_2, true, 100, 101);
 		exception_occurred = false;
 		try {
 			packet->addMessage(second_unicast_header, payload);
@@ -141,7 +141,7 @@ public:
 	void testBroadcastPayload() {
 		L2HeaderBase* base_header = new L2HeaderBase(MacId(42), 12, 13, 13, 14);
 		L2HeaderBroadcast* broadcast_header = new L2HeaderBroadcast();
-		L2HeaderUnicast* unicast_header = new L2HeaderUnicast(MacId(43), true, 100, 101, 102);
+		L2HeaderUnicast* unicast_header = new L2HeaderUnicast(MacId(43), true, 100, 101);
 		TestPayload* payload = nullptr;
 
 		// Add a base and a broadcast header and then a unicast header.
@@ -187,7 +187,7 @@ public:
 		// Should be able to add a unicast header.
 		exception_occurred = false;
 		try {
-			L2HeaderUnicast* unicast_header = new L2HeaderUnicast(MacId(43), true, 100, 101, 102);
+			L2HeaderUnicast* unicast_header = new L2HeaderUnicast(MacId(43), true, 100, 101);
 			packet->addMessage(unicast_header, payload);
 		} catch (const std::exception& e) {
 			exception_occurred = true;
@@ -205,12 +205,12 @@ public:
 
 	void testCopy() {
 		MacId id = MacId(1), id2 = MacId(2);
-		unsigned int offset = 3, length_next = 1, timeout = 12, arq_ack_slot = 7;
+		unsigned int offset = 3, length_next = 1, timeout = 12;
 		bool use_arq = true;
 		SequenceNumber arq_seqno = 12, ack_seqno = 5;
 		packet->addMessage(new L2HeaderBase(id, offset, length_next, length_next, timeout), nullptr);
 		int payload_value = 42;
-		packet->addMessage(new L2HeaderUnicast(id2, use_arq, arq_seqno, ack_seqno, arq_ack_slot), new TestPayload(payload_value));
+		packet->addMessage(new L2HeaderUnicast(id2, use_arq, arq_seqno, ack_seqno), new TestPayload(payload_value));
 
 		L2Packet* copy = packet->copy();
 		CPPUNIT_ASSERT_EQUAL(size_t(2), packet->getHeaders().size());
@@ -229,7 +229,7 @@ public:
 		auto *base_header = new L2HeaderBase();
 		packet->addMessage(base_header, nullptr);
 		CPPUNIT_ASSERT_EQUAL(base_header->getBits(), packet->getBits());
-		auto *unicast_header = new L2HeaderUnicast(MacId(42), false, SequenceNumber(1), SequenceNumber(2), 3);
+		auto *unicast_header = new L2HeaderUnicast(MacId(42), false, SequenceNumber(1), SequenceNumber(2));
 		auto *unicast_payload = new TestPayload();
 		packet->addMessage(unicast_header, unicast_payload);
 		CPPUNIT_ASSERT_EQUAL(base_header->getBits() + unicast_header->getBits() + unicast_payload->getBits(), packet->getBits());
@@ -237,12 +237,12 @@ public:
 
 	void testErase() {
 		MacId id = MacId(1), id2 = MacId(2);
-		unsigned int offset = 3, length_next = 1, timeout = 12, arq_ack_slot = 7;
+		unsigned int offset = 3, length_next = 1, timeout = 12;
 		bool use_arq = true;
 		SequenceNumber arq_seqno = 12, ack_seqno = 5;
 		packet->addMessage(new L2HeaderBase(id, offset, length_next, length_next, timeout), nullptr);
 		int payload_value = 42;
-		packet->addMessage(new L2HeaderUnicast(id2, use_arq, arq_seqno, ack_seqno, arq_ack_slot), new TestPayload(payload_value));
+		packet->addMessage(new L2HeaderUnicast(id2, use_arq, arq_seqno, ack_seqno), new TestPayload(payload_value));
 
 		CPPUNIT_ASSERT_EQUAL(size_t(2), packet->getHeaders().size());
 		CPPUNIT_ASSERT_EQUAL(L2Header::FrameType::base, packet->getHeaders().at(0)->frame_type);
