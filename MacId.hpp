@@ -24,7 +24,7 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		}
 
 		static unsigned int getBits() {
-			return 27; // ICAO ID is 27 bits.
+			return 28; // ICAO ID is 28 bits.
 		}
 
 		const int& getId() const {
