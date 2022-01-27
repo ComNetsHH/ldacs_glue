@@ -5,11 +5,13 @@
 #ifndef TUHH_INTAIRNET_MC_SOTDMA_INET_HPP
 #define TUHH_INTAIRNET_MC_SOTDMA_INET_HPP
 
+class L3Packet;
+
 namespace TUHH_INTAIRNET_MCSOTDMA {
-	class IRlc; // Forward-declaration so that we can keep a pointer to the RLC sublayer.
+	class IRlc; // Forward-declaration so that we can keep a pointer to the RLC sublayer.	
 
 	/**
-	 * Specifies the interfacce the Network Layer must implement.
+	 * Network layer interface.
 	 */
 	class INet {
 	public:
