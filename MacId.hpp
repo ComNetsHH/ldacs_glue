@@ -61,22 +61,17 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 	const MacId SYMBOLIC_LINK_ID_BROADCAST = MacId(-2);
 	/** Symbolic beacon ID (which is also a broadcast). */
 	const MacId SYMBOLIC_LINK_ID_BEACON = MacId(-3);
+	/** Symbolic DME ID. */
+	const MacId SYMBOLIC_LINK_ID_DME = MacId(-4);
 
 	inline std::ostream& operator<<(std::ostream& stream, const MacId& id) {
 		std::string str;
 		switch (id.getId()) {
-			case -1:
-				str = "UNSET";
-				break;
-			case -2:
-				str = "SH";
-				break;
-			case -3:
-				str = "BEACON";
-				break;
-			default:
-				str = std::to_string(id.getId());
-				break;
+			case -1: {str = "UNSET"; break;}
+			case -2: {str = "SH"; break;}
+			case -3: {str = "BEACON"; break;}
+			case -4: {str = "DME"; break;}
+			default: {str = std::to_string(id.getId()); break;}
 		}
 		return stream << str;
 	}

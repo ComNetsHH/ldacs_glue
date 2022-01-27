@@ -131,6 +131,8 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		 */
 		 bool hasChannelError = false;
 
+		 bool isDME() const;
+
 	protected:
 		/**
 		 * Ensures that at least one header is present, which must be a base header.

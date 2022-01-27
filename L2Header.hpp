@@ -26,7 +26,9 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			broadcast,
 			unicast,
 			link_establishment_request,
-			link_establishment_reply
+			link_establishment_reply,
+			dme_request,
+			dme_response
 		};
 
 		explicit L2Header(L2Header::FrameType frame_type) : frame_type(frame_type) {}
@@ -58,8 +60,26 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			return frame_type == L2Header::broadcast || frame_type == L2Header::beacon;
 		}		
 
+		bool isDMERequest() const {
+			return frame_type == L2Header::dme_request;
+		}
+
+		bool isDMEResponse() const {
+			return frame_type == L2Header::dme_response;
+		}
+
 		/** This frame's type. */
 		const FrameType frame_type;
+	};
+
+	class L2HeaderDMERequest : public L2Header {
+	public:
+		L2HeaderDMERequest() : L2Header(FrameType::dme_request) {}
+	};
+
+	class L2HeaderDMEResponse : public L2Header {
+	public:
+		L2HeaderDMEResponse() : L2Header(FrameType::dme_response) {}
 	};
 
 	class L2HeaderBase : public L2Header {
@@ -443,6 +463,8 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			case L2Header::FrameType::unicast: {s = "unicast"; break;}
 			case L2Header::FrameType::link_establishment_reply: {s = "link_reply"; break;}
 			case L2Header::FrameType::link_establishment_request: {s = "link_request"; break;}
+			case L2Header::FrameType::dme_request: {s = "dme_request"; break;}
+			case L2Header::FrameType::dme_response: {s = "dme_response"; break;}
 			default: {throw std::invalid_argument("please add new header type to operator<< of FrameType: " + std::to_string(frame_type) + "!");}
 		}
 		return stream << s;

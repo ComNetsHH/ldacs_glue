@@ -196,3 +196,12 @@ void L2Packet::erase(size_t index) {
 	delete payloads.at(index);
 	this->payloads.erase(this->payloads.begin() + index);
 }
+
+bool L2Packet::isDME() const {
+	if (getOrigin() == SYMBOLIC_LINK_ID_DME)
+		return true;
+	for (auto *header : this->headers)
+		if (header->isDMERequest() || header->isDMEResponse())
+			return true;
+	return false;
+}
