@@ -119,12 +119,7 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		/**
 		 * @return Index of a contained link reply, or -1 if it doesn't contain one.
 		 */
-		int getBeaconIndex() const;
-
-		/**
-		 * @return Index of a contained link info, or -1 if it doesn't contain one.
-		 */
-		int getLinkInfoIndex() const;
+		int getBeaconIndex() const;		
 
 		/**
 		 * Erases header and payload at the given index.
