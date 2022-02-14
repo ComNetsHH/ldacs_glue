@@ -144,3 +144,11 @@ void IMac::setEnableBeacons(bool flag) {
 void IMac::setAdvertiseNextBroadcastSlotInCurrentHeader(bool flag) {
 	throw std::runtime_error("setAdvertiseNextBroadcastSlotInCurrentHeader not implemented");
 }
+
+void IMac::setPPLinkBurstOffset(unsigned int value) {
+	throw std::runtime_error("setPPLinkBurstOffset not implemented");
+}
+
+void IMac::setPPLinkBurstOffsetAdaptive(bool value) {
+	throw std::runtime_error("setPPLinkBurstOffsetAdaptive not implemented");
+}
