@@ -152,6 +152,8 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 
 		bool isAnyReceiverIdle(unsigned int slot_offset, unsigned int num_slots) const;
 
+		virtual bool isGoingToTransmitDuringCurrentSlot(uint64_t center_frequency) const = 0;
+
 		/** Increment time. Updates the linked PHY. */
 		virtual void update(uint64_t num_slots);
 
