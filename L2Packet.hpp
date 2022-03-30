@@ -131,6 +131,11 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		 */
 		 bool hasChannelError = false;
 
+		/**
+		 * Distance from the sender at which the packet was received. Intended to calculate SINR. 
+		 */
+		 double receptionDist = 0.0;
+
 		 bool isDME() const;
 
 	protected:
