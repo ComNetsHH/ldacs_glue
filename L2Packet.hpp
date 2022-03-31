@@ -129,14 +129,19 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		/**
 		 * Flag that indicates whether an error was introduced by transmitting over the channel
 		 */
-		 bool hasChannelError = false;
+		bool hasChannelError = false;
 
 		/**
 		 * Distance from the sender at which the packet was received. Intended to calculate SINR. 
 		 */
-		 double receptionDist = 0.0;
+		double receptionDist = 0.0;
 
-		 bool isDME() const;
+		/**
+		 * SNR when the packet is received
+		 */
+		double snr = 0.0;
+
+		bool isDME() const;
 
 	protected:
 		/**
