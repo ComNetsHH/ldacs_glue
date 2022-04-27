@@ -13,7 +13,7 @@ enum ContentionMethod {
 	poisson_binomial_estimate,
 	/** calculate the number of candidate slots required to meet a certain collision probability */
 	randomized_slotted_aloha,
-	/** don't utilize contention estimation in any way, just pick a random slot out of the next 100 slots */
+	/** just pick a random slot out of the next seven slots */
 	naive_random_access,	
 };
 

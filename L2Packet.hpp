@@ -72,6 +72,7 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		 * @return All headers.
 		 */
 		const std::vector<L2Header*>& getHeaders();
+		void replaceBaseHeader(std::size_t i, L2HeaderBase header);
 
 		/**
 		 * @return Total size of this packet in bits, consisting of both headers and payloads.

@@ -205,3 +205,8 @@ bool L2Packet::isDME() const {
 			return true;
 	return false;
 }
+
+void L2Packet::replaceBaseHeader(std::size_t i, L2HeaderBase header) {
+	delete headers.at(i);
+	headers.at(i) = new L2HeaderBase(header);
+}
