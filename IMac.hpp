@@ -222,7 +222,7 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		virtual void setPPLinkBurstOffset(unsigned int value);
 		virtual void setPPLinkBurstOffsetAdaptive(bool value);
 
-		virtual const std::map<uint64_t, bool>& getChannelSensingObservation() const;
+		virtual const std::vector<int> getChannelSensingObservation() const;
 
 	protected:
 		IArq* upper_layer = nullptr;
