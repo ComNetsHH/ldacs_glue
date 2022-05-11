@@ -222,7 +222,15 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		virtual void setPPLinkBurstOffset(unsigned int value);
 		virtual void setPPLinkBurstOffsetAdaptive(bool value);
 
+		/**		 
+		 * @return A vector with positive and negative ones, indicating IDLE and BUSY observations in the current LDACS time slot.
+		 */
 		virtual const std::vector<int> getChannelSensingObservation() const;
+
+		/**
+		 * Whether to keep track of the frequency channels on which DME packets have been received.
+		 */
+		virtual void setLearnDMEActivity(bool value);
 
 	protected:
 		IArq* upper_layer = nullptr;

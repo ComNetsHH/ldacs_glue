@@ -156,3 +156,7 @@ void IMac::setPPLinkBurstOffsetAdaptive(bool value) {
 const std::vector<int> IMac::getChannelSensingObservation() const {
 	throw std::runtime_error("getChannelSensingObservation not implemented");
 }
+
+void IMac::setLearnDMEActivity(bool value) {
+	throw std::runtime_error("setLearnDMEActivity not implemented");
+}
