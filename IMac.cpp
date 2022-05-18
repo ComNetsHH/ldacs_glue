@@ -160,3 +160,7 @@ const std::vector<int> IMac::getChannelSensingObservation() const {
 void IMac::setLearnDMEActivity(bool value) {
 	throw std::runtime_error("setLearnDMEActivity not implemented");
 }
+
+void IMac::passPrediction(const std::vector<std::vector<double>>& prediction_mat) {
+	throw std::runtime_error("passPrediction not implemented");
+}

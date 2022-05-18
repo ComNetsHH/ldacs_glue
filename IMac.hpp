@@ -232,6 +232,8 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		 */
 		virtual void setLearnDMEActivity(bool value);
 
+		virtual void passPrediction(const std::vector<std::vector<double>>& prediction_mat);
+
 	protected:
 		IArq* upper_layer = nullptr;
 		IPhy* lower_layer = nullptr;
