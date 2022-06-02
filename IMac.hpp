@@ -234,6 +234,9 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 
 		virtual void passPrediction(const std::vector<std::vector<double>>& prediction_mat);
 
+		virtual void setDutyCycle(unsigned int period, double max, unsigned int min_num_supported_pp_links);
+
+
 	protected:
 		IArq* upper_layer = nullptr;
 		IPhy* lower_layer = nullptr;
