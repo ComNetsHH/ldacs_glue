@@ -30,7 +30,7 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 
 		/** Number of bits required to encode this position. */
 		unsigned int getBits() const {
-			return 12 /* latitude */ + 14 /* longitutde */ + 12 /* altitude */;
+			return 17 /* latitude */ + 17 /* longitude */ + 12 /* altitude */ + 1 /* odd/even bit */;
 		}
 
 		bool operator==(const CPRPosition& other) const {
