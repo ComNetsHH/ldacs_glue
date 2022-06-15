@@ -113,12 +113,44 @@ void IMac::setContentionMethod(ContentionMethod method) {
 	throw std::runtime_error("setContentionMethod not implemented");
 }
 
+void IMac::setAlwaysScheduleNextBroadcastSlot(bool value) {
+	throw std::runtime_error("setAlwaysScheduleNextBroadcastSlot not implemented");
+}
+
+void IMac::setMinBeaconOffset(unsigned int value) {
+	throw std::runtime_error("setMinBeaconOffset not implemented");
+}
+
+void IMac::setMaxBeaconOffset(unsigned int value) {
+	throw std::runtime_error("setMaxBeaconOffset not implemented");
+}
+
 void IMac::onBeaconReception(MacId origin_id, L2HeaderBeacon header) {
 	passUpBeaconFct(origin_id, header);
 }
 
+void IMac::setForceBidirectionalLinks(bool flag) {
+	this->should_force_bidirectional_links = flag;
+}
+
+void IMac::setWriteResourceUtilizationIntoBeacon(bool flag) {
+	throw std::runtime_error("setWriteResourceUtilizationIntoBeacon not implemented");
+}
+
+void IMac::setEnableBeacons(bool flag) {
+	throw std::runtime_error("setEnableBeacons not implemented");
+}
+
 void IMac::setAdvertiseNextBroadcastSlotInCurrentHeader(bool flag) {
 	throw std::runtime_error("setAdvertiseNextBroadcastSlotInCurrentHeader not implemented");
+}
+
+void IMac::setPPLinkBurstOffset(unsigned int value) {
+	throw std::runtime_error("setPPLinkBurstOffset not implemented");
+}
+
+void IMac::setPPLinkBurstOffsetAdaptive(bool value) {
+	throw std::runtime_error("setPPLinkBurstOffsetAdaptive not implemented");
 }
 
 const std::vector<int> IMac::getChannelSensingObservation() const {

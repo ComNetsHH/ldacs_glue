@@ -15,7 +15,7 @@
 namespace TUHH_INTAIRNET_MCSOTDMA {
 
 	/**
-	 * Data Link Layer Headers.
+	 * Specifies the MC-SOTDMA layer-2 header.
 	 */
 	class L2Header {
 	public:
@@ -29,22 +29,6 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			link_establishment_reply,
 			dme_request,
 			dme_response
-		};
-		enum SlotDuration {
-			six_ms,
-			twelve_ms,
-			twentyfour_ms
-		};
-		class Direction {
-		public:
-			bool North = false;
-			bool NorthEast = false;
-			bool East = false;
-			bool SouthEast = false;
-			bool South = false;
-			bool SouthWest = false;
-			bool West = false;
-			bool NorthWest = false;
 		};
 
 		explicit L2Header(L2Header::FrameType frame_type) : frame_type(frame_type) {}
@@ -87,107 +71,6 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		/** This frame's type. */
 		const FrameType frame_type;
 	};
-
-	class L2HeaderSH : public L2Header {
-	public:
-
-		/** ECC-384. Not actually used in the simulator. */
-		class Signature {
-		public:
-			static unsigned int getBits() {
-				return 96*8;
-			}
-		};
-
-		class LinkStatus {
-		public:
-			int num_proposals = 0;
-			/** indicates that links in particular directions are wanted */
-			Direction direction;
-			/** number of resource utilization messages */
-			int num_utilizations = 0;
-			/** datarates for (direction, priority)-pairs */
-			int datarates = 0;
-
-			static unsigned int getBits() {
-				return 4 /* num_proposals */
-				+ 4 /* direction */
-				+ 4 /* num_utilizations */
-				+ 16*8 /* datarates */
-				;
-			}
-		};
-
-		class LinkUtilization {
-		public:
-			int slot_offset = 0;
-			L2Header::SlotDuration slot_duration;
-			int num_bursts_forward = 0, num_bursts_reverse = 0;
-			int period = 0;
-			int center_frequency = 0;
-			int timeout = 0;
-
-			static unsigned int getBits() {
-				return 14 /* slot_offset */ + 2 /* slot_duration */ + 2 /* num_bursts_forward */ + 2 /* num_bursts_reverse */ + 3 /* period */ + 9 /* center frequency */ + 8 /* timeout */;
-			}
-		};
-
-		class LinkProposal {
-		public:
-			int slot_offset = 0;
-			SlotDuration slot_duration;
-			int noise = 0;
-			int period = 0;
-			int center_frequency = 0;
-
-			static unsigned int getBits() {
-				return 14 /* slot_offset */ + 2 /* slot_duration */ + 4 /* noise */ + 3 /* period */ + 9 /* center_frequency */
-				;
-			}
-		};
-
-		class LinkRequest {
-		public:
-			static unsigned int getBits() {
-				throw std::runtime_error("LinkRequest::getBits not implemented!");
-			}
-		};
-		
-		Signature signature = Signature();
-		MacId src_id;
-		/** advertises next transmission slot */
-		unsigned int slot_offset;
-		SlotDuration slot_duration;
-		CPRPosition position;
-		int time_src = 0;
-		int num_hops = 0;
-		int time_tx = 0;
-		/** flag to request the transmission of reception time for two-way ranging */
-		bool request_time_rx = false;
-		/** flag to indicate that requested reception time is saved in this message */
-		bool response_time_rx = false;
-		LinkStatus link_status;
-		std::vector<LinkUtilization> link_utilizations;
-		std::vector<LinkProposal> link_proposals;
-		std::vector<LinkRequest> link_requests;
-
-		unsigned int getBits() const override {
-			return L2Header::getBits() + signature.getBits() + src_id.getBits() 
-				+ 14 /* slot_offset */
-				+ 2 /* slot_duration */
-				+ position.getBits()
-				+ 3 /* time_src */
-				+ 4 /* num_hops */
-				+ 64 /* time_tx */
-				+ LinkStatus::getBits()
-				+ link_utilizations.size() * LinkUtilization::getBits()
-				+ link_proposals.size() * LinkProposal::getBits()
-				+ link_requests.size() * LinkRequest::getBits()
-				;
-		}
-	};
-
-
 
 	class L2HeaderDMERequest : public L2Header {
 	public:

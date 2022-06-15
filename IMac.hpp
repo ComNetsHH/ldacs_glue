@@ -193,8 +193,16 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		 * @param method: Broadcast contention method.
 		 */
 		virtual void setContentionMethod(ContentionMethod method);
-		
-		virtual void setAdvertiseNextBroadcastSlotInCurrentHeader(bool flag);				
+
+		/**
+		 * If 'true': always schedule the next broadcast slot and advertise it in the header.
+		 * If 'false: only schedule the next broadcast slot if there's more data queued up.
+		 * @param value
+		 */
+		virtual void setAlwaysScheduleNextBroadcastSlot(bool value);
+		virtual void setAdvertiseNextBroadcastSlotInCurrentHeader(bool flag);		
+		virtual void setMinBeaconOffset(unsigned int value);
+		virtual void setMaxBeaconOffset(unsigned int value);
 
 		/** 
 		 * When a beacon arrives at the MAC, it may be passed up to the Network Layer through this function.
@@ -203,7 +211,16 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 
 		void setOmnetPassUpBeaconFct(std::function<void (MacId origin_id, L2HeaderBeacon header)> func) {
 			this->passUpBeaconFct = func;
-		}		
+		}
+
+		/**
+		 * @param flag: If true, P2P links will always be bidirectional, i.e. have TX reservations for both sides.
+		 * */
+		virtual void setForceBidirectionalLinks(bool flag);		
+		virtual void setWriteResourceUtilizationIntoBeacon(bool flag);
+		virtual void setEnableBeacons(bool flag);
+		virtual void setPPLinkBurstOffset(unsigned int value);
+		virtual void setPPLinkBurstOffsetAdaptive(bool value);
 
 		/**		 
 		 * @return A vector with positive and negative ones, indicating IDLE and BUSY observations in the current LDACS time slot.
