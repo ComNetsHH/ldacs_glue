@@ -11,6 +11,7 @@
 #include "MacId.hpp"
 #include "CPRPosition.hpp"
 #include "SequenceNumber.hpp"
+#include "LinkProposal.hpp"
 
 namespace TUHH_INTAIRNET_MCSOTDMA {
 
@@ -118,7 +119,7 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			}
 		};
 
-		class LinkUtilization {
+		class LinkUtilizationMessage {
 		public:
 			int slot_offset = 0;
 			L2Header::SlotDuration slot_duration;
@@ -132,13 +133,9 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			}
 		};
 
-		class LinkProposal {
+		class LinkProposalMessage {
 		public:
-			int slot_offset = 0;
-			SlotDuration slot_duration;
-			int noise = 0;
-			int period = 0;
-			int center_frequency = 0;
+			LinkProposal proposed_link;
 
 			static unsigned int getBits() {
 				return 14 /* slot_offset */ + 2 /* slot_duration */ + 4 /* noise */ + 3 /* period */ + 9 /* center_frequency */
@@ -167,8 +164,8 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		/** flag to indicate that requested reception time is saved in this message */
 		bool response_time_rx = false;
 		LinkStatus link_status;
-		std::vector<LinkUtilization> link_utilizations;
-		std::vector<LinkProposal> link_proposals;
+		std::vector<LinkUtilizationMessage> link_utilizations;
+		std::vector<LinkProposalMessage> link_proposals;
 		std::vector<LinkRequest> link_requests;
 
 		unsigned int getBits() const override {
@@ -180,8 +177,8 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 				+ 4 /* num_hops */
 				+ 64 /* time_tx */
 				+ LinkStatus::getBits()
-				+ link_utilizations.size() * LinkUtilization::getBits()
-				+ link_proposals.size() * LinkProposal::getBits()
+				+ link_utilizations.size() * LinkUtilizationMessage::getBits()
+				+ link_proposals.size() * LinkProposalMessage::getBits()
 				+ link_requests.size() * LinkRequest::getBits()
 				;
 		}
