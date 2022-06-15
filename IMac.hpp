@@ -236,6 +236,8 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 
 		virtual void setDutyCycle(unsigned int period, double max, unsigned int min_num_supported_pp_links);
 
+		virtual void notifyAboutDmeTransmission(uint64_t center_frequency);
+
 
 	protected:
 		IArq* upper_layer = nullptr;
