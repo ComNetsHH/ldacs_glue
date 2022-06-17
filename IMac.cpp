@@ -113,7 +113,7 @@ void IMac::setContentionMethod(ContentionMethod method) {
 	throw std::runtime_error("setContentionMethod not implemented");
 }
 
-void IMac::onBeaconReception(MacId origin_id, L2HeaderBeacon header) {
+void IMac::onBeaconReception(MacId origin_id, L2HeaderSH::LinkStatus header) {
 	passUpBeaconFct(origin_id, header);
 }
 

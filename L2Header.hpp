@@ -23,7 +23,6 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		enum FrameType {
 			unset,
 			base,
-			beacon,
 			broadcast,
 			unicast,
 			link_establishment_request,
@@ -74,7 +73,7 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		}
 
 		bool isBroadcastType() const {
-			return frame_type == L2Header::broadcast || frame_type == L2Header::beacon;
+			return frame_type == L2Header::broadcast;
 		}		
 
 		bool isDMERequest() const {
@@ -91,6 +90,9 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 
 	class L2HeaderSH : public L2Header {
 	public:
+
+		L2HeaderSH() : L2Header(L2Header::FrameType::broadcast) {}
+		L2HeaderSH(MacId id) : L2Header(L2Header::FrameType::broadcast), src_id(id) {}
 
 		/** ECC-384. Not actually used in the simulator. */
 		class Signature {
@@ -146,7 +148,7 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		class LinkRequest {
 		public:
 			static unsigned int getBits() {
-				throw std::runtime_error("LinkRequest::getBits not implemented!");
+				return 0;
 			}
 		};
 		
@@ -196,383 +198,382 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		L2HeaderDMEResponse() : L2Header(FrameType::dme_response) {}
 	};
 
-	class L2HeaderBase : public L2Header {
-	public:
-		L2HeaderBase(const MacId& icao_id, unsigned int burst_offset, unsigned int burst_length, unsigned int burst_length_tx, unsigned int timeout)
-				: L2Header(FrameType::base), src_id(icao_id), burst_offset(burst_offset), burst_length(burst_length), burst_length_tx(burst_length_tx), timeout(timeout), message_authentication_code(0) {
-		}
+	// class L2HeaderBase : public L2Header {
+	// public:
+	// 	L2HeaderBase(const MacId& icao_id, unsigned int burst_offset, unsigned int burst_length, unsigned int burst_length_tx, unsigned int timeout)
+	// 			: L2Header(FrameType::base), src_id(icao_id), burst_offset(burst_offset), burst_length(burst_length), burst_length_tx(burst_length_tx), timeout(timeout), message_authentication_code(0) {
+	// 	}
 
-		L2HeaderBase() : L2HeaderBase(SYMBOLIC_ID_UNSET, 0, 0, 0, 0) {}
+	// 	L2HeaderBase() : L2HeaderBase(SYMBOLIC_ID_UNSET, 0, 0, 0, 0) {}
 
-		L2HeaderBase(const L2HeaderBase& other) : L2Header((const L2Header&) other) {
-			burst_offset = other.burst_offset;
-			burst_length = other.burst_length;
-			burst_length_tx = other.burst_length_tx;
-			timeout = other.timeout;
-			src_id = other.src_id;
-			message_authentication_code = other.message_authentication_code;
-		}
+	// 	L2HeaderBase(const L2HeaderBase& other) : L2Header((const L2Header&) other) {
+	// 		burst_offset = other.burst_offset;
+	// 		burst_length = other.burst_length;
+	// 		burst_length_tx = other.burst_length_tx;
+	// 		timeout = other.timeout;
+	// 		src_id = other.src_id;
+	// 		message_authentication_code = other.message_authentication_code;
+	// 	}
 
-		L2HeaderBase* copy() const override {
-			return new L2HeaderBase(*this);
-		}
+	// 	L2HeaderBase* copy() const override {
+	// 		return new L2HeaderBase(*this);
+	// 	}
 
-		unsigned int getBits() const override {
-			return MacId::getBits()				   
-				   + L2Header::getBits()
-			       + 8 /* burst_offset */
-			       + 4 /* burst_length */
-			       + 4 /* burst_length_tx */
-			       + 8 /* timeout */
-			       + 96 /* message authentication code */
-				   + 1 /* padding */
-			       ;
-		}
+	// 	unsigned int getBits() const override {
+	// 		return MacId::getBits()				   
+	// 			   + L2Header::getBits()
+	// 		       + 8 /* burst_offset */
+	// 		       + 4 /* burst_length */
+	// 		       + 4 /* burst_length_tx */
+	// 		       + 8 /* timeout */
+	// 		       + 96 /* message authentication code */
+	// 			   + 1 /* padding */
+	// 		       ;
+	// 	}
 
-		bool operator==(const L2HeaderBase& other) const {
-			return other.burst_offset == burst_offset && other.burst_length == burst_length && other.burst_length_tx == burst_length_tx && other.timeout == timeout && other.src_id == src_id && other.message_authentication_code == message_authentication_code;
-		}
+	// 	bool operator==(const L2HeaderBase& other) const {
+	// 		return other.burst_offset == burst_offset && other.burst_length == burst_length && other.burst_length_tx == burst_length_tx && other.timeout == timeout && other.src_id == src_id && other.message_authentication_code == message_authentication_code;
+	// 	}
 
-		bool operator!=(const L2HeaderBase& other) const {
-			return !((*this) == other);
-		}
+	// 	bool operator!=(const L2HeaderBase& other) const {
+	// 		return !((*this) == other);
+	// 	}
 
-		/** Number of slots until the next transmission. */
-		unsigned int burst_offset;
-		/** Number of slots next frame will occupy. */
-		unsigned int burst_length;
-		/** Number of initial transmission slots for the link initiator. */
-		unsigned int burst_length_tx;
-		/** Remaining number of repetitions this reservation remains valid for. */
-		unsigned int timeout;
-		/** Origin ID. */
-		MacId src_id;
-		/** Combines authentication with error detection / correction. */
-		unsigned int message_authentication_code;
-	};
+	// 	/** Number of slots until the next transmission. */
+	// 	unsigned int burst_offset;
+	// 	/** Number of slots next frame will occupy. */
+	// 	unsigned int burst_length;
+	// 	/** Number of initial transmission slots for the link initiator. */
+	// 	unsigned int burst_length_tx;
+	// 	/** Remaining number of repetitions this reservation remains valid for. */
+	// 	unsigned int timeout;
+	// 	/** Origin ID. */
+	// 	MacId src_id;
+	// 	/** Combines authentication with error detection / correction. */
+	// 	unsigned int message_authentication_code;
+	// };
 
-	class L2HeaderWithDestination : public L2Header {
-	public:
-		MacId dest_id;
+	// class L2HeaderWithDestination : public L2Header {
+	// public:
+	// 	MacId dest_id;
 
-		explicit L2HeaderWithDestination(FrameType frame_type, const MacId& dest_id) : L2Header(frame_type), dest_id(dest_id) {}
-		L2HeaderWithDestination(const L2HeaderWithDestination &other) : L2HeaderWithDestination(other.frame_type, other.dest_id) {}
-		L2HeaderWithDestination* copy() const override {
-			return new L2HeaderWithDestination(*this);
-		}
+	// 	explicit L2HeaderWithDestination(FrameType frame_type, const MacId& dest_id) : L2Header(frame_type), dest_id(dest_id) {}
+	// 	L2HeaderWithDestination(const L2HeaderWithDestination &other) : L2HeaderWithDestination(other.frame_type, other.dest_id) {}
+	// 	L2HeaderWithDestination* copy() const override {
+	// 		return new L2HeaderWithDestination(*this);
+	// 	}
 
-		unsigned int getBits() const override {
-			return MacId::getBits() + L2Header::getBits();
-		}
+	// 	unsigned int getBits() const override {
+	// 		return MacId::getBits() + L2Header::getBits();
+	// 	}
 
-		bool operator==(const L2HeaderWithDestination &other) {
-			return dest_id == other.dest_id && ((L2Header&) *this) == ((L2Header&) other);
-		}
-		bool operator!=(const L2HeaderWithDestination &other) {
-			return !(*this == other);
-		}
+	// 	bool operator==(const L2HeaderWithDestination &other) {
+	// 		return dest_id == other.dest_id && ((L2Header&) *this) == ((L2Header&) other);
+	// 	}
+	// 	bool operator!=(const L2HeaderWithDestination &other) {
+	// 		return !(*this == other);
+	// 	}
 
-		const MacId& getDestId() const {
-			return this->dest_id;
-		}
-	};
+	// 	const MacId& getDestId() const {
+	// 		return this->dest_id;
+	// 	}
+	// };
 
-	class L2HeaderBroadcast : public L2Header {
-	public:
-		L2HeaderBroadcast() : L2Header(FrameType::broadcast) {}
+	// class L2HeaderBroadcast : public L2Header {
+	// public:
+	// 	L2HeaderBroadcast() : L2Header(FrameType::broadcast) {}
 
-		L2HeaderBroadcast(const L2HeaderBroadcast& other) : L2Header((const L2Header&) other) {
-			is_pkt_start = other.is_pkt_start;
-			is_pkt_end = other.is_pkt_end;
-			seqno = other.seqno;
-			payload_length = other.payload_length;
-		}
+	// 	L2HeaderBroadcast(const L2HeaderBroadcast& other) : L2Header((const L2Header&) other) {
+	// 		is_pkt_start = other.is_pkt_start;
+	// 		is_pkt_end = other.is_pkt_end;
+	// 		seqno = other.seqno;
+	// 		payload_length = other.payload_length;
+	// 	}
 
-		L2HeaderBroadcast* copy() const override {
-			return new L2HeaderBroadcast(*this);
-		}
+	// 	L2HeaderBroadcast* copy() const override {
+	// 		return new L2HeaderBroadcast(*this);
+	// 	}
 
-		/** Whether the contained L3 Packet starts with this fragment **/
-		bool is_pkt_start = false;
+	// 	/** Whether the contained L3 Packet starts with this fragment **/
+	// 	bool is_pkt_start = false;
 
-		/** Whether the contained L3 Packet ends with this fragment **/
-		bool is_pkt_end = false;
+	// 	/** Whether the contained L3 Packet ends with this fragment **/
+	// 	bool is_pkt_end = false;
 
-		bool operator==(const L2HeaderBroadcast& other) const {
-			return other.is_pkt_start == is_pkt_start && other.is_pkt_end == is_pkt_end && other.seqno == seqno && other.payload_length == payload_length;
-		}
+	// 	bool operator==(const L2HeaderBroadcast& other) const {
+	// 		return other.is_pkt_start == is_pkt_start && other.is_pkt_end == is_pkt_end && other.seqno == seqno && other.payload_length == payload_length;
+	// 	}
 
-		bool operator!=(const L2HeaderBroadcast& other) const {
-			return !((*this) == other);
-		}
+	// 	bool operator!=(const L2HeaderBroadcast& other) const {
+	// 		return !((*this) == other);
+	// 	}
 
-		unsigned int getBits() const override {
-			return L2Header::getBits() 
-					+ 2 /** Two additional bits for start and end flags */
-					+ 8 /** seqno */
-					+ 12 /** payload length */
-					+ 7 /** padding */
-					;
-		}
+	// 	unsigned int getBits() const override {
+	// 		return L2Header::getBits() 
+	// 				+ 2 /** Two additional bits for start and end flags */
+	// 				+ 8 /** seqno */
+	// 				+ 12 /** payload length */
+	// 				+ 7 /** padding */
+	// 				;
+	// 	}
 
-		unsigned int seqno = 0;
-		unsigned int payload_length = 0;
-	};	
+	// 	unsigned int seqno = 0;
+	// 	unsigned int payload_length = 0;
+	// };	
 
-	class L2HeaderBeacon : public L2Header {
-	public:
-		enum CongestionLevel {
-			uncongested,
-			slightly_congested,
-			moderately_congested,
-			congested
-		};
+	// class L2HeaderBeacon : public L2Header {
+	// public:
+	// 	enum CongestionLevel {
+	// 		uncongested,
+	// 		slightly_congested,
+	// 		moderately_congested,
+	// 		congested
+	// 	};
 
-		L2HeaderBeacon(const CPRPosition& position, bool is_cpr_odd, L2HeaderBeacon::CongestionLevel congestion_level, CPRPosition::PositionQuality pos_quality)
-				: L2Header(L2Header::FrameType::beacon), position(position), is_cpr_odd(is_cpr_odd), congestion_level(congestion_level), payload_length(0) {}
+	// 	L2HeaderBeacon(const CPRPosition& position, bool is_cpr_odd, L2HeaderBeacon::CongestionLevel congestion_level, CPRPosition::PositionQuality pos_quality)
+	// 			: L2Header(L2Header::FrameType::beacon), position(position), is_cpr_odd(is_cpr_odd), congestion_level(congestion_level), payload_length(0) {}
 
-		L2HeaderBeacon() : L2HeaderBeacon(CPRPosition(), CPRPosition().odd, L2HeaderBeacon::CongestionLevel::uncongested, CPRPosition::PositionQuality::low) {}
+	// 	L2HeaderBeacon() : L2HeaderBeacon(CPRPosition(), CPRPosition().odd, L2HeaderBeacon::CongestionLevel::uncongested, CPRPosition::PositionQuality::low) {}
 
-		L2HeaderBeacon(const L2HeaderBeacon& other) : L2Header((const L2Header&) other) {
-			position = other.position;
-			is_cpr_odd = other.is_cpr_odd;					
-			payload_length = other.payload_length;
-			congestion_level = other.congestion_level;			
-		}
+	// 	L2HeaderBeacon(const L2HeaderBeacon& other) : L2Header((const L2Header&) other) {
+	// 		position = other.position;
+	// 		is_cpr_odd = other.is_cpr_odd;					
+	// 		payload_length = other.payload_length;
+	// 		congestion_level = other.congestion_level;			
+	// 	}
 
-		L2HeaderBeacon* copy() const override {
-			return new L2HeaderBeacon(*this);
-		}
+	// 	L2HeaderBeacon* copy() const override {
+	// 		return new L2HeaderBeacon(*this);
+	// 	}
 
-		unsigned int getBits() const override {
-			return position.getBits()
-			       + 1 /* odd/even identifier */
-			       + 4 /* congestion level */
-			       + 12 /* payload length */
-			       + L2Header::getBits()
-				   + 6 /* padding */
-				   ;
-		}
+	// 	unsigned int getBits() const override {
+	// 		return position.getBits()
+	// 		       + 1 /* odd/even identifier */
+	// 		       + 4 /* congestion level */
+	// 		       + 12 /* payload length */
+	// 		       + L2Header::getBits()
+	// 			   + 6 /* padding */
+	// 			   ;
+	// 	}
 
-		bool operator==(const L2HeaderBeacon& other) const {
-			return other.position == position && other.is_cpr_odd == is_cpr_odd && congestion_level == other.congestion_level && payload_length == other.payload_length;
-		}
+	// 	bool operator==(const L2HeaderBeacon& other) const {
+	// 		return other.position == position && other.is_cpr_odd == is_cpr_odd && congestion_level == other.congestion_level && payload_length == other.payload_length;
+	// 	}
 
-		bool operator!=(const L2HeaderBeacon& other) const {
-			return !((*this) == other);
-		}
+	// 	bool operator!=(const L2HeaderBeacon& other) const {
+	// 		return !((*this) == other);
+	// 	}
 
-		CPRPosition position;
-		bool is_cpr_odd;						
-		L2HeaderBeacon::CongestionLevel congestion_level;
-		unsigned int payload_length;
-	};
+	// 	CPRPosition position;
+	// 	bool is_cpr_odd;						
+	// 	L2HeaderBeacon::CongestionLevel congestion_level;
+	// 	unsigned int payload_length;
+	// };
 
-	class L2HeaderUnicast : public L2HeaderWithDestination {
-	public:
-		L2HeaderUnicast(const MacId& icao_dest_id, bool use_arq, const SequenceNumber& seqno, const SequenceNumber& seqno_next_expected, FrameType frame_type)
-				: L2HeaderWithDestination(frame_type, icao_dest_id), use_arq(use_arq), seqno(seqno), seqno_next_expected(seqno_next_expected) {
-			if (frame_type != FrameType::unicast && frame_type != FrameType::link_establishment_reply && frame_type != FrameType::link_establishment_request)
-				throw std::invalid_argument("Cannot instantiate a unicast header with a non-unicast type.");
-		}
+	// class L2HeaderUnicast : public L2HeaderWithDestination {
+	// public:
+	// 	L2HeaderUnicast(const MacId& icao_dest_id, bool use_arq, const SequenceNumber& seqno, const SequenceNumber& seqno_next_expected, FrameType frame_type)
+	// 			: L2HeaderWithDestination(frame_type, icao_dest_id), use_arq(use_arq), seqno(seqno), seqno_next_expected(seqno_next_expected) {
+	// 		if (frame_type != FrameType::unicast && frame_type != FrameType::link_establishment_reply && frame_type != FrameType::link_establishment_request)
+	// 			throw std::invalid_argument("Cannot instantiate a unicast header with a non-unicast type.");
+	// 	}
 
-		L2HeaderUnicast(const MacId& icao_dest_id, bool use_arq, SequenceNumber arq_seqno, SequenceNumber arq_ack_no)
-				: L2HeaderUnicast(icao_dest_id, use_arq, arq_seqno, arq_ack_no, FrameType::unicast) {}
+	// 	L2HeaderUnicast(const MacId& icao_dest_id, bool use_arq, SequenceNumber arq_seqno, SequenceNumber arq_ack_no)
+	// 			: L2HeaderUnicast(icao_dest_id, use_arq, arq_seqno, arq_ack_no, FrameType::unicast) {}
 
-		L2HeaderUnicast(const L2HeaderUnicast& other) : L2HeaderWithDestination((const L2HeaderWithDestination&) other) {
-			is_pkt_start = other.is_pkt_start;
-			is_pkt_end = other.is_pkt_end;
-			use_arq = other.use_arq;
-			seqno = SequenceNumber(other.seqno);
-			seqno_next_expected = SequenceNumber(other.seqno_next_expected);			
-			burst_length_tx_desire = other.burst_length_tx_desire;
-            srej_bitmap = other.srej_bitmap;
-			payload_length = other.payload_length;
-		}
+	// 	L2HeaderUnicast(const L2HeaderUnicast& other) : L2HeaderWithDestination((const L2HeaderWithDestination&) other) {
+	// 		is_pkt_start = other.is_pkt_start;
+	// 		is_pkt_end = other.is_pkt_end;
+	// 		use_arq = other.use_arq;
+	// 		seqno = SequenceNumber(other.seqno);
+	// 		seqno_next_expected = SequenceNumber(other.seqno_next_expected);			
+	// 		burst_length_tx_desire = other.burst_length_tx_desire;
+    //         srej_bitmap = other.srej_bitmap;
+	// 		payload_length = other.payload_length;
+	// 	}
 
-		L2HeaderUnicast* copy() const override {
-			return new L2HeaderUnicast(*this);
-		}
+	// 	L2HeaderUnicast* copy() const override {
+	// 		return new L2HeaderUnicast(*this);
+	// 	}
 
-		explicit L2HeaderUnicast(FrameType frame_type) : L2HeaderUnicast(SYMBOLIC_ID_UNSET, false, SequenceNumber(0), SequenceNumber(0), frame_type) {}
+	// 	explicit L2HeaderUnicast(FrameType frame_type) : L2HeaderUnicast(SYMBOLIC_ID_UNSET, false, SequenceNumber(0), SequenceNumber(0), frame_type) {}
 
-		L2HeaderUnicast() : L2HeaderUnicast(FrameType::unicast) {}
+	// 	L2HeaderUnicast() : L2HeaderUnicast(FrameType::unicast) {}
 
-		unsigned int getBits() const override {
-			return L2HeaderWithDestination::getBits()
-				   + 1 /* Whether ARQ is used */				   
-			       + 2 /* RLC start and end flags */
-			       + 8 /* ARQ sequence number */
-			       + 8 /* ARQ ACK number */			       
-			       + 4 /* burst length desire */
-			       + 16 /* Srej bit map */
-				   + 12 /* payload length */			       
-				   + 6 /* padding */
-				   ;
-		}
+	// 	unsigned int getBits() const override {
+	// 		return L2HeaderWithDestination::getBits()
+	// 			   + 1 /* Whether ARQ is used */				   
+	// 		       + 2 /* RLC start and end flags */
+	// 		       + 8 /* ARQ sequence number */
+	// 		       + 8 /* ARQ ACK number */			       
+	// 		       + 4 /* burst length desire */
+	// 		       + 16 /* Srej bit map */
+	// 			   + 12 /* payload length */			       
+	// 			   + 6 /* padding */
+	// 			   ;
+	// 	}
 
-		bool operator==(const L2HeaderUnicast& other) const {
-			return other.is_pkt_start == is_pkt_start && other.is_pkt_end == is_pkt_end && other.use_arq == use_arq && other.seqno == seqno && other.seqno_next_expected == seqno_next_expected
-			       && burst_length_tx_desire == other.burst_length_tx_desire && payload_length == other.payload_length && ((L2HeaderWithDestination&) *this == (L2HeaderWithDestination&) other);
-		}
+	// 	bool operator==(const L2HeaderUnicast& other) const {
+	// 		return other.is_pkt_start == is_pkt_start && other.is_pkt_end == is_pkt_end && other.use_arq == use_arq && other.seqno == seqno && other.seqno_next_expected == seqno_next_expected
+	// 		       && burst_length_tx_desire == other.burst_length_tx_desire && payload_length == other.payload_length && ((L2HeaderWithDestination&) *this == (L2HeaderWithDestination&) other);
+	// 	}
 
-		bool operator!=(const L2HeaderUnicast& other) const {
-			return !((*this) == other);
-		}
+	// 	bool operator!=(const L2HeaderUnicast& other) const {
+	// 		return !((*this) == other);
+	// 	}
 
-		/** Whether the contained L3 Packet starts with this fragment **/
-		bool is_pkt_start = false;
+	// 	/** Whether the contained L3 Packet starts with this fragment **/
+	// 	bool is_pkt_start = false;
 
-		/** Whether the contained L3 Packet ends with this fragment **/
-		bool is_pkt_end = false;
+	// 	/** Whether the contained L3 Packet ends with this fragment **/
+	// 	bool is_pkt_end = false;
 
-		/** Whether the ARQ protocol is followed for this transmission, i.e. acknowledgements are expected. */
-		bool use_arq;
-		/** ARQ sequence number. */
-		SequenceNumber seqno;
-		/** ARQ acknowledgement. */
-		SequenceNumber seqno_next_expected;
-		/** Selective rejection list. */
-        std::array<bool, 16> srej_bitmap = {false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false};		
-		/** The number of transmission slots the local node would like to have, which will be respected upon link renewal. */
-		unsigned int burst_length_tx_desire = 0;
-		unsigned int payload_length = 0;
+	// 	/** Whether the ARQ protocol is followed for this transmission, i.e. acknowledgements are expected. */
+	// 	bool use_arq;
+	// 	/** ARQ sequence number. */
+	// 	SequenceNumber seqno;
+	// 	/** ARQ acknowledgement. */
+	// 	SequenceNumber seqno_next_expected;
+	// 	/** Selective rejection list. */
+    //     std::array<bool, 16> srej_bitmap = {false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false};		
+	// 	/** The number of transmission slots the local node would like to have, which will be respected upon link renewal. */
+	// 	unsigned int burst_length_tx_desire = 0;
+	// 	unsigned int payload_length = 0;
 
-		/** Sequence number setter */
-		void setSeqno(SequenceNumber seqno) {
-			this->seqno = seqno;
-		}
+	// 	/** Sequence number setter */
+	// 	void setSeqno(SequenceNumber seqno) {
+	// 		this->seqno = seqno;
+	// 	}
 
-		/** Next expected sequence number setter function */
-		void setSeqnoNextExpected(SequenceNumber seqno) {
-			this->seqno_next_expected = seqno;
-		}
+	// 	/** Next expected sequence number setter function */
+	// 	void setSeqnoNextExpected(SequenceNumber seqno) {
+	// 		this->seqno_next_expected = seqno;
+	// 	}
 
-		/** Get srej list */
-		std::array<bool, 16> getSrejList() {
-			return this->srej_bitmap;
-		}
+	// 	/** Get srej list */
+	// 	std::array<bool, 16> getSrejList() {
+	// 		return this->srej_bitmap;
+	// 	}
 
-        /** Set srej list */
-        void setSrejBitmap(std::array<bool, 16> srej) {
-            this->srej_bitmap = srej;
-		}
+    //     /** Set srej list */
+    //     void setSrejBitmap(std::array<bool, 16> srej) {
+    //         this->srej_bitmap = srej;
+	// 	}
 
-		/** Get sequence number */
-		SequenceNumber getSeqno() {
-			return this->seqno;
-		}
+	// 	/** Get sequence number */
+	// 	SequenceNumber getSeqno() {
+	// 		return this->seqno;
+	// 	}
 
-		/** Get next expected sequence number */
-		SequenceNumber getSeqnoNextExpected() {
-			return this->seqno_next_expected;
-		}
-	};
+	// 	/** Get next expected sequence number */
+	// 	SequenceNumber getSeqnoNextExpected() {
+	// 		return this->seqno_next_expected;
+	// 	}
+	// };
 
-	class L2HeaderLinkRequest : public L2HeaderWithDestination {
-	public:
-		explicit L2HeaderLinkRequest(const MacId& dest_id) : L2HeaderWithDestination(FrameType::link_establishment_request, dest_id) {}
-		L2HeaderLinkRequest() : L2HeaderLinkRequest(SYMBOLIC_ID_UNSET) {}
-		L2HeaderLinkRequest(const L2HeaderLinkRequest& other) : L2HeaderLinkRequest(other.dest_id) {
-			timeout = other.timeout;
-			burst_offset = other.burst_offset;
-			burst_length = other.burst_length;
-			burst_length_tx = other.burst_length_tx;
-			reply_offset = other.reply_offset;
-			payload_length = other.payload_length;
-		}
+	// class L2HeaderLinkRequest : public L2HeaderWithDestination {
+	// public:
+	// 	explicit L2HeaderLinkRequest(const MacId& dest_id) : L2HeaderWithDestination(FrameType::link_establishment_request, dest_id) {}
+	// 	L2HeaderLinkRequest() : L2HeaderLinkRequest(SYMBOLIC_ID_UNSET) {}
+	// 	L2HeaderLinkRequest(const L2HeaderLinkRequest& other) : L2HeaderLinkRequest(other.dest_id) {
+	// 		timeout = other.timeout;
+	// 		burst_offset = other.burst_offset;
+	// 		burst_length = other.burst_length;
+	// 		burst_length_tx = other.burst_length_tx;
+	// 		reply_offset = other.reply_offset;
+	// 		payload_length = other.payload_length;
+	// 	}
 
-		L2HeaderLinkRequest* copy() const override {
-			return new L2HeaderLinkRequest(*this);
-		}
+	// 	L2HeaderLinkRequest* copy() const override {
+	// 		return new L2HeaderLinkRequest(*this);
+	// 	}
 
-		unsigned int getBits() const override {
-			return L2HeaderWithDestination::getBits() 
-					+ 8 /* reply_offset */ 					
-					+ 8 /* burst_offset */ 
-					+ 4 /* burst_length */ 
-					+ 4 /* burst_length_tx */ 					
-					+ 8 /* timeout */ 
-					+ 12 /* payload length */
-					+ 5 /* padding */
-					;
-		}
+	// 	unsigned int getBits() const override {
+	// 		return L2HeaderWithDestination::getBits() 
+	// 				+ 8 /* reply_offset */ 					
+	// 				+ 8 /* burst_offset */ 
+	// 				+ 4 /* burst_length */ 
+	// 				+ 4 /* burst_length_tx */ 					
+	// 				+ 8 /* timeout */ 
+	// 				+ 12 /* payload length */
+	// 				+ 5 /* padding */
+	// 				;
+	// 	}
 
-		bool operator==(const L2HeaderLinkRequest& other) const {
-			return timeout == other.timeout
-				&& burst_offset == other.burst_offset
-				&& burst_length == other.burst_length
-				&& burst_length_tx == other.burst_length_tx
-				&& dest_id == other.dest_id
-				&& reply_offset == other.reply_offset
-				&& ((L2Header&) *this) == ((L2Header&) other);
-		}
+	// 	bool operator==(const L2HeaderLinkRequest& other) const {
+	// 		return timeout == other.timeout
+	// 			&& burst_offset == other.burst_offset
+	// 			&& burst_length == other.burst_length
+	// 			&& burst_length_tx == other.burst_length_tx
+	// 			&& dest_id == other.dest_id
+	// 			&& reply_offset == other.reply_offset
+	// 			&& ((L2Header&) *this) == ((L2Header&) other);
+	// 	}
 
-		bool operator!=(const L2HeaderLinkRequest& other) const {
-			return !((*this) == other);
-		}
+	// 	bool operator!=(const L2HeaderLinkRequest& other) const {
+	// 		return !((*this) == other);
+	// 	}
 
-		unsigned int timeout = 0;
-		unsigned int burst_offset = 0;
-		unsigned int burst_length = 0;
-		unsigned int burst_length_tx = 0;
-		unsigned int reply_offset = 0;
-		unsigned int payload_length = 0;
-	};
+	// 	unsigned int timeout = 0;
+	// 	unsigned int burst_offset = 0;
+	// 	unsigned int burst_length = 0;
+	// 	unsigned int burst_length_tx = 0;
+	// 	unsigned int reply_offset = 0;
+	// 	unsigned int payload_length = 0;
+	// };
 
-	class L2HeaderLinkReply : public L2HeaderWithDestination {
-	public:
-		explicit L2HeaderLinkReply(const MacId& dest_id) : L2HeaderWithDestination(FrameType::link_establishment_reply, dest_id) {}
-		L2HeaderLinkReply() : L2HeaderLinkReply(SYMBOLIC_ID_UNSET) {}
-		L2HeaderLinkReply(const L2HeaderLinkReply& other) : L2HeaderLinkReply(other.dest_id) {
-			timeout = other.timeout;
-			burst_offset = other.burst_offset;
-			burst_length = other.burst_length;
-			burst_length_tx = other.burst_length_tx;
-			payload_length = other.payload_length;
-		}
+	// class L2HeaderLinkReply : public L2HeaderWithDestination {
+	// public:
+	// 	explicit L2HeaderLinkReply(const MacId& dest_id) : L2HeaderWithDestination(FrameType::link_establishment_reply, dest_id) {}
+	// 	L2HeaderLinkReply() : L2HeaderLinkReply(SYMBOLIC_ID_UNSET) {}
+	// 	L2HeaderLinkReply(const L2HeaderLinkReply& other) : L2HeaderLinkReply(other.dest_id) {
+	// 		timeout = other.timeout;
+	// 		burst_offset = other.burst_offset;
+	// 		burst_length = other.burst_length;
+	// 		burst_length_tx = other.burst_length_tx;
+	// 		payload_length = other.payload_length;
+	// 	}
 
-		L2HeaderLinkReply* copy() const override {
-			return new L2HeaderLinkReply(*this);
-		}
+	// 	L2HeaderLinkReply* copy() const override {
+	// 		return new L2HeaderLinkReply(*this);
+	// 	}
 
-		unsigned int getBits() const override {
-			return L2HeaderWithDestination::getBits() 					
-					+ 8 /* burst_offset */ 
-					+ 4 /* burst_length */ 
-					+ 4 /* burst_length_tx */ 					
-					+ 8 /* timeout */ 
-					+ 12 /* payload length */
-					+ 5 /* padding */
-					;
-		}
+	// 	unsigned int getBits() const override {
+	// 		return L2HeaderWithDestination::getBits() 					
+	// 				+ 8 /* burst_offset */ 
+	// 				+ 4 /* burst_length */ 
+	// 				+ 4 /* burst_length_tx */ 					
+	// 				+ 8 /* timeout */ 
+	// 				+ 12 /* payload length */
+	// 				+ 5 /* padding */
+	// 				;
+	// 	}
 
-		bool operator==(const L2HeaderLinkReply& other) const {
-			return timeout == other.timeout
-			       && burst_offset == other.burst_offset
-			       && burst_length == other.burst_length
-			       && burst_length_tx == other.burst_length_tx
-			       && dest_id == other.dest_id
-			       && ((L2Header&) *this) == ((L2Header&) other);
-		}
+	// 	bool operator==(const L2HeaderLinkReply& other) const {
+	// 		return timeout == other.timeout
+	// 		       && burst_offset == other.burst_offset
+	// 		       && burst_length == other.burst_length
+	// 		       && burst_length_tx == other.burst_length_tx
+	// 		       && dest_id == other.dest_id
+	// 		       && ((L2Header&) *this) == ((L2Header&) other);
+	// 	}
 
-		bool operator!=(const L2HeaderLinkReply& other) const {
-			return !((*this) == other);
-		}
+	// 	bool operator!=(const L2HeaderLinkReply& other) const {
+	// 		return !((*this) == other);
+	// 	}
 
-		unsigned int timeout = 0;
-		unsigned int burst_offset = 0;
-		unsigned int burst_length = 0;
-		unsigned int burst_length_tx = 0;
-		unsigned int payload_length = 0;
-	};		
+	// 	unsigned int timeout = 0;
+	// 	unsigned int burst_offset = 0;
+	// 	unsigned int burst_length = 0;
+	// 	unsigned int burst_length_tx = 0;
+	// 	unsigned int payload_length = 0;
+	// };		
 
 	inline std::ostream& operator<<(std::ostream& stream, const L2Header::FrameType& frame_type) {
 		std::string s;
 		switch (frame_type) {
 			case L2Header::FrameType::unset: {s = "unset"; break;}
-			case L2Header::FrameType::base: {s = "base"; break;}			
-			case L2Header::FrameType::beacon: {s = "beacon"; break;}
+			case L2Header::FrameType::base: {s = "base"; break;}						
 			case L2Header::FrameType::broadcast: {s = "broadcast"; break;}
 			case L2Header::FrameType::unicast: {s = "unicast"; break;}
 			case L2Header::FrameType::link_establishment_reply: {s = "link_reply"; break;}

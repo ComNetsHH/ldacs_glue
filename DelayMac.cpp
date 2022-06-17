@@ -52,12 +52,13 @@ void DelayMac::execute() {
     }
     auto *packet = new L2Packet();
 
-    auto *base_header = new L2HeaderBase(id, 0, 0, 0, 0);
+    auto *header = new L2HeaderSH();
+    header->src_id = id;
 
     IArq* arq = getUpperLayer();
     auto upper_layer_data = arq->requestSegment(nextPktSize + 155 + 77, nextMacId);
 
-    packet->addMessage(base_header, nullptr);
+    packet->addMessage(header, nullptr);
 
     for (size_t i = 0; i < upper_layer_data->getPayloads().size(); i++) {
         if (upper_layer_data->getHeaders().at(i)->frame_type != L2Header::base) {
