@@ -165,3 +165,12 @@ bool L2Packet::isDME() const {
 	return false;
 }
 
+bool L2Packet::empty() const {
+	if (this->payloads.empty())
+		return true;
+	size_t payload_size = 0;
+	for (const auto *payload : payloads)
+		if (payload != nullptr)
+			payload_size += payload->getBits();
+	return payload_size == 0;
+}

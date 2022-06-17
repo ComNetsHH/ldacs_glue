@@ -137,6 +137,8 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 
 		class LinkProposalMessage {
 		public:
+			LinkProposalMessage() {}
+			explicit LinkProposalMessage(LinkProposal proposal) : proposed_link(proposal) {}
 			LinkProposal proposed_link;
 
 			static unsigned int getBits() {

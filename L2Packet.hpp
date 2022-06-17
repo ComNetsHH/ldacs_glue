@@ -143,6 +143,8 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 
 		bool isDME() const;
 
+		bool empty() const;
+
 	protected:
 		/**
 		 * Ensures that at least one header is present, which must be a base header.
