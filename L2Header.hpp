@@ -138,7 +138,7 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		class LinkProposalMessage {
 		public:
 			LinkProposalMessage() {}
-			explicit LinkProposalMessage(LinkProposal proposal) : proposed_link(proposal) {}
+			explicit LinkProposalMessage(const LinkProposal &proposal) : proposed_link(proposal) {}
 			LinkProposal proposed_link;
 
 			static unsigned int getBits() {
@@ -188,7 +188,12 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		}
 	};
 
+	class L2HeaderPP : public L2Header {
+	public:
+		L2HeaderPP(const MacId& sender_id, const MacId& receiver_id) : L2Header(L2Header::FrameType::unicast), src_id(sender_id), dest_id(receiver_id) {}
 
+		MacId src_id, dest_id;		
+	};
 
 	class L2HeaderDMERequest : public L2Header {
 	public:
