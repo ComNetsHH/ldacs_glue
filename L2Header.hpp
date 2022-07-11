@@ -35,6 +35,10 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			twelve_ms,
 			twentyfour_ms
 		};
+		enum Modulation {
+			BPSK,
+			QPSK
+		};
 		class Direction {
 		public:
 			bool North = false;
@@ -47,8 +51,8 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			bool NorthWest = false;
 		};
 
-		explicit L2Header(L2Header::FrameType frame_type) : frame_type(frame_type) {}
-
+		L2Header() : frame_type(unset) {}
+		explicit L2Header(L2Header::FrameType frame_type) : frame_type(frame_type) {}		
 		L2Header(const L2Header& other) = default;
 		virtual ~L2Header() = default;
 
@@ -93,6 +97,26 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 
 		L2HeaderSH() : L2Header(L2Header::FrameType::broadcast) {}
 		L2HeaderSH(MacId id) : L2Header(L2Header::FrameType::broadcast), src_id(id) {}
+		L2HeaderSH(const L2HeaderSH &other) : L2Header(other) {
+			signature = other.signature;
+			src_id = other.src_id; 
+			slot_offset = other.slot_offset;
+			slot_duration = other.slot_duration;
+			position = other.position;
+			time_src = other.time_src;
+			num_hops = other.num_hops;
+			time_tx = other.time_tx; 
+			request_time_rx = other.request_time_rx;
+			response_time_rx = other.response_time_rx; 
+			link_status = other.link_status;
+			link_utilizations = other.link_utilizations; 
+			link_proposals = other.link_proposals; 
+			link_requests = other.link_requests; 			
+		}
+
+		L2HeaderSH* copy() const override {
+			return new L2HeaderSH(*this);
+		}
 
 		/** ECC-384. Not actually used in the simulator. */
 		class Signature {
@@ -140,6 +164,7 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			LinkProposalMessage() {}
 			explicit LinkProposalMessage(const LinkProposal &proposal) : proposed_link(proposal) {}
 			LinkProposal proposed_link;
+			int noise = 0;
 
 			static unsigned int getBits() {
 				return 14 /* slot_offset */ + 2 /* slot_duration */ + 4 /* noise */ + 3 /* period */ + 9 /* center_frequency */
@@ -149,16 +174,25 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 
 		class LinkRequest {
 		public:
+			LinkRequest() {}
+			explicit LinkRequest(const MacId &dest_id, const LinkProposal &proposal) : dest_id(dest_id), proposed_link(proposal) {}
+			Modulation modulation = Modulation::BPSK;
+			int type = 0;
+			MacId dest_id;
+			LinkProposal proposed_link;
+			int num_forward_bursts = 1, num_reverse_bursts = 1;
+
 			static unsigned int getBits() {
-				return 0;
+				return 4 /*modulation*/ + 4 /*type*/ + MacId::getBits() + 14 /*slot_offset*/ 
+					+ 2 /*slot_duration*/ + 3 /*period*/ + 9 /*center_frequency*/ + 4 /*forward/reverse*/;
 			}
 		};
 		
 		Signature signature = Signature();
-		MacId src_id;
+		MacId src_id = SYMBOLIC_ID_UNSET;
 		/** advertises next transmission slot */
-		unsigned int slot_offset;
-		SlotDuration slot_duration;
+		unsigned int slot_offset = 0; 
+		SlotDuration slot_duration = SlotDuration::twentyfour_ms;
 		CPRPosition position;
 		int time_src = 0;
 		int num_hops = 0;

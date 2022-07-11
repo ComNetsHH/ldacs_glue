@@ -5,7 +5,7 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 	class LinkProposal {
 	public:
 		LinkProposal() {}
-		LinkProposal(const LinkProposal &other) : slot_offset(other.slot_offset), slot_duration(other.slot_duration), noise(other.noise), period(other.period), center_frequency(other.center_frequency) {}		
+		LinkProposal(const LinkProposal &other) : slot_offset(other.slot_offset), slot_duration(other.slot_duration), period(other.period), center_frequency(other.center_frequency), num_tx_initiator(other.num_tx_initiator), num_tx_recipient(other.num_tx_recipient) {}		
 
 		enum SlotDuration {
 			six_ms,
@@ -14,10 +14,11 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		};
 
 		int slot_offset = 0;
-		SlotDuration slot_duration = twentyfour_ms;
-		int noise = 0;
+		SlotDuration slot_duration = twentyfour_ms;		
 		int period = 0;
 		int center_frequency = 0;
+		int num_tx_initiator = 1;
+		int num_tx_recipient = 1;
 	};
 }
 
