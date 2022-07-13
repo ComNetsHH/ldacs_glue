@@ -12,6 +12,7 @@
 #include "CPRPosition.hpp"
 #include "SequenceNumber.hpp"
 #include "LinkProposal.hpp"
+#include "SlotDuration.hpp"
 
 namespace TUHH_INTAIRNET_MCSOTDMA {
 
@@ -29,12 +30,7 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			link_establishment_reply,
 			dme_request,
 			dme_response
-		};
-		enum SlotDuration {
-			six_ms,
-			twelve_ms,
-			twentyfour_ms
-		};
+		};		
 		enum Modulation {
 			BPSK,
 			QPSK
@@ -147,8 +143,15 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 
 		class LinkUtilizationMessage {
 		public:
+			LinkUtilizationMessage() : slot_offset(0), slot_duration(SlotDuration::twentyfour_ms), num_bursts_forward(0), num_bursts_reverse(0), period(0), center_frequency(0), timeout(0) {}
+			LinkUtilizationMessage(int slot_offset, SlotDuration slot_duration, int num_bursts_forward = 0, int num_bursts_reverse = 0, int period = 0, int center_frequency = 0, int timeout = 0)
+				: slot_offset(slot_offset), slot_duration(slot_duration), num_bursts_forward(num_bursts_forward), num_bursts_reverse(num_bursts_reverse), period(period), center_frequency(center_frequency), timeout(timeout) {}
+			bool operator==(LinkUtilizationMessage const& rhs) const { return slot_offset == rhs.slot_duration && slot_duration == rhs.slot_duration && num_bursts_forward == rhs.num_bursts_forward && num_bursts_reverse == rhs.num_bursts_reverse && period == rhs.period && center_frequency == rhs.center_frequency && timeout == rhs.timeout; }
+			bool operator!=(LinkUtilizationMessage const& rhs) const { return !(*this == rhs);}
+			
+
 			int slot_offset = 0;
-			L2Header::SlotDuration slot_duration;
+			SlotDuration slot_duration = SlotDuration::twentyfour_ms;
 			int num_bursts_forward = 0, num_bursts_reverse = 0;
 			int period = 0;
 			int center_frequency = 0;
