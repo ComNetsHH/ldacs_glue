@@ -8,6 +8,8 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 	public:
 		LinkProposal() {}
 		LinkProposal(const LinkProposal &other) : slot_offset(other.slot_offset), slot_duration(other.slot_duration), period(other.period), center_frequency(other.center_frequency), num_tx_initiator(other.num_tx_initiator), num_tx_recipient(other.num_tx_recipient) {}				
+		bool operator==(LinkProposal const& rhs) const {return slot_offset == rhs.slot_offset && slot_duration == rhs.slot_duration && period == rhs.period && center_frequency == rhs.center_frequency && num_tx_initiator == rhs.num_tx_initiator && num_tx_recipient == num_tx_recipient;}
+		bool operator!=(LinkProposal const& rhs) const { return !(*this == rhs);}
 
 		int slot_offset = 0;
 		SlotDuration slot_duration = twentyfour_ms;		

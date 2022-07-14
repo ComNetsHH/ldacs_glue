@@ -190,6 +190,23 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 					+ 2 /*slot_duration*/ + 3 /*period*/ + 9 /*center_frequency*/ + 4 /*forward/reverse*/;
 			}
 		};
+		class LinkReply {
+		public:
+			LinkReply() {}
+			LinkReply(const MacId &dest_id, const LinkProposal &proposal) : dest_id(dest_id), proposed_link(proposal) {}
+			bool operator==(LinkReply const& rhs) const {return type == rhs.type && dest_id == rhs.dest_id && proposed_link == rhs.proposed_link && num_forward_bursts == rhs.num_forward_bursts && num_reverse_bursts == rhs.num_reverse_bursts;}
+			bool operator!=(LinkReply const& rhs) const { return !(*this == rhs);}
+			Modulation modulation = Modulation::BPSK;
+			int type = 0;
+			MacId dest_id;
+			LinkProposal proposed_link;
+			int num_forward_bursts = 1, num_reverse_bursts = 1;
+
+			static unsigned int getBits() {
+				return 4 /*modulation*/ + 4 /*type*/ + MacId::getBits() + 14 /*slot_offset*/ 
+					+ 2 /*slot_duration*/ + 3 /*period*/ + 9 /*center_frequency*/ + 4 /*forward/reverse*/;
+			}
+		};
 		
 		Signature signature = Signature();
 		MacId src_id = SYMBOLIC_ID_UNSET;
@@ -208,6 +225,7 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		std::vector<LinkUtilizationMessage> link_utilizations;
 		std::vector<LinkProposalMessage> link_proposals;
 		std::vector<LinkRequest> link_requests;
+		LinkReply link_reply;
 
 		unsigned int getBits() const override {
 			return L2Header::getBits() + signature.getBits() + src_id.getBits() 
