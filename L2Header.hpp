@@ -108,6 +108,7 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			link_utilizations = other.link_utilizations; 
 			link_proposals = other.link_proposals; 
 			link_requests = other.link_requests; 			
+			link_reply = other.link_reply;
 		}
 
 		L2HeaderSH* copy() const override {
@@ -198,8 +199,8 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			bool operator!=(LinkReply const& rhs) const { return !(*this == rhs);}
 			Modulation modulation = Modulation::BPSK;
 			int type = 0;
-			MacId dest_id;
-			LinkProposal proposed_link;
+			MacId dest_id = SYMBOLIC_ID_UNSET;
+			LinkProposal proposed_link = LinkProposal();
 			int num_forward_bursts = 1, num_reverse_bursts = 1;
 
 			static unsigned int getBits() {
