@@ -246,7 +246,18 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 
 	class L2HeaderPP : public L2Header {
 	public:
-		L2HeaderPP(const MacId& sender_id, const MacId& receiver_id) : L2Header(L2Header::FrameType::unicast), src_id(sender_id), dest_id(receiver_id) {}
+		L2HeaderPP() : L2Header(L2Header::FrameType::unicast) {}
+		L2HeaderPP(const MacId& dest_id) : L2Header(L2Header::FrameType::unicast), dest_id(dest_id) {}
+		L2HeaderPP(const MacId& src_id, const MacId& dest_id) : L2Header(L2Header::FrameType::unicast), src_id(src_id), dest_id(dest_id) {}
+		L2HeaderPP(const L2HeaderPP &other) : L2Header(other) {
+			src_id = other.src_id;
+			dest_id = other.dest_id;
+		}
+
+		L2HeaderPP* copy() const override {
+			return new L2HeaderPP(*this);
+		}
+
 
 		MacId src_id, dest_id;		
 	};

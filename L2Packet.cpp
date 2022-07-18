@@ -56,12 +56,12 @@ unsigned int L2Packet::getBits() const {
 	return bits;
 }
 
-MacId L2Packet::getDestination() const {
+MacId L2Packet::getDestination() const {	
 	for (const L2Header *header : headers) {
 		if (header->isBroadcastType())
 			return SYMBOLIC_LINK_ID_BROADCAST;		
 		else if (header->isUnicastType())
-			throw std::runtime_error("unicast packet's getDestination not yet implemented");
+			return ((L2HeaderPP*) header)->dest_id;
 	}
 	// Default to UNSET.
 	return SYMBOLIC_ID_UNSET;
