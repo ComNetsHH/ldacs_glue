@@ -189,6 +189,9 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		 */
 		virtual void setBcSlotSelectionMaxNumCandidateSlots(int value);
 
+		/** Set max. no of PP link establishment attempts before giving up. */
+		virtual void setMaxNoPPLinkEstablishmentAttempts(int value);
+
 		/**
 		 * @param method: Broadcast contention method.
 		 */

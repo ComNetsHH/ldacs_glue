@@ -136,3 +136,7 @@ void IMac::passPrediction(const std::vector<std::vector<double>>& prediction_mat
 void IMac::setDutyCycle(unsigned int period, double max, unsigned int min_num_supported_pp_links) {
 	throw std::runtime_error("setDutyCycle not implemented");
 }
+
+void IMac::setMaxNoPPLinkEstablishmentAttempts(int value) {
+	throw std::runtime_error("setMaxNoPPLinkEstablishmentAttempts not implemented");
+}
