@@ -261,7 +261,13 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			src_id = other.src_id;
 			dest_id = other.dest_id;
 			is_pkt_start = other.is_pkt_start;
-			is_pkt_end = other.is_pkt_end;			
+			is_pkt_end = other.is_pkt_end;		
+			use_arq = other.use_arq;
+			seqno = SequenceNumber(other.seqno);
+			seqno_next_expected = SequenceNumber(other.seqno_next_expected);						
+            srej_bitmap = other.srej_bitmap;
+			payload_length = other.payload_length;
+	
 		}
 
 		L2HeaderPP* copy() const override {
@@ -270,6 +276,47 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 
 		MacId src_id, dest_id;		
 		bool is_pkt_end = false, is_pkt_start = false;
+
+		/** Whether the ARQ protocol is followed for this transmission, i.e. acknowledgements are expected. */
+		bool use_arq;
+		/** ARQ sequence number. */
+		SequenceNumber seqno;
+		/** ARQ acknowledgement. */
+		SequenceNumber seqno_next_expected;
+		/** Selective rejection list. */
+        std::array<bool, 16> srej_bitmap = {false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false};				
+		unsigned int payload_length = 0;
+
+		/** Sequence number setter */
+		void setSeqno(SequenceNumber seqno) {
+			this->seqno = seqno;
+		}
+
+		/** Next expected sequence number setter function */
+		void setSeqnoNextExpected(SequenceNumber seqno) {
+			this->seqno_next_expected = seqno;
+		}
+
+		/** Get srej list */
+		std::array<bool, 16> getSrejList() {
+			return this->srej_bitmap;
+		}
+
+        /** Set srej list */
+        void setSrejBitmap(std::array<bool, 16> srej) {
+            this->srej_bitmap = srej;
+		}
+
+		/** Get sequence number */
+		SequenceNumber getSeqno() {
+			return this->seqno;
+		}
+
+		/** Get next expected sequence number */
+		SequenceNumber getSeqnoNextExpected() {
+			return this->seqno_next_expected;
+		}
+
 	};
 
 	class L2HeaderDMERequest : public L2Header {
