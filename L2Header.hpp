@@ -109,6 +109,8 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			link_proposals = other.link_proposals; 
 			link_requests = other.link_requests; 			
 			link_reply = other.link_reply;
+			is_pkt_start = other.is_pkt_start;
+			is_pkt_end = other.is_pkt_end; 			
 		}
 
 		L2HeaderSH* copy() const override {
@@ -232,6 +234,7 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		std::vector<LinkProposalMessage> link_proposals;
 		std::vector<LinkRequest> link_requests;
 		LinkReply link_reply;
+		bool is_pkt_end = false, is_pkt_start = false;
 
 		unsigned int getBits() const override {
 			return L2Header::getBits() + signature.getBits() + src_id.getBits() 
