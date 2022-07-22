@@ -202,9 +202,9 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		/** 
 		 * When a beacon arrives at the MAC, it may be passed up to the Network Layer through this function.
 		 */
-		virtual void onBeaconReception(MacId origin_id, L2HeaderSH::LinkStatus header);
+		virtual void onBeaconReception(MacId origin_id, CPRPosition position);
 
-		void setOmnetPassUpBeaconFct(std::function<void (MacId origin_id, L2HeaderSH::LinkStatus header)> func) {
+		void setOmnetPassUpBeaconFct(std::function<void (MacId origin_id, CPRPosition position)> func) {
 			this->passUpBeaconFct = func;
 		}		
 
@@ -230,7 +230,7 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		std::map<MacId, CPRPosition> position_map;
 		std::map<MacId, CPRPosition::PositionQuality> position_quality_map;
 		uint64_t current_slot = 0;
-		std::function<void (MacId origin_id, L2HeaderSH::LinkStatus header)> passUpBeaconFct = [] (MacId origin_id, L2HeaderSH::LinkStatus header) {/* do nothing */};
+		std::function<void (MacId origin_id, CPRPosition position)> passUpBeaconFct = [] (MacId origin_id, CPRPosition position) {/* do nothing */};
 		bool should_force_bidirectional_links = true;		
 	};
 }

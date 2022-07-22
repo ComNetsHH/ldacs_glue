@@ -257,6 +257,9 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		L2HeaderPP() : L2Header(L2Header::FrameType::unicast) {}
 		L2HeaderPP(const MacId& dest_id) : L2Header(L2Header::FrameType::unicast), dest_id(dest_id) {}
 		L2HeaderPP(const MacId& src_id, const MacId& dest_id) : L2Header(L2Header::FrameType::unicast), src_id(src_id), dest_id(dest_id) {}
+		L2HeaderPP(const MacId& dest_id, bool use_arq, SequenceNumber arq_seqno, SequenceNumber ack_seqno) : L2Header(L2Header::FrameType::unicast), dest_id(dest_id), use_arq(use_arq), seqno(arq_seqno), seqno_next_expected(ack_seqno) {}
+		L2HeaderPP(const MacId& icao_dest_id, bool use_arq, SequenceNumber arq_seqno, SequenceNumber arq_ack_no, unsigned int arq_ack_slot) : L2Header(L2Header::FrameType::unicast), dest_id(dest_id), use_arq(use_arq), seqno(arq_seqno), seqno_next_expected(arq_ack_no), arq_ack_slot(arq_ack_slot) {}					
+
 		L2HeaderPP(const L2HeaderPP &other) : L2Header(other) {
 			src_id = other.src_id;
 			dest_id = other.dest_id;
@@ -283,9 +286,14 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		SequenceNumber seqno;
 		/** ARQ acknowledgement. */
 		SequenceNumber seqno_next_expected;
+		unsigned int arq_ack_slot;
 		/** Selective rejection list. */
         std::array<bool, 16> srej_bitmap = {false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false};				
 		unsigned int payload_length = 0;
+
+		const MacId& getDestId() const {
+			return this->dest_id;
+		}
 
 		/** Sequence number setter */
 		void setSeqno(SequenceNumber seqno) {
