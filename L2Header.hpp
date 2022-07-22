@@ -257,14 +257,16 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		L2HeaderPP(const L2HeaderPP &other) : L2Header(other) {
 			src_id = other.src_id;
 			dest_id = other.dest_id;
+			is_pkt_start = other.is_pkt_start;
+			is_pkt_end = other.is_pkt_end;			
 		}
 
 		L2HeaderPP* copy() const override {
 			return new L2HeaderPP(*this);
 		}
 
-
 		MacId src_id, dest_id;		
+		bool is_pkt_end = false, is_pkt_start = false;
 	};
 
 	class L2HeaderDMERequest : public L2Header {
