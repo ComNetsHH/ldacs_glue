@@ -199,6 +199,8 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		
 		virtual void setAdvertiseNextBroadcastSlotInCurrentHeader(bool flag);				
 
+		virtual void setMinNumSupportedPPLinks(unsigned int value);
+
 		/** 
 		 * When a beacon arrives at the MAC, it may be passed up to the Network Layer through this function.
 		 */
@@ -221,6 +223,8 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		virtual void passPrediction(const std::vector<std::vector<double>>& prediction_mat);
 
 		virtual void setDutyCycle(unsigned int period, double max, unsigned int min_num_supported_pp_links);
+
+		virtual void setConsiderDutyCycle(bool flag);
 
 
 	protected:

@@ -140,3 +140,11 @@ void IMac::setDutyCycle(unsigned int period, double max, unsigned int min_num_su
 void IMac::setMaxNoPPLinkEstablishmentAttempts(int value) {
 	throw std::runtime_error("setMaxNoPPLinkEstablishmentAttempts not implemented");
 }
+
+void IMac::setConsiderDutyCycle(bool flag) {
+	throw std::runtime_error("setConsiderDutyCycle not implemented");
+}
+
+void IMac::setMinNumSupportedPPLinks(unsigned int value) {
+	throw std::runtime_error("setMinNumSupportedPPLinks not implemented");
+}
