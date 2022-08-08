@@ -187,9 +187,9 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			Modulation modulation = Modulation::BPSK;
 			int type = 0;
 			MacId dest_id;
-			LinkProposal proposed_link;
+			LinkProposal proposed_link = LinkProposal();
 			int num_forward_bursts = 1, num_reverse_bursts = 1;
-			/** Won't be part of an actual link request, but this allows the recipient to have a valid link establishment time statistic. */
+			/** Isn't part of an actual link request, but this allows the recipient to have a valid link establishment time statistic. */
 			uint64_t generation_time = 0;
 
 			static unsigned int getBits() {
