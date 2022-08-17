@@ -148,3 +148,7 @@ void IMac::setConsiderDutyCycle(bool flag) {
 void IMac::setMinNumSupportedPPLinks(unsigned int value) {
 	throw std::runtime_error("setMinNumSupportedPPLinks not implemented");
 }
+
+void IMac::setForcePPPeriod(bool flag, int value) {
+	throw std::runtime_error("setForcePPPeriod not implemented");
+}

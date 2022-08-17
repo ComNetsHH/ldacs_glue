@@ -226,6 +226,8 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 
 		virtual void setConsiderDutyCycle(bool flag);
 
+		virtual void setForcePPPeriod(bool flag, int value);
+
 
 	protected:
 		IArq* upper_layer = nullptr;
