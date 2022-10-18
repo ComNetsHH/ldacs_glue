@@ -288,7 +288,8 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		SequenceNumber seqno_next_expected;
 		unsigned int arq_ack_slot;
 		/** Selective rejection list. */
-        std::array<bool, 16> srej_bitmap = {false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false};				
+        std::array<bool, 16> srej_bitmap = {false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false};
+		std::array<bool, 4> srej = {false, false, false, false};
 		unsigned int payload_length = 0;
 
 		const MacId& getDestId() const {
