@@ -113,32 +113,8 @@ void IMac::setContentionMethod(ContentionMethod method) {
 	throw std::runtime_error("setContentionMethod not implemented");
 }
 
-void IMac::setAlwaysScheduleNextBroadcastSlot(bool value) {
-	throw std::runtime_error("setAlwaysScheduleNextBroadcastSlot not implemented");
-}
-
-void IMac::setMinBeaconOffset(unsigned int value) {
-	throw std::runtime_error("setMinBeaconOffset not implemented");
-}
-
-void IMac::setMaxBeaconOffset(unsigned int value) {
-	throw std::runtime_error("setMaxBeaconOffset not implemented");
-}
-
-void IMac::onBeaconReception(MacId origin_id, L2HeaderBeacon header) {
-	passUpBeaconFct(origin_id, header);
-}
-
-void IMac::setForceBidirectionalLinks(bool flag) {
-	this->should_force_bidirectional_links = flag;
-}
-
-void IMac::setWriteResourceUtilizationIntoBeacon(bool flag) {
-	throw std::runtime_error("setWriteResourceUtilizationIntoBeacon not implemented");
-}
-
-void IMac::setEnableBeacons(bool flag) {
-	throw std::runtime_error("setEnableBeacons not implemented");
+void IMac::onBeaconReception(MacId origin_id, CPRPosition position) {
+	passUpBeaconFct(origin_id, position);
 }
 
 void IMac::setAdvertiseNextBroadcastSlotInCurrentHeader(bool flag) {
@@ -169,6 +145,18 @@ void IMac::setDutyCycle(unsigned int period, double max, unsigned int min_num_su
 	throw std::runtime_error("setDutyCycle not implemented");
 }
 
-void IMac::notifyAboutDmeTransmission(uint64_t center_frequency) {
-	throw std::runtime_error("notifyAboutDmeTransmission not implemented");
+void IMac::setMaxNoPPLinkEstablishmentAttempts(int value) {
+	throw std::runtime_error("setMaxNoPPLinkEstablishmentAttempts not implemented");
+}
+
+void IMac::setConsiderDutyCycle(bool flag) {
+	throw std::runtime_error("setConsiderDutyCycle not implemented");
+}
+
+void IMac::setMinNumSupportedPPLinks(unsigned int value) {
+	throw std::runtime_error("setMinNumSupportedPPLinks not implemented");
+}
+
+void IMac::setForcePPPeriod(bool flag, int value) {
+	throw std::runtime_error("setForcePPPeriod not implemented");
 }

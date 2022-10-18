@@ -189,38 +189,26 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		 */
 		virtual void setBcSlotSelectionMaxNumCandidateSlots(int value);
 
+		/** Set max. no of PP link establishment attempts before giving up. */
+		virtual void setMaxNoPPLinkEstablishmentAttempts(int value);
+
 		/**
 		 * @param method: Broadcast contention method.
 		 */
 		virtual void setContentionMethod(ContentionMethod method);
+		
+		virtual void setAdvertiseNextBroadcastSlotInCurrentHeader(bool flag);				
 
-		/**
-		 * If 'true': always schedule the next broadcast slot and advertise it in the header.
-		 * If 'false: only schedule the next broadcast slot if there's more data queued up.
-		 * @param value
-		 */
-		virtual void setAlwaysScheduleNextBroadcastSlot(bool value);
-		virtual void setAdvertiseNextBroadcastSlotInCurrentHeader(bool flag);		
-		virtual void setMinBeaconOffset(unsigned int value);
-		virtual void setMaxBeaconOffset(unsigned int value);
+		virtual void setMinNumSupportedPPLinks(unsigned int value);
 
 		/** 
 		 * When a beacon arrives at the MAC, it may be passed up to the Network Layer through this function.
 		 */
-		virtual void onBeaconReception(MacId origin_id, L2HeaderBeacon header);
+		virtual void onBeaconReception(MacId origin_id, CPRPosition position);
 
-		void setOmnetPassUpBeaconFct(std::function<void (MacId origin_id, L2HeaderBeacon header)> func) {
+		void setOmnetPassUpBeaconFct(std::function<void (MacId origin_id, CPRPosition position)> func) {
 			this->passUpBeaconFct = func;
-		}
-
-		/**
-		 * @param flag: If true, P2P links will always be bidirectional, i.e. have TX reservations for both sides.
-		 * */
-		virtual void setForceBidirectionalLinks(bool flag);		
-		virtual void setWriteResourceUtilizationIntoBeacon(bool flag);
-		virtual void setEnableBeacons(bool flag);
-		virtual void setPPLinkBurstOffset(unsigned int value);
-		virtual void setPPLinkBurstOffsetAdaptive(bool value);
+		}		
 
 		/**		 
 		 * @return A vector with positive and negative ones, indicating IDLE and BUSY observations in the current LDACS time slot.
@@ -236,6 +224,10 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 
 		virtual void setDutyCycle(unsigned int period, double max, unsigned int min_num_supported_pp_links);
 
+		virtual void setConsiderDutyCycle(bool flag);
+
+		virtual void setForcePPPeriod(bool flag, int value);
+
 		virtual void notifyAboutDmeTransmission(uint64_t center_frequency);
 
 
@@ -246,7 +238,7 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		std::map<MacId, CPRPosition> position_map;
 		std::map<MacId, CPRPosition::PositionQuality> position_quality_map;
 		uint64_t current_slot = 0;
-		std::function<void (MacId origin_id, L2HeaderBeacon header)> passUpBeaconFct = [] (MacId origin_id, L2HeaderBeacon header) {/* do nothing */};
+		std::function<void (MacId origin_id, CPRPosition position)> passUpBeaconFct = [] (MacId origin_id, CPRPosition position) {/* do nothing */};
 		bool should_force_bidirectional_links = true;		
 	};
 }

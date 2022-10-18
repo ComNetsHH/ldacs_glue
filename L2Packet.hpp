@@ -71,8 +71,7 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		/**
 		 * @return All headers.
 		 */
-		const std::vector<L2Header*>& getHeaders();
-		void replaceBaseHeader(std::size_t i, L2HeaderBase header);
+		const std::vector<L2Header*>& getHeaders();		
 
 		/**
 		 * @return Total size of this packet in bits, consisting of both headers and payloads.
@@ -107,20 +106,20 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		 */
 		std::string print();
 
-		/**
-		 * @return Index of a contained link request, or -1 if it doesn't contain one.
-		 */
-		int getRequestIndex() const;
+		// /**
+		//  * @return Index of a contained link request, or -1 if it doesn't contain one.
+		//  */
+		// int getRequestIndex() const;
 
-		/**
-		 * @return Index of a contained link reply, or -1 if it doesn't contain one.
-		 */
-		int getReplyIndex() const;
+		// /**
+		//  * @return Index of a contained link reply, or -1 if it doesn't contain one.
+		//  */
+		// int getReplyIndex() const;
 
-		/**
-		 * @return Index of a contained link reply, or -1 if it doesn't contain one.
-		 */
-		int getBeaconIndex() const;		
+		// /**
+		//  * @return Index of a contained link reply, or -1 if it doesn't contain one.
+		//  */
+		// int getBeaconIndex() const;		
 
 		/**
 		 * Erases header and payload at the given index.
@@ -143,6 +142,8 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		double snr = 0.0;
 
 		bool isDME() const;
+
+		bool empty() const;
 
 	protected:
 		/**
