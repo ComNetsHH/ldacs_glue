@@ -121,14 +121,6 @@ void IMac::setAdvertiseNextBroadcastSlotInCurrentHeader(bool flag) {
 	throw std::runtime_error("setAdvertiseNextBroadcastSlotInCurrentHeader not implemented");
 }
 
-void IMac::setPPLinkBurstOffset(unsigned int value) {
-	throw std::runtime_error("setPPLinkBurstOffset not implemented");
-}
-
-void IMac::setPPLinkBurstOffsetAdaptive(bool value) {
-	throw std::runtime_error("setPPLinkBurstOffsetAdaptive not implemented");
-}
-
 const std::vector<int> IMac::getChannelSensingObservation() const {
 	throw std::runtime_error("getChannelSensingObservation not implemented");
 }
@@ -159,4 +151,8 @@ void IMac::setMinNumSupportedPPLinks(unsigned int value) {
 
 void IMac::setForcePPPeriod(bool flag, int value) {
 	throw std::runtime_error("setForcePPPeriod not implemented");
+}
+
+void IMac::notifyAboutDmeTransmission(uint64_t center_frequency) {
+	throw std::runtime_error("notifyAboutDmeTransmission not implemented");
 }
