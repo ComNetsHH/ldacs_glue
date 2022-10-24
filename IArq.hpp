@@ -121,6 +121,19 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		 */
 		size_t getMaxNumRtxAttempts() const;
 
+		/**
+		 * To be called when a TX burst starts for a given mac id
+		 * @param id
+		 */
+		void startTxBurst(MacId id) { }
+
+		/**
+		 * To be called when a TX burst ends for a given mac id
+		 * @param id
+		 */
+        void endTxBurst(MacId id) { }
+
+
 	protected:
 		/**
 		 * When a packet comes in via PHY and MAC, this function parses its header and updates the internal ARQ state.
