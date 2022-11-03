@@ -131,13 +131,13 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		 * To be called when a TX burst starts for a given mac id
 		 * @param id
 		 */
-		void startTxBurst(MacId id) { }
+		virtual void startTxBurst(MacId id) { }
 
 		/**
 		 * To be called when a TX burst ends for a given mac id
 		 * @param id
 		 */
-        void endTxBurst(MacId id) { }
+	        virtual void endTxBurst(MacId id) { }
 
 
 	protected:
