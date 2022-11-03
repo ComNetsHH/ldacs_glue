@@ -96,7 +96,7 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		 * Interface to inform ARQ about a missed packet from src
 		 * @param src
 		 */
-		void notifyAboutMissedPacket(MacId src) {}
+		virtual void notifyAboutMissedPacket(MacId src) {};
 
 		/**
 		 * The MAC may call this function to notify the ARQ sublayer of a newly established link.
@@ -131,13 +131,13 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		 * To be called when a TX burst starts for a given mac id
 		 * @param id
 		 */
-		void startTxBurst(MacId id) { }
+		virtual void startTxBurst(MacId id) { }
 
 		/**
 		 * To be called when a TX burst ends for a given mac id
 		 * @param id
 		 */
-        void endTxBurst(MacId id) { }
+	        virtual void endTxBurst(MacId id) { }
 
 
 	protected:
