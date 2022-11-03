@@ -156,3 +156,7 @@ void IMac::setForcePPPeriod(bool flag, int value) {
 void IMac::notifyAboutDmeTransmission(uint64_t center_frequency) {
 	throw std::runtime_error("notifyAboutDmeTransmission not implemented");
 }
+
+void IMac::setDutyCycleBudgetComputationStrategy(const DutyCycleBudgetStrategy& strategy) {
+	throw std::runtime_error("setDutyCycleBudgetComputationStrategy not implemented");
+}

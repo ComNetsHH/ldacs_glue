@@ -3,10 +3,10 @@
 
 namespace TUHH_INTAIRNET_MCSOTDMA {
 	enum SlotDuration {
-			six_ms,
-			twelve_ms,
-			twentyfour_ms
-		};
+		six_ms,
+		twelve_ms,
+		twentyfour_ms
+	};
 }
 
 #endif

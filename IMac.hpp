@@ -10,6 +10,7 @@
 #include "L2Header.hpp"
 #include "Timestamp.hpp"
 #include "ContentionMethod.hpp"
+#include "DutyCycleBudgetStrategy.hpp"
 #include <map>
 #include <functional>
 
@@ -229,6 +230,8 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		virtual void setForcePPPeriod(bool flag, int value);
 
 		virtual void notifyAboutDmeTransmission(uint64_t center_frequency);
+
+		virtual void setDutyCycleBudgetComputationStrategy(const DutyCycleBudgetStrategy& strategy);
 
 
 	protected:
