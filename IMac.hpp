@@ -233,6 +233,9 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 
 		virtual void setDutyCycleBudgetComputationStrategy(const DutyCycleBudgetStrategy& strategy);
 
+		void reportStartOfTxBurstToArq(const MacId &id);
+		void reportEndOfTxBurstToArq(const MacId &id);
+
 
 	protected:
 		IArq* upper_layer = nullptr;

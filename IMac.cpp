@@ -160,3 +160,15 @@ void IMac::notifyAboutDmeTransmission(uint64_t center_frequency) {
 void IMac::setDutyCycleBudgetComputationStrategy(const DutyCycleBudgetStrategy& strategy) {
 	throw std::runtime_error("setDutyCycleBudgetComputationStrategy not implemented");
 }
+
+void IMac::reportStartOfTxBurstToArq(const MacId &id) {
+	if (upper_layer == nullptr)
+		throw std::runtime_error("IMac::reportStartOfTxBurstToArq for nullptr ARQ upper layer.");
+	upper_layer->startTxBurst(id);
+}
+
+void IMac::reportEndOfTxBurstToArq(const MacId &id) {
+	if (upper_layer == nullptr)
+		throw std::runtime_error("IMac::reportEndOfTxBurstToArq for nullptr ARQ upper layer.");
+	upper_layer->endTxBurst(id);
+}
