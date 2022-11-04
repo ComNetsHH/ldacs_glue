@@ -172,3 +172,9 @@ void IMac::reportEndOfTxBurstToArq(const MacId &id) {
 		throw std::runtime_error("IMac::reportEndOfTxBurstToArq for nullptr ARQ upper layer.");
 	upper_layer->endTxBurst(id);
 }
+
+void IMac::reportMissingPpPacket(const MacId &id) {
+	if (upper_layer == nullptr)
+		throw std::runtime_error("IMac::reportMissingPpPacket for nullptr ARQ upper layer.");
+	upper_layer->notifyAboutMissedPacket(id);
+}

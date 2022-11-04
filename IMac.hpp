@@ -235,6 +235,7 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 
 		void reportStartOfTxBurstToArq(const MacId &id);
 		void reportEndOfTxBurstToArq(const MacId &id);
+		void reportMissingPpPacket(const MacId &id);
 
 
 	protected:
