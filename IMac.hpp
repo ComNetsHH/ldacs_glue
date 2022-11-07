@@ -237,6 +237,9 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		void reportEndOfTxBurstToArq(const MacId &id);
 		void reportMissingPpPacket(const MacId &id);
 
+		/** A silent node cannot transmit packets. */
+		virtual void setSilent(bool is_silent) = 0;
+
 
 	protected:
 		IArq* upper_layer = nullptr;
@@ -246,7 +249,7 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		std::map<MacId, CPRPosition::PositionQuality> position_quality_map;
 		uint64_t current_slot = 0;
 		std::function<void (MacId origin_id, CPRPosition position)> passUpBeaconFct = [] (MacId origin_id, CPRPosition position) {/* do nothing */};
-		bool should_force_bidirectional_links = true;		
+		bool should_force_bidirectional_links = true;				
 	};
 }
 
