@@ -65,6 +65,9 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		 * @return A pointer to the segment.
 		 */
 		virtual L2Packet* requestSegment(unsigned int num_bits, const MacId& mac_id) = 0;
+		virtual L2Packet* requestSegment(unsigned int num_bits, const MacId& mac_id, int frameIdx) {
+			return requestSegment(num_bits, mac_id);
+		};
 
 		/**
 		 * @param mac_id
