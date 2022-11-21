@@ -270,6 +270,8 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			seqno_next_expected = SequenceNumber(other.seqno_next_expected);						
             srej_bitmap = other.srej_bitmap;
 			payload_length = other.payload_length;
+			payload_offset = other.payload_offset;
+			packet_id = other.packet_id;
 	
 		}
 
@@ -290,7 +292,13 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		/** Selective rejection list. */
         std::array<bool, 16> srej_bitmap = {false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false};
 		std::array<bool, 4> srej = {false, false, false, false};
+
+		/** Length of included payload */
 		unsigned int payload_length = 0;
+		/** Offset of included payload */
+		unsigned int payload_offset = 0;
+		/** Packet id of payload */
+		unsigned int packet_id = 0; 
 
 		const MacId& getDestId() const {
 			return this->dest_id;
