@@ -17,6 +17,9 @@ public:
 	/** default constructor **/
 	L3Packet();
 
+	/** packet id */
+	unsigned int packetId = 0;
+
 	/** Size of the contained inet packet **/
 	int size = 0;
 
