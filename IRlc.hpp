@@ -70,6 +70,15 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		};
 
 		/**
+		 * Interface to acknowledge a sent frameIdx
+		*/
+		virtual void ack(MacId mac_id, int frameIdx) { }
+		/**
+		 * Interface to negatively acknowledge a sent frameIdx
+		*/
+		virtual void nack(MacId mac_id, int frameIdx) { }
+
+		/**
 		 * @param mac_id
 		 * @return Whether there's more data to be sent for the given ID.
 		 */
