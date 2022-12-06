@@ -334,6 +334,10 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			return this->seqno_next_expected;
 		}
 
+		unsigned int getBits() const override {
+			return 40; // 5 bytes according to Spec v4.1 Figure 18 
+		}
+
 	};
 
 	class L2HeaderDMERequest : public L2Header {
