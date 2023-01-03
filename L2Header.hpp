@@ -269,6 +269,7 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 			seqno = SequenceNumber(other.seqno);
 			seqno_next_expected = SequenceNumber(other.seqno_next_expected);						
             srej_bitmap = other.srej_bitmap;
+			srej = other.srej;
 			payload_length = other.payload_length;
 			payload_offset = other.payload_offset;
 			packet_id = other.packet_id;
