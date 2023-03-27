@@ -178,3 +178,7 @@ void IMac::reportMissingPpPacket(const MacId &id) {
 		throw std::runtime_error("IMac::reportMissingPpPacket for nullptr ARQ upper layer.");
 	upper_layer->notifyAboutMissedPacket(id);
 }
+
+void IMac::shouldCapturePerSlotStatistics(bool flag) {
+	this->capture_per_slot_statistics = flag;
+}

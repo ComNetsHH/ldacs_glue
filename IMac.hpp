@@ -240,6 +240,12 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		/** A silent node cannot transmit packets. */
 		virtual void setSilent(bool is_silent) = 0;
 
+		/** Set whether to capture per-slot statistics. 
+		 * These can take up a lot of memory. 
+		 * So enable these only if explicitly required by your evaluation.
+		*/
+		void shouldCapturePerSlotStatistics(bool flag);
+
 
 	protected:
 		IArq* upper_layer = nullptr;
@@ -249,7 +255,9 @@ namespace TUHH_INTAIRNET_MCSOTDMA {
 		std::map<MacId, CPRPosition::PositionQuality> position_quality_map;
 		uint64_t current_slot = 0;
 		std::function<void (MacId origin_id, CPRPosition position)> passUpBeaconFct = [] (MacId origin_id, CPRPosition position) {/* do nothing */};
-		bool should_force_bidirectional_links = true;				
+		bool should_force_bidirectional_links = true;
+		/** Per-slot statistics can take up a lot of memory. So enable these only if explicitly required by your evaluation. */
+		bool capture_per_slot_statistics = false;
 	};
 }
 
