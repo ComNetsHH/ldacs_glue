@@ -14,4 +14,6 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -I/usr/local/include/ -L/usr/local/Cella
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 add_library(intairnet_linklayer_glue SHARED ${GLUE_SRC_HPP} ${GLUE_SRC_CPP})
 add_executable(glue-lib-unittests ${GLUE_SRC_HPP} ${GLUE_SRC_TESTS})
-target_link_libraries(glue-lib-unittests cppunit intairnet_linklayer_glue)
+target_include_directories(glue-lib-unittests PUBLIC /opt/homebrew/opt/cppunit/include)
+find_library(CPPUNITLIB cppunit)
+target_link_libraries(glue-lib-unittests ${CPPUNITLIB} intairnet_linklayer_glue)
